@@ -455,6 +455,9 @@
 
         pages (->> (:pages context) (mapv get-page-data))]
 
+    (println "::::::process-pages context" context)
+    (println "::::::process-pages file" file)
+
     (->> (rx/from pages)
          (rx/tap (fn [[_ page-name]]
                    (progress! context :process-page page-name)))
@@ -583,6 +586,7 @@
 (defn parse-mtype [ba]
   (let [u8 (js/Uint8Array. ba 0 4)
         sg (areduce u8 i ret "" (str ret (if (zero? i) "" " ") (.toString (aget u8 i) 8)))]
+    (println "------sg" sg)
     (case sg
       "120 113 3 4" "application/zip"
       "1 13 32 206" "application/octet-stream"

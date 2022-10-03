@@ -118,7 +118,8 @@
               (case sg
                 "117 124 124 117" "font/otf"
                 "0 1 0 0"         "font/ttf"
-                "167 117 106 106" "font/woff")))
+                "167 117 106 106" "font/woff"
+                "other")))
 
           (parse-font [{:keys [data] :as params}]
             (try

@@ -7,6 +7,7 @@
 (ns app.libs.render
   (:require
    [app.common.uuid :as uuid]
+   [app.config :as cf]
    [app.main.render :as r]
    [beicon.core :as rx]
    [promesa.core :as p]))
@@ -24,5 +25,10 @@
             (rx/take 1)
             (rx/subs resolve reject))) )))
 
+(defn version
+  []
+  (@cf/version))
+
 (defn exports []
-  #js {:renderPage render-page-export})
+  #js {:renderPage render-page-export
+       :version version})

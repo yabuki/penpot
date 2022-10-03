@@ -26,9 +26,9 @@
   "Creates a manifest entry for the given files"
   [team-id file-id export-type files]
   (letfn [(format-page [manifest page]
-            (-> manifest
-                (assoc (str (:id page))
-                       {:name (:name page)})))
+                       (-> manifest
+                           (assoc (str (:id page))
+                                  {:name (:name page)})))
 
           (format-file [manifest file]
             (let [name      (:name file)
@@ -38,6 +38,7 @@
                   index     (->> (get-in file [:data :pages-index])
                                  (vals)
                                  (reduce format-page {}))]
+
               (-> manifest
                   (assoc (str (:id file))
                          {:name                 name
@@ -60,6 +61,7 @@
 (defn process-pages [file]
   (let [pages (get-in file [:data :pages])
         pages-index (get-in file [:data :pages-index])]
+
     (->> pages
          (map #(hash-map
                 :file-id (:id file)

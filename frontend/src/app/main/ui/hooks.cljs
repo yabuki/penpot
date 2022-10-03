@@ -299,19 +299,7 @@
   `key` for new values."
   [key default]
   (let [id     (use-id)
-        state  (mf/use-state (get @storage key default))
-        stream (mf/with-memo [id]
-                 (->> mbc/stream
-                      (rx/filter #(not= (:id %) id))
-                      (rx/filter #(= (:type %) key))
-                      (rx/map deref)))]
-
-    (mf/with-effect [@state key id]
-      (mbc/emit! id key @state)
-      (swap! storage assoc key @state))
-
-    (use-stream stream (partial reset! state))
-
+        state  (mf/use-state (get @storage key default))]
     state))
 
 (defonce ^:private intersection-subject (rx/subject))

@@ -18,10 +18,10 @@
 (def ^:const default-topic "penpot")
 
 ;; The main broadcast channel instance, used for emit data
-(defonce default-channel
+#_(defonce default-channel
   (js/BroadcastChannel. default-topic))
 
-(defonce stream
+#_(defonce stream
   (->> (rx/create (fn [subs]
                     (let [chan (js/BroadcastChannel. default-topic)]
                       (unchecked-set chan "onmessage" #(rx/push! subs (unchecked-get % "data")))
@@ -32,10 +32,12 @@
 
 (defn emit!
   ([type data]
-   (.postMessage ^js default-channel (t/encode-str {:id nil :type type :data data}))
+   #_(.postMessage ^js default-channel (t/encode-str {:id nil :type type :data data}))
+   (println "kk" type data)
    nil)
   ([id type data]
-   (.postMessage ^js default-channel (t/encode-str {:id id :type type :data data}))
+   #_(.postMessage ^js default-channel (t/encode-str {:id id :type type :data data}))
+   (println "kk" id type data)
    nil))
 
 (defn type?

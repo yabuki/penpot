@@ -10,7 +10,7 @@
    [app.util.globals :as g]
    [app.util.timers :as tm]))
 
-(defn- persist
+#_(defn- persist
   [storage prev curr]
   (run! (fn [key]
           (let [prev* (get prev key)
@@ -39,6 +39,6 @@
               (range len)))))
 
 
-(defonce storage (atom (load (unchecked-get g/global "localStorage"))))
+(defonce storage (atom {}))
 
-(add-watch storage :persistence #(persist js/localStorage %3 %4))
+(add-watch storage :persistence #(println "TODO"))
