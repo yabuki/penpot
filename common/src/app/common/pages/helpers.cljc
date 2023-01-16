@@ -42,8 +42,11 @@
   (and (= type :group) masked-group?))
 
 (defn bool-shape?
-  [{:keys [type]}]
-  (= type :bool))
+  ([objects id]
+   (bool-shape? (get objects id)))
+
+  ([{:keys [type]}]
+   (= type :bool)))
 
 (defn group-like-shape?
   [{:keys [type]}]
@@ -503,3 +506,8 @@
        (d/seek root-frame?)
        :id))
 
+(defn is-bool-child?
+  [objects shape-id]
+  (let [parents (get-parent-ids objects shape-id)]
+    (->> parents
+         (some (partial bool-shape? objects)))))

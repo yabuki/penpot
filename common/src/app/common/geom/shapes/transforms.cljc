@@ -408,9 +408,12 @@
   "Calculates the selrect+points for the boolean shape"
   [shape children objects]
 
-  (let [bool-content     (gshb/calc-bool-content shape objects)
-        shape            (assoc shape :bool-content bool-content)
-        [points selrect] (gpa/content->points+selrect shape bool-content)]
+  (let [shape
+        (cond-> shape
+          (not (:bool-content shape))
+          (assoc :bool-content (gshb/calc-bool-content shape objects)))
+
+        [points selrect] (gpa/content->points+selrect shape (:bool-content shape))]
 
     (if (and (some? selrect) (d/not-empty? points))
       (-> shape

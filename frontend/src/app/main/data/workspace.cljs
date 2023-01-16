@@ -41,7 +41,6 @@
    [app.main.data.workspace.drawing :as dwd]
    [app.main.data.workspace.drawing.common :as dwdc]
    [app.main.data.workspace.edition :as dwe]
-   [app.main.data.workspace.fix-bool-contents :as fbc]
    [app.main.data.workspace.groups :as dwg]
    [app.main.data.workspace.guides :as dwgu]
    [app.main.data.workspace.highlight :as dwh]
@@ -128,7 +127,6 @@
             has-graphics?  (-> file :media seq)
             components-v2  (features/active-feature? state :components-v2)]
         (rx/merge
-         (rx/of (fbc/fix-bool-contents))
          (if (and has-graphics? components-v2)
            (rx/of (remove-graphics (:id file) (:name file)))
            (rx/empty)))))))

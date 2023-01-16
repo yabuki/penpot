@@ -317,6 +317,13 @@
 
          (assoc state :workspace-modifiers modif-tree))))))
 
+(defn regenerate-content?
+  [objects shape modifiers]
+  (let [all-children (cph/get-children-ids objects (:id shape))]
+    (->> all-children
+         (some #(not (contains? modifiers %))))
+    ))
+
 
 (defn apply-modifiers
   ([]
@@ -333,6 +340,22 @@
                                  (get state :workspace-modifiers))
 
              ids (or (keys object-modifiers) [])
+
+             ids-set (set ids)
+
+             ;; Search for bool childs to regenerate its parents
+             reg-bools-ids
+             (into #{}
+                   (comp (filter #(cph/is-bool-child? objects %))
+                         (mapcat #(->> (cph/get-parent-ids objects %)
+                                       (filter (partial cph/bool-shape? objects))))
+                         (remove #(contains? ids-set %)))
+                   ids)
+             
+             _ (prn "??" reg-bools-ids)
+
+             ids (d/concat-vec ids reg-bools-ids)
+             
              ids-with-children (into (vec ids) (mapcat #(cph/get-children-ids objects %)) ids)
 
              shapes            (map (d/getf objects) ids)
@@ -349,16 +372,23 @@
                  (dch/update-shapes
                   ids
                   (fn [shape]
+                    
                     (let [modif (get-in object-modifiers [(:id shape) :modifiers])
                           text-shape? (cph/text-shape? shape)
                           position-data (when text-shape?
                                           (dm/get-in text-modifiers [(:id shape) :position-data]))]
+
                       (-> shape
                           (gsh/transform-shape modif)
                           (cond-> (d/not-empty? position-data)
                             (assoc-position-data position-data shape))
                           (cond-> text-shape?
-                            (update-grow-type shape)))))
+                            (update-grow-type shape))
+
+                          (cond-> (and (cph/bool-shape? shape) (regenerate-content? objects shape object-modifiers))
+                            ;; Dissoc will force a re-generation of the bool-content
+                            (dissoc :bool-content))
+                          )))
                   {:reg-objects? true
                    :ignore-tree ignore-tree
                    ;; Attributes that can change in the transform. This way we don't have to check
@@ -369,6 +399,7 @@
                            :y
                            :width
                            :height
+                           :bool-content
                            :content
                            :transform
                            :transform-inverse
