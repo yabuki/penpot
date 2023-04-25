@@ -99,13 +99,15 @@
     
     (defn- add-shape
       [event]    
-      (let [new-uuid (uuid/next)
-            message-channel (js/MessageChannel.)
-            port1 (.-port1 message-channel)
-            port2 (.-port2 message-channel)]
+      (let [
+            new-uuid (uuid/next)
+            ;; message-channel (js/MessageChannel.)
+            ;; port1 (.-port1 message-channel)
+            ;; port2 (.-port2 message-channel)
+            ]
 
-        (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
-        (.start port1)
+        ;; (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
+        ;; (.start port1)
         (st/emit! (dw/add-shape {:type :rect
                                  :name "test"
                                  :x 0
@@ -115,7 +117,11 @@
                                  :id new-uuid
                                  :fills [{:fill-color (.-color (.-detail event))
                                           :fill-opacity 1}]}))
-        (.postMessage port1 (clj->js {:new-uuid new-uuid}))))
+
+        (js/console.log "message" event)
+        (.callback (.-detail event) new-uuid)
+        ;; (.postMessage port1 (clj->js {:new-uuid new-uuid}))
+        ))
 
     (mf/with-effect []
       (.addEventListener globals/document "addShapeEvent" add-shape false)
@@ -134,6 +140,8 @@
                :style {:border "10px solid pink"}
                :src-doc "
 <script>
+
+/*
 let port;
 
 // Listen for the initial port transfer message
@@ -155,17 +163,26 @@ function initPort(e) {
     console.log('initPort end', port);
   }
 }
+*/
 
 function dispatch()  {
   let color = '#' + Math.floor(Math.random()*16777215).toString(16);
-  window.parent.document.dispatchEvent(new CustomEvent('addShapeEvent', { detail: { color: color } }));
+  window.parent.document.dispatchEvent(new CustomEvent('addShapeEvent', 
+    { detail: { color: color,
+                callback: (uuid) => {
+                  console.log('-----------------', uuid.uuid);
+                  document.getElementById('uuid').innerHTML = uuid.uuid;
+                }
+              } 
+    }));
   //port.postMessage({color: color});
   console.log('dispatched');
 }
 
 </script>
 Esto es un iframe 
-<button onClick = \"dispatch();\">CLICK</button>"}]
+<button onClick = \"dispatch();\">CLICK</button>
+<div id=\"uuid\"></div>"}]
 
      [:section.workspace-content {:key (dm/str "workspace-" page-id)
                                   :ref node-ref}
