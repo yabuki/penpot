@@ -8,6 +8,7 @@
   (:import goog.events.EventType)
   (:require
    [app.common.data.macros :as dm]
+   [app.common.uuid :as uuid]
    [app.main.data.messages :as msg]
    [app.main.data.modal :as modal]
    [app.main.data.workspace :as dw]
@@ -60,18 +61,103 @@
 
         on-resize
         (mf/use-callback
-         (mf/deps vport)
-         (fn [resize-type size]
-           (when (and vport (not= size vport))
-             (st/emit! (dw/update-viewport-size resize-type size)))))
+          (mf/deps vport)
+          (fn [resize-type size]
+            (when (and vport (not= size vport))
+              (st/emit! (dw/update-viewport-size resize-type size)))))
 
-        node-ref (use-resize-observer on-resize)]
+        node-ref (use-resize-observer on-resize)
+
+        message-channel (mf/use-ref nil)
+        ref   (mf/use-ref)]
+    
+    (defn- on-message
+      [event]
+      (let [new-uuid (uuid/next)]
+        (st/emit! (dw/add-shape {:type :rect
+                                 :name "test"
+                                 :x 0
+                                 :y 0
+                                 :width 300
+                                 :height 300
+                                 :id new-uuid
+                                 :fills [{:fill-color (.-color (.-data event))
+                                          :fill-opacity 1}]}))
+        (.postMessage (.-port1 (mf/ref-val message-channel)) (clj->js {:new-uuid new-uuid}))
+        (println "on-message main end")))
+
+    (defn- on-iframe-load
+      [event]
+      (let [new-message-channel (js/MessageChannel.)
+            port1 (.-port1 new-message-channel)
+            port2 (.-port2 new-message-channel)]
+        (mf/set-ref-val! message-channel new-message-channel)
+        (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
+        (.addEventListener port1 "message" on-message false)
+        (.start port1)
+        (println "on-iframe-load end")))
+    
+    #_(defn- on-custom-event
+      [event]    
+      (let [new-uuid (uuid/next)]
+        (st/emit! (dw/add-shape {:type :rect
+                                 :name "test"
+                                 :x 0
+                                 :y 0
+                                 :width 300
+                                 :height 300
+                                 :id new-uuid
+                                 :fills [{:fill-color (.-color (.-detail event))
+                                          :fill-opacity 1}]}))
+        (println "on-custom-event main end")))
+
+    (mf/with-effect []
+      ;; (.addEventListener globals/document "myCustomEvent" on-custom-event false)
+      (.addEventListener (.-contentWindow (mf/ref-val ref)) "load" on-iframe-load))
+
     [:*
      (when (and colorpalette? (not hide-ui?))
        [:& colorpalette])
 
      (when (and textpalette? (not hide-ui?))
        [:& textpalette])
+
+     [:iframe {:ref ref
+               :width 300
+               :height 300
+               :style {:border "10px solid pink"}
+               :src-doc "
+<script>
+let port;
+
+// Listen for the initial port transfer message
+window.addEventListener('message', initPort);
+
+// Handle messages received on port
+function onMessage(e) {
+  newuuid = e.data['new-uuid'].uuid;
+  console.log('************* newuuid', newuuid);
+  console.log(`Message received by IFrame: '${e.data}'`);
+}
+
+// Setup the transferred port
+function initPort(e) {
+  console.log('initPort start')
+  port = e.ports[0];
+  port.onmessage = onMessage;
+  console.log('initPort end', port);
+}
+
+function dispatch()  {
+  let color = '#' + Math.floor(Math.random()*16777215).toString(16);
+  //window.parent.document.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { color: color } }));
+  port.postMessage({color: color});
+  console.log('dispatched');
+}
+
+</script>
+Esto es un iframe 
+<button onClick = \"dispatch();\">CLICK</button>"}]
 
      [:section.workspace-content {:key (dm/str "workspace-" page-id)
                                   :ref node-ref}
