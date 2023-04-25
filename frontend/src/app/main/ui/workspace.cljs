@@ -68,10 +68,10 @@
 
         node-ref (use-resize-observer on-resize)
 
-        message-channel (mf/use-ref nil)
+        ;; message-channel (mf/use-ref nil)
         ref   (mf/use-ref)]
     
-    (defn- on-message
+    #_(defn- on-message
       [event]
       (let [new-uuid (uuid/next)]
         (st/emit! (dw/add-shape {:type :rect
@@ -86,20 +86,26 @@
         (.postMessage (.-port1 (mf/ref-val message-channel)) (clj->js {:new-uuid new-uuid}))
         (println "on-message main end")))
 
-    (defn- on-iframe-load
-      [event]
-      (let [new-message-channel (js/MessageChannel.)
-            port1 (.-port1 new-message-channel)
-            port2 (.-port2 new-message-channel)]
-        (mf/set-ref-val! message-channel new-message-channel)
-        (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
-        (.addEventListener port1 "message" on-message false)
-        (.start port1)
-        (println "on-iframe-load end")))
+    ;; (defn- on-iframe-load
+    ;;   [event]
+    ;;   (let [new-message-channel (js/MessageChannel.)
+    ;;         port1 (.-port1 new-message-channel)
+    ;;         port2 (.-port2 new-message-channel)]
+    ;;     (mf/set-ref-val! message-channel new-message-channel)
+    ;;     (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
+    ;;     (.addEventListener port1 "message" on-message false)
+    ;;     (.start port1)
+    ;;     (println "on-iframe-load end")))
     
-    #_(defn- on-custom-event
+    (defn- add-shape
       [event]    
-      (let [new-uuid (uuid/next)]
+      (let [new-uuid (uuid/next)
+            message-channel (js/MessageChannel.)
+            port1 (.-port1 message-channel)
+            port2 (.-port2 message-channel)]
+
+        (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
+        (.start port1)
         (st/emit! (dw/add-shape {:type :rect
                                  :name "test"
                                  :x 0
@@ -109,11 +115,11 @@
                                  :id new-uuid
                                  :fills [{:fill-color (.-color (.-detail event))
                                           :fill-opacity 1}]}))
-        (println "on-custom-event main end")))
+        (.postMessage port1 (clj->js {:new-uuid new-uuid}))))
 
     (mf/with-effect []
-      ;; (.addEventListener globals/document "myCustomEvent" on-custom-event false)
-      (.addEventListener (.-contentWindow (mf/ref-val ref)) "load" on-iframe-load))
+      (.addEventListener globals/document "addShapeEvent" add-shape false)
+      #_(.addEventListener (.-contentWindow (mf/ref-val ref)) "load" on-iframe-load))
 
     [:*
      (when (and colorpalette? (not hide-ui?))
@@ -142,16 +148,18 @@ function onMessage(e) {
 
 // Setup the transferred port
 function initPort(e) {
-  console.log('initPort start')
-  port = e.ports[0];
-  port.onmessage = onMessage;
-  console.log('initPort end', port);
+  if (e.data === 'init') {
+    console.log('initPort start', e);
+    port = e.ports[0];
+    port.onmessage = onMessage;
+    console.log('initPort end', port);
+  }
 }
 
 function dispatch()  {
   let color = '#' + Math.floor(Math.random()*16777215).toString(16);
-  //window.parent.document.dispatchEvent(new CustomEvent('myCustomEvent', { detail: { color: color } }));
-  port.postMessage({color: color});
+  window.parent.document.dispatchEvent(new CustomEvent('addShapeEvent', { detail: { color: color } }));
+  //port.postMessage({color: color});
   console.log('dispatched');
 }
 
