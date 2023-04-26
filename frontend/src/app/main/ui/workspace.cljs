@@ -7,7 +7,9 @@
 (ns app.main.ui.workspace
   (:import goog.events.EventType)
   (:require
+   [app.common.data :as d]
    [app.common.data.macros :as dm]
+   [app.common.types.shape :as cts]
    [app.common.uuid :as uuid]
    [app.main.data.messages :as msg]
    [app.main.data.modal :as modal]
@@ -16,6 +18,7 @@
    [app.main.features :as features]
    [app.main.refs :as refs]
    [app.main.store :as st]
+   [app.main.data.workspace.shapes :as dwsh]
    [app.main.ui.context :as ctx]
    [app.main.ui.hooks :as hooks]
    [app.main.ui.hooks.resize :refer [use-resize-observer]]
@@ -37,12 +40,26 @@
    [app.util.i18n :as i18n :refer [tr]]
    [app.util.object :as obj]
    [app.util.router :as rt]
+   [cuerdas.core :as str]
    [debug :refer [debug?]]
    [goog.events :as events]
    [okulary.core :as l]
    [rumext.v2 :as mf]))
 
 ;; --- Workspace
+
+(defn parse-data [data]
+  (as-> data $
+    (js->clj $ :keywordize-keys true)
+    ;; Transforms camelCase to kebab-case
+    (d/deep-mapm
+      (fn [[key value]]
+        (let [value (if (= (type value) js/Symbol)
+                      (keyword (js/Symbol.keyFor value))
+                      value)
+              key (-> key d/name str/kebab keyword)
+              _ (println "key" key "value" value)]
+          [key value])) $)))
 
 (mf/defc workspace-content
   {::mf/wrap-props false}
@@ -70,21 +87,21 @@
 
         ;; message-channel (mf/use-ref nil)
         ref   (mf/use-ref)]
-    
+
     #_(defn- on-message
-      [event]
-      (let [new-uuid (uuid/next)]
-        (st/emit! (dw/add-shape {:type :rect
-                                 :name "test"
-                                 :x 0
-                                 :y 0
-                                 :width 300
-                                 :height 300
-                                 :id new-uuid
-                                 :fills [{:fill-color (.-color (.-data event))
-                                          :fill-opacity 1}]}))
-        (.postMessage (.-port1 (mf/ref-val message-channel)) (clj->js {:new-uuid new-uuid}))
-        (println "on-message main end")))
+        [event]
+        (let [new-uuid (uuid/next)]
+          (st/emit! (dw/add-shape {:type :rect
+                                   :name "test"
+                                   :x 0
+                                   :y 0
+                                   :width 300
+                                   :height 300
+                                   :id new-uuid
+                                   :fills [{:fill-color (.-color (.-data event))
+                                            :fill-opacity 1}]}))
+          (.postMessage (.-port1 (mf/ref-val message-channel)) (clj->js {:new-uuid new-uuid}))
+          (println "on-message main end")))
 
     ;; (defn- on-iframe-load
     ;;   [event]
@@ -96,27 +113,28 @@
     ;;     (.addEventListener port1 "message" on-message false)
     ;;     (.start port1)
     ;;     (println "on-iframe-load end")))
-    
+
     (defn- add-shape
-      [event]    
-      (let [
-            new-uuid (uuid/next)
+      [event]
+      (let [new-uuid (uuid/next)
             ;; message-channel (js/MessageChannel.)
             ;; port1 (.-port1 message-channel)
             ;; port2 (.-port2 message-channel)
+            ;; data (parse-data (.-shape (.-detail event))) 
+            ;; TODO use new-uuid
+            shape (-> (parse-data (.-shape (.-detail event)))
+                      js/JSON.stringify
+                      js/JSON.parse
+                      parse-data)
+            shape (assoc shape :type :rect)
             ]
 
         ;; (.postMessage (.-contentWindow (mf/ref-val ref)) "init" "*" (array port2))
         ;; (.start port1)
-        (st/emit! (dw/add-shape {:type :rect
-                                 :name "test"
-                                 :x 0
-                                 :y 0
-                                 :width 300
-                                 :height 300
-                                 :id new-uuid
-                                 :fills [{:fill-color (.-color (.-detail event))
-                                          :fill-opacity 1}]}))
+        ;; (js/console.log "shape" (js->clj (.-shape (.-detail event))))
+        ;; (js/console.log "shape2" shape)
+        ;; (println "--------> shape" (js->clj (.-shape (.-detail event))))
+        (st/emit! (dwsh/create-and-add-shape (:type shape) (:x shape) (:y shape) shape))
 
         (js/console.log "message" event)
         (.callback (.-detail event) new-uuid)
@@ -168,7 +186,16 @@ function initPort(e) {
 function dispatch()  {
   let color = '#' + Math.floor(Math.random()*16777215).toString(16);
   window.parent.document.dispatchEvent(new CustomEvent('addShapeEvent', 
-    { detail: { color: color,
+    { detail: { shape: {
+                          type: ':rect',
+                          name: 'test',
+                          x: 0,
+                          y: 0,
+                          width: 300,
+                          height: 300,
+                          fills: [{fillColor: color,
+                                   fillOpacity: 1}]
+                },
                 callback: (uuid) => {
                   console.log('-----------------', uuid.uuid);
                   document.getElementById('uuid').innerHTML = uuid.uuid;
@@ -254,15 +281,15 @@ Esto es un iframe
 
         focus-out
         (mf/use-callback
-         (fn []
-           (st/emit! (dw/workspace-focus-lost))))]
+          (fn []
+            (st/emit! (dw/workspace-focus-lost))))]
 
     (mf/use-effect
-     (mf/deps focus-out)
-     (fn []
-       (let [keys [(events/listen globals/document EventType.FOCUSOUT focus-out)]]
-         #(doseq [key keys]
-            (events/unlistenByKey key)))))
+      (mf/deps focus-out)
+      (fn []
+        (let [keys [(events/listen globals/document EventType.FOCUSOUT focus-out)]]
+          #(doseq [key keys]
+             (events/unlistenByKey key)))))
 
     ;; Setting the layout preset by its name
     (mf/with-effect [layout-name]
@@ -272,7 +299,7 @@ Esto es un iframe
       (st/emit! (dw/initialize-file project-id file-id))
       (fn []
         (st/emit! ::dwp/force-persist
-                  (dw/finalize-file project-id file-id))))
+          (dw/finalize-file project-id file-id))))
 
     ;; Set html theme color and close any non-modal dialog that may be still open
     (mf/with-effect
@@ -299,11 +326,11 @@ Esto es un iframe
 
            [:& context-menu]
 
-          (if ready?
-            [:& workspace-page {:page-id page-id
-                                :file file
-                                :wglobal wglobal
-                                :layout layout}]
+           (if ready?
+             [:& workspace-page {:page-id page-id
+                                 :file file
+                                 :wglobal wglobal
+                                 :layout layout}]
              [:& workspace-loader])]]]]]]]))
 
 (mf/defc remove-graphics-dialog
@@ -315,8 +342,8 @@ Esto es un iframe
         close        #(modal/hide!)
         reload-file  #(dom/reload-current-window)
         nav-out      #(st/emit! (rt/navigate :dashboard-files
-                                             {:team-id (:team-id project)
-                                                               :project-id (:id project)}))]
+                                  {:team-id (:team-id project)
+                                   :project-id (:id project)}))]
     (mf/use-effect
       (fn []
         #(st/emit! (dw/clear-remove-graphics))))
@@ -336,8 +363,8 @@ Esto es un iframe
          [:p (tr "workspace.remove-graphics.text1")]
          [:p (tr "workspace.remove-graphics.text2")]
          [:p.progress-message (tr "workspace.remove-graphics.progress"
-                                  (:current remove-state)
-                                  (:total remove-state))]]
+                                (:current remove-state)
+                                (:total remove-state))]]
         [:*
          [:div.modal-content
           [:p.error-message [:span i/close] (tr "workspace.remove-graphics.error-msg")]
