@@ -328,17 +328,52 @@
                            :format (:format style-text)
                            :tab-size 2})])))
 
+(defn selector-name [shape]
+  (let [name (:name shape)
+        selector (str/css-selector (dm/str name " " (:id shape)))
+        selector (if (str/starts-with? selector "-") (subs selector 1) selector)]
+    selector))
+
 (defn generate-css [shape]
   (let [name (:name shape)
         properties (if (= :text (:type shape))
                      (text->properties shape)
                      (shape->properties shape))
-        selector (str/css-selector name)
-        selector (if (str/starts-with? selector "-") (subs selector 1) selector)]
+
+        selector (selector-name shape)]
     (str/join "\n" [(str/fmt "/* %s */" name)
                     (str/fmt ".%s {" selector)
                     properties
                     "}"])))
+
+(defn generate-html
+  ([objects shape-id]
+   (generate-html objects shape-id 0))
+
+  ([objects shape-id level]
+   (let [shape (get objects shape-id)
+         indent (str/repeat "  " level)]
+     (if (empty? (:shapes shape))
+       (dm/fmt "%<div class=\"%\"></div>"
+               indent
+               (selector-name shape))
+       (dm/fmt "%<div class=\"%\">\n%\n%</div>"
+               indent
+               (selector-name shape)
+               (->> (:shapes shape)
+                    (map #(generate-html objects % (inc level)))
+                    (str/join "\n"))
+               indent))
+     ))
+
+  )
+
+(defn generate-markup-code [objects type shapes]
+  (let [generate-markup-fn (case type
+                            "html" generate-html)]
+    (->> shapes
+         (map #(generate-markup-fn objects % 1))
+         (str/join "\n"))))
 
 (defn generate-style-code [type shapes]
   (let [generate-style-fn (case type
@@ -346,3 +381,4 @@
     (->> shapes
          (map generate-style-fn)
          (str/join "\n\n"))))
+

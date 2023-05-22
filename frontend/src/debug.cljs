@@ -6,6 +6,11 @@
 
 (ns debug
   (:require
+   [app.common.data.macros :as dm]
+   [app.common.pages.helpers :as cph]
+   [app.util.code-gen :as cgen]
+   [app.common.types.shape-tree :as ctst]
+
    [app.common.data :as d]
    [app.common.logging :as l]
    [app.common.math :as mth]
@@ -401,3 +406,41 @@
 (defn ^:export fix-orphan-shapes
   []
   (st/emit! (dw/fix-orphan-shapes)))
+
+(def template )
+
+(defn ^:export code
+  []
+
+  (let [page-id (get @st/state :current-page-id)
+        objects (get-in @st/state [:workspace-data :pages-index page-id :objects])
+        selected (get-in @st/state [:workspace-local :selected])
+        result (->> selected (map (d/getf objects)))
+        all-children (->> (cph/selected-with-children objects selected)
+                          (map (d/getf objects)))
+
+        css-code (cgen/generate-style-code "css" all-children)
+        html-code (cgen/generate-markup-code objects "html" selected) 
+        ]
+
+    (.log js/console (dm/fmt "
+<!doctype html>
+
+<html lang=\"en\">
+<head>
+  <meta charset=\"utf-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+  <link rel=\"stylesheet\" href=\"css/styles.css?v=1.0\">
+  <style>
+  %
+  </style>
+
+</head>
+
+<body>
+%
+</body>
+</html>
+" css-code html-code))
+    )
+  )
