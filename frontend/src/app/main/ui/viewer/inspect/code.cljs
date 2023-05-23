@@ -75,7 +75,7 @@
         shapes     (->> shapes
                         (map #(assoc % :parent (get objects (:parent-id %))))
                         (map #(assoc % :flex-items flex-items)))
-        style-code (-> (cg/generate-style-code @style-type shapes)
+        style-code (-> (cg/generate-style-code objects @style-type shapes)
                        (format-code "css"))
 
         markup-code

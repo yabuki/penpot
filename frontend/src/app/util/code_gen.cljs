@@ -75,8 +75,16 @@
       (fmt/format-size :width value values)
       (fmt/format-size :heigth value values))))
 
+(defn make-format-absolute-pos
+  [objects shape coord]
+  (fn [value]
+    (let [frame-id (dm/get-in objects [(:id shape) :frame-id])
+          frame-value (dm/get-in objects [frame-id :selrect coord])]
+      (when-not (or (cph/root-frame? shape) (cph/group-shape? shape))
+        (fmt/format-pixels (- value frame-value))))))
+
 (defn styles-data
-  [shape]
+  [objects shape]
   {:position    {:props [:type]
                  :to-prop {:type "position"}
                  :format {:type format-position}}
@@ -92,7 +100,9 @@
                  :format  {:rotation #(str/fmt "rotate(%sdeg)" %)
                            :r1       #(apply str/fmt "%spx %spx %spx %spx" %)
                            :width    #(get-size :width %)
-                           :height   #(get-size :height %)}
+                           :height   #(get-size :height %)
+                           :x (make-format-absolute-pos objects shape :x)
+                           :y (make-format-absolute-pos objects shape :x)}
                  :multi   {:r1 [:r1 :r2 :r3 :r4]}}
    :fill        {:props [:fills]
                  :to-prop {:fills (if (> (count (:fills shape)) 1) "background-image" "background")}
@@ -227,7 +237,7 @@
                              (when css-val
                                (dm/str
                                 (str/repeat " " tab-size)
-                                (str/fmt "%s: %s;" css-prop css-val)))))]
+                                (dm/fmt "%: %;" css-prop css-val)))))]
 
      (->> properties
           (remove #(null? (get-value %)))
@@ -235,15 +245,15 @@
           (filter (comp not nil?))
           (str/join "\n")))))
 
-(defn shape->properties [shape]
+(defn shape->properties [objects shape]
   (let [;; This property is added in an earlier step (code.cljs), 
         ;; it will come with a vector of flex-items if any.
         ;; If there are none it will continue as usual. 
         flex-items (:flex-items shape)
-        props      (->> (styles-data shape) vals (mapcat :props))
-        to-prop    (->> (styles-data shape) vals (map :to-prop) (reduce merge))
-        format     (->> (styles-data shape) vals (map :format) (reduce merge))
-        multi      (->> (styles-data shape) vals (map :multi) (reduce merge))
+        props      (->> (styles-data objects shape) vals (mapcat :props))
+        to-prop    (->> (styles-data objects shape) vals (map :to-prop) (reduce merge))
+        format     (->> (styles-data objects shape) vals (map :format) (reduce merge))
+        multi      (->> (styles-data objects shape) vals (map :multi) (reduce merge))
         props      (cond-> props
                      (seq flex-items) (concat (:props layout-flex-item-params))
                      (= :wrap (:layout-wrap-type shape)) (concat (:props layout-align-content)))
@@ -296,9 +306,9 @@
     (-> (rec-style-text-map [] node {})
         reverse)))
 
-(defn text->properties [shape]
+(defn text->properties [objects shape]
   (let [flex-items (:flex-items shape)
-        text-shape-style (select-keys (styles-data shape) [:layout :shadow :blur])
+        text-shape-style (select-keys (styles-data objects shape) [:layout :shadow :blur])
 
         shape-props      (->> text-shape-style vals (mapcat :props))
         shape-to-prop    (->> text-shape-style vals (map :to-prop) (reduce merge))
@@ -334,11 +344,11 @@
         selector (if (str/starts-with? selector "-") (subs selector 1) selector)]
     selector))
 
-(defn generate-css [shape]
+(defn generate-css [objects shape]
   (let [name (:name shape)
         properties (if (= :text (:type shape))
-                     (text->properties shape)
-                     (shape->properties shape))
+                     (text->properties objects shape)
+                     (shape->properties objects shape))
 
         selector (selector-name shape)]
     (str/join "\n" [(str/fmt "/* %s */" name)
@@ -363,10 +373,7 @@
                (->> (:shapes shape)
                     (map #(generate-html objects % (inc level)))
                     (str/join "\n"))
-               indent))
-     ))
-
-  )
+               indent)))))
 
 (defn generate-markup-code [objects type shapes]
   (let [generate-markup-fn (case type
@@ -375,10 +382,10 @@
          (map #(generate-markup-fn objects % 1))
          (str/join "\n"))))
 
-(defn generate-style-code [type shapes]
+(defn generate-style-code [objects type shapes]
   (let [generate-style-fn (case type
                             "css" generate-css)]
     (->> shapes
-         (map generate-style-fn)
+         (map (partial generate-style-fn objects))
          (str/join "\n\n"))))
 

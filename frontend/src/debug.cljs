@@ -419,7 +419,7 @@
         all-children (->> (cph/selected-with-children objects selected)
                           (map (d/getf objects)))
 
-        css-code (cgen/generate-style-code "css" all-children)
+        css-code (cgen/generate-style-code objects "css" all-children)
         html-code (cgen/generate-markup-code objects "html" selected) 
         ]
 
@@ -432,6 +432,7 @@
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   <link rel=\"stylesheet\" href=\"css/styles.css?v=1.0\">
   <style>
+  html { background: #e8e9ea; }
   %
   </style>
 
