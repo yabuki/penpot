@@ -248,7 +248,7 @@
             (->> (rx/merge
                   ;; LOCAL CHANGES
                   (->> stream
-                       (rx/filter dch/commit-changes?)
+                       (rx/filter dch/commit?)
                        (rx/observe-on :async)
                        (rx/with-latest-from workspace-data-s)
                        (rx/merge-map (partial extract-frame-changes page-id))
