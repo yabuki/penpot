@@ -464,7 +464,8 @@
   (ptk/reify ::restore-component
     ptk/WatchEvent
     (watch [it state _]
-      (let [page-id      (:current-page-id state)
+      (let [_ (prn "RESTORE-COMPONENT" library-id component-id)
+            page-id      (:current-page-id state)
             current-page (dm/get-in state [:workspace-data :pages-index page-id])
             objects      (wsh/lookup-page-objects state page-id)
             library-data (wsh/get-file state library-id)
@@ -482,6 +483,22 @@
                         (pcb/resize-parents new-objects-ids))]
 
         (rx/of (dch/commit-changes (assoc changes :file-id library-id)))))))
+
+
+(defn restore-components
+  "Restore multiple deleted component definded by a map with the component id as key and the component library as value"
+  [components-data]
+  (dm/assert! (map? components-data))
+  (ptk/reify ::restore-components
+    ptk/WatchEvent
+    (watch [it state _]
+      (let [_ (prn "restore-components" components-data)
+             undo-id (js/Symbol)]
+
+        (rx/concat
+         (rx/of (dwu/start-undo-transaction undo-id))
+         (rx/map #(restore-component (val %) (key %)) (rx/from components-data))
+         (rx/of (dwu/commit-undo-transaction undo-id)))))))
 
 (defn instantiate-component
   "Create a new shape in the current page, from the component with the given id
@@ -533,6 +550,19 @@
                           (dwlh/generate-detach-instance container id))]
 
         (rx/of (dch/commit-changes changes))))))
+
+(defn detach-components
+  "Remove all references to components in the shapes with the given ids"
+  [ids]
+  (dm/assert! (seq ids))
+  (ptk/reify ::detach-components
+    ptk/WatchEvent
+    (watch [_ _ _]
+           (let [undo-id (js/Symbol)]
+             (rx/concat
+              (rx/of (dwu/start-undo-transaction undo-id))
+              (rx/map #(detach-component %) (rx/from ids))
+              (rx/of (dwu/commit-undo-transaction undo-id)))))))
 
 (def detach-selected-components
   (ptk/reify ::detach-selected-components
@@ -620,6 +650,20 @@
                                                                  (:redo-changes changes)
                                                                  file))
         (rx/of (dch/commit-changes changes))))))
+
+(defn reset-components
+  "Cancels all modifications in the shapes with the given ids"
+  [ids]
+  (dm/assert! (seq ids))
+  (ptk/reify ::reset-components
+    ptk/WatchEvent
+    (watch [_ _ _]
+      (let [undo-id (js/Symbol)]
+        (rx/concat
+         (rx/of (dwu/start-undo-transaction undo-id))
+         (rx/map #(reset-component %) (rx/from ids))
+         (rx/of (dwu/commit-undo-transaction undo-id)))))))
+
 
 (defn update-component
   "Modify the component linked to the shape with the given id, in the

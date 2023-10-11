@@ -4864,6 +4864,9 @@ msgstr "Actualizar componentes"
 msgid "workspace.shape.menu.update-main"
 msgstr "Actualizar componente principal"
 
+msgid "workspace.shape.menu.update-main.multi"
+msgstr "Actualizar componentes principales"
+
 msgid "workspace.sidebar.collapse"
 msgstr "Cerrar barra lateral"
 

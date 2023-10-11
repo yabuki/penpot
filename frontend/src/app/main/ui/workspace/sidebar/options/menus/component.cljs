@@ -9,7 +9,6 @@
   (:require
    [app.common.pages.helpers :as cph]
    [app.common.types.component :as ctk]
-   [app.common.types.components-list :as ctkl]
    [app.common.types.file :as ctf]
    [app.common.uuid :as uuid]
    [app.main.data.modal :as modal]
@@ -30,13 +29,10 @@
    [cuerdas.core :as str]
    [rumext.v2 :as mf]))
 
-(def component-attrs [:component-id :component-file :shape-ref :main-instance :annotation])
-
-
 (mf/defc component-annotation
-  [{:keys [id values shape component] :as props}]
-  (let [main-instance?        (:main-instance values)
-        component-id          (:component-id values)
+  [{:keys [id shape component] :as props}]
+  (let [main-instance?        (:main-instance shape)
+        component-id          (:component-id shape)
         annotation            (:annotation component)
         editing?              (mf/use-state false)
         invalid-text?         (mf/use-state (or (nil? annotation)(str/empty? annotation)))
@@ -291,50 +287,54 @@
                [:span (:name item)]
                [:span i/arrow-slide]]))]]]))
 
+(mf/defc component-ctx-menu
+  [{:keys [menu-entries on-close show type] :as props}]
+  (case type
+    :context-menu
+    [:& context-menu {:on-close on-close
+                      :show show
+                      :options
+                      (vec (for [entry menu-entries :when (not (nil? entry))]
+                             [(tr (first entry)) (second entry)]))}]
+    :dropdown
+    [:& dropdown {:show show :on-close on-close}
+     [:ul {:class (stl/css :custom-select-dropdown)}
+      (for [entry menu-entries :when (not (nil? entry))]
+        [:li {:key (uuid/next)
+              :class (stl/css :dropdown-element)
+              :on-click (second entry)}
+         [:span {:class (stl/css :dropdown-label)}
+          (tr (first entry))]])]]))
 
 
 (mf/defc component-menu
-  [{:keys [shape swap-opened?] :as props}]
-  (let [[ids values]        [[(:id shape)] (select-keys shape component-attrs)]
-        new-css-system      (mf/use-ctx ctx/new-css-system)
+  [{:keys [shapes swap-opened?] :as props}]
+  (let [new-css-system      (mf/use-ctx ctx/new-css-system)
         current-file-id     (mf/use-ctx ctx/current-file-id)
         components-v2       (mf/use-ctx ctx/components-v2)
+        workspace-data      (deref refs/workspace-data)
+        workspace-libraries (deref refs/workspace-libraries)
 
-        objects             (deref refs/workspace-page-objects)
-        touched?            (cph/component-touched? objects (:id shape))
-        can-update-main?    (or (not components-v2) touched?)
-
-        id                  (first ids)
         state*              (mf/use-state {:show-content true
                                            :menu-open false})
         state               (deref state*)
         open?               (:show-content state)
         menu-open?          (:menu-open state)
 
+        shapes              (filter ctk/instance-head? shapes)
+        multi               (> (count shapes) 1)
+        copies              (filter ctk/in-component-copy? shapes)
+        can-swap?           (and components-v2 (seq copies))
+
+        ;; For when it's only one shape
+        shape               (first shapes)
+        id                  (:id shape)
+        shape-name          (:name shape)
+        component           (ctf/resolve-component shape {:id current-file-id :data workspace-data} workspace-libraries)
+        main-instance?      (if components-v2 (ctk/main-instance? shape) true)
+
         toggle-content
         (mf/use-fn #(swap! state* update :show-content not))
-
-        shape-name          (:name shape)
-        component-id        (:component-id values)
-        library-id          (:component-file values)
-        show?               (some? component-id)
-        main-instance?      (if components-v2
-                              (ctk/main-instance? values)
-                              true)
-        can-swap?           (and components-v2 (not main-instance?))
-        main-component?     (:main-instance values)
-        lacks-annotation?   (nil? (:annotation values))
-
-        local-component?    (= library-id current-file-id)
-
-        workspace-data      (deref refs/workspace-data)
-        workspace-libraries (deref refs/workspace-libraries)
-        component           (if local-component?
-                              (ctkl/get-component workspace-data component-id)
-                              (ctf/get-component workspace-libraries library-id component-id))
-        is-dangling?        (nil? component)
-        lib-exists?         (and (not local-component?)
-                                 (some? (get workspace-libraries library-id)))
 
         on-menu-click
         (mf/use-fn
@@ -347,37 +347,10 @@
         (mf/use-callback
          #(swap! state* assoc :menu-open false))
 
-        do-detach-component
-        #(st/emit! (dwl/detach-component id))
+        menu-entries         (cmm/generate-components-menu-entries shapes components-v2)
+        show-menu?           (seq menu-entries)]
 
-        do-reset-component
-        #(st/emit! (dwl/reset-component id))
-
-        do-update-component
-        #(st/emit! (dwl/update-component-sync id library-id))
-
-        do-restore-component
-        #(st/emit! (dwl/restore-component library-id component-id)
-                   (dw/go-to-main-instance nil component-id))
-
-        do-update-remote-component
-        #(st/emit! (modal/show
-                    {:type :confirm
-                     :message ""
-                     :title (tr "modals.update-remote-component.message")
-                     :hint (tr "modals.update-remote-component.hint")
-                     :cancel-label (tr "modals.update-remote-component.cancel")
-                     :accept-label (tr "modals.update-remote-component.accept")
-                     :accept-style :primary
-                     :on-accept do-update-component}))
-
-        do-show-component #(st/emit! (dw/go-to-component component-id))
-        do-show-in-assets #(st/emit! (if components-v2
-                                       (dw/show-component-in-assets component-id)
-                                       (dw/go-to-component component-id)))
-        do-create-annotation #(st/emit! (dw/set-annotations-id-for-create id))
-        do-navigate-component-file #(st/emit! (dwl/nav-to-component-file library-id))]
-    (when show?
+    (when (seq shapes)
       (if new-css-system
         [:div {:class (stl/css :element-set)}
          [:div {:class (stl/css :element-title)}
@@ -403,94 +376,12 @@
                         :on-click on-menu-click}
                i/menu-refactor]
 
-              [:& dropdown {:show menu-open?
-                            :on-close on-menu-close}
-               [:ul {:class (stl/css :custom-select-dropdown)}
-                (if main-component?
-                  [:*
-                   [:li {:class (stl/css :dropdown-element)
-                         :on-click do-show-in-assets}
-                    [:span {:class (stl/css :dropdown-label)}
-                     (tr "workspace.shape.menu.show-in-assets")]]
-                   (when (and components-v2 local-component? lacks-annotation?)
-                     [:li {:class (stl/css :dropdown-element)
-                           :on-click do-create-annotation}
-                      [:span {:class (stl/css :dropdown-label)}
-                       (tr "workspace.shape.menu.create-annotation")]])]
-
-                  (if local-component?
-                    (if is-dangling?
-                      [:*
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-detach-component}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.detach-instance")]]
-                       (when can-update-main?
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-reset-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.reset-overrides")]])
-                       (when components-v2
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-restore-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.restore-main")]])]
-
-                      [:*
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-detach-component}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.detach-instance")]]
-                       (when can-update-main?
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-reset-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.reset-overrides")]]
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-update-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.update-main")]])
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-show-component}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.show-main")]]])
-                    (if is-dangling?
-                      [:*
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-detach-component}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.detach-instance")]]
-                       (when can-update-main?
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-reset-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.reset-overrides")]])
-
-                       (when (and components-v2 lib-exists?)
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-restore-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.restore-main")]])]
-                      [:*
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-detach-component}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.detach-instance")]]
-                       (when can-update-main?
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-reset-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.reset-overrides")]]
-                         [:li {:class (stl/css :dropdown-element)
-                               :on-click do-update-remote-component}
-                          [:span {:class (stl/css :dropdown-label)}
-                           (tr "workspace.shape.menu.update-main")]])
-                       [:li {:class (stl/css :dropdown-element)
-                             :on-click do-navigate-component-file}
-                        [:span {:class (stl/css :dropdown-label)}
-                         (tr "workspace.shape.menu.go-main")]]])))]]]]
-            (when components-v2
-              [:& component-annotation {:id id :values values :shape shape :component component}])])]
+              [:& component-ctx-menu {:show menu-open?
+                                      :on-close on-menu-close
+                                      :menu-entries menu-entries
+                                      :type :dropdown}]]]
+            (when (and (not multi) components-v2)
+              [:& component-annotation {:id id :shape shape :component component}])])]
 
         [:div.element-set
          [:div.element-set-title {:class (stl/css-case :back swap-opened?)
@@ -500,63 +391,37 @@
              [:span
               i/arrow-slide])
            [:span (tr "workspace.options.component")]]
-          [:span (if main-instance?
-                   (tr "workspace.options.component.main")
-                   (tr "workspace.options.component.copy"))]]
+          (when-not multi
+            [:span (if main-instance?
+                     (tr "workspace.options.component.main")
+                     (tr "workspace.options.component.copy"))])]
          [:div.element-set-content
           [:div.row-flex.component-row
            {:class (stl/css-case :copy can-swap?)
-            :on-click #(when can-swap? (st/emit! (dwsp/open-specialized-panel :component-swap [shape])))}
-           (if main-instance?
-             i/component
-             i/component-copy)
-           [:div.component-name shape-name]
-           [:div.row-actions
-            {:on-click on-menu-click}
-            i/actions
-                  ;; WARNING: this menu is the same as the shape context menu.
-                  ;;          If you change it, you must change equally the file
-                  ;;          app/main/ui/workspace/context_menu.cljs
-            [:& context-menu {:on-close on-menu-close
-                              :show menu-open?
-                              :options (if main-component?
-                                         [[(tr "workspace.shape.menu.show-in-assets") do-show-in-assets]
-                                          (when (and components-v2 local-component? lacks-annotation?)
-                                            [(tr "workspace.shape.menu.create-annotation") do-create-annotation])]
-                                         (if local-component?
-                                           (if is-dangling?
-                                             [[(tr "workspace.shape.menu.detach-instance") do-detach-component]
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.reset-overrides") do-reset-component])
-                                              (when components-v2
-                                                [(tr "workspace.shape.menu.restore-main") do-restore-component])]
+            :on-click #(when can-swap? (st/emit! (dwsp/open-specialized-panel :component-swap shapes)))}
+           (if multi
+             i/component-copy
+             (if main-instance?
+               i/component
+               i/component-copy))
+           [:div.component-name (if multi
+                                  (tr "settings.multiple")
+                                  shape-name)]
+           (when show-menu?
+             [:div.row-actions
+              {:on-click on-menu-click}
+              i/actions
+              [:& component-ctx-menu {:on-close on-menu-close
+                                      :show menu-open?
+                                      :menu-entries menu-entries
+                                      :type :context-menu}]])
 
-                                             [[(tr "workspace.shape.menu.detach-instance") do-detach-component]
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.reset-overrides") do-reset-component])
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.update-main") do-update-component])
-                                              [(tr "workspace.shape.menu.show-main") do-show-component]])
-
-                                           (if is-dangling?
-                                             [[(tr "workspace.shape.menu.detach-instance") do-detach-component]
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.reset-overrides") do-reset-component])
-                                              (when (and components-v2 lib-exists?)
-                                                [(tr "workspace.shape.menu.restore-main") do-restore-component])]
-                                             [[(tr "workspace.shape.menu.detach-instance") do-detach-component]
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.reset-overrides") do-reset-component])
-                                              (when can-update-main?
-                                                [(tr "workspace.shape.menu.update-main") do-update-remote-component])
-                                              [(tr "workspace.shape.menu.go-main") do-navigate-component-file]])))}]]
-
-           (when can-swap?
+           (when (and can-swap? (not multi))
              [:div.component-parent-name
               (cph/merge-path-item (:path component) (:name component))])]
 
           (when swap-opened?
-            [:& component-swap {:shapes [shape]}])
+            [:& component-swap {:shapes shapes}])
 
-          (when (and (not swap-opened?) components-v2)
-            [:& component-annotation {:id id :values values :shape shape :component component}])]]))))
+          (when (and (not swap-opened?) (not multi) components-v2)
+            [:& component-annotation {:id id :shape shape :component component}])]]))))
