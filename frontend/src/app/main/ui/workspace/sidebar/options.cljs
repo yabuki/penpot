@@ -115,7 +115,8 @@
           [:& bool-options]
 
           (cond
-            (d/not-empty? selected-cells)
+            ;;(d/not-empty? selected-cells)
+            false
             [:& grid-cell/options
              {:shape (get objects edition)
               :cells selected-cells}]
@@ -125,7 +126,7 @@
              {:ids [edition]
               :values (get objects edition)}]
 
-            (not (nil? sp-panel))
+            sp-panel
             [:& specialized-panel {:panel sp-panel}]
 
             (d/not-empty? drawing)

@@ -6,6 +6,16 @@
 
 @import "refactor/common-refactor.scss";
 .element-set {
+  .element-title {
+    @include titleTipography;
+    display: flex;
+    align-items: center;
+    padding-right: $s-16;
+
+    .element-subtitle {
+      padding-bottom: $s-2;
+    }
+  }
   .element-content {
     display: flex;
     flex-direction: column;
@@ -26,11 +36,15 @@
           svg {
             @extend .button-icon;
             stroke: var(--icon-foreground);
+            fill: var(--icon-foreground);
           }
         }
         .component-name {
           @include titleTipography;
           flex-grow: 1;
+        }
+        &.copy {
+          cursor: pointer;
         }
       }
       .component-actions {

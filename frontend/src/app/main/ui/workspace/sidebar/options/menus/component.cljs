@@ -275,7 +275,7 @@
              (when ^boolean enter? (dom/blur! node))
              (when ^boolean esc?   (dom/blur! node)))))]
 
-       [:div.component-swap
+       [:div.component-swap ;; {:class (stl/css :component-swap)}
         [:div.element-set-title
          [:span (tr "workspace.options.component.swap")]]
         [:div.component-swap-content
@@ -314,7 +314,7 @@
                     loop?      (or (contains? parent-components (:main-instance-id item))
                                    (contains? parent-components (:id item)))]
                 [:div.component-item
-                 {:class (stl/css-case :disabled loop?)
+                 {:class (stl/css-case :disabled loop?) ;; :component-item true
                   :key (:id item)
                   :on-click #(when-not loop?
                                (st/emit!
@@ -367,6 +367,7 @@
         shapes              (filter ctk/instance-head? shapes)
         multi               (> (count shapes) 1)
         copies              (filter ctk/in-component-copy? shapes)
+        all-main-instances? (= 0 (count copies))
         can-swap?           (and components-v2 (seq copies))
 
         ;; For when it's only one shape
@@ -396,23 +397,34 @@
     (when (seq shapes)
       (if new-css-system
         [:div {:class (stl/css :element-set)}
+
          [:div {:class (stl/css :element-title)}
           [:& title-bar {:collapsable? true
                          :collapsed?   (not open?)
                          :on-collapsed toggle-content
                          :title        (tr "workspace.options.component")
-                         :class        (stl/css :title-spacing-component)}]]
+                         :class        (stl/css :title-spacing-component)}]
+
+          (when-not multi
+            [:span {:class (stl/css :element-subtitle)}
+             (if main-instance?
+               (tr "workspace.options.component.main")
+               (tr "workspace.options.component.copy"))])]
 
          (when open?
            [:div {:class (stl/css :element-content)}
             [:div {:class (stl/css :component-wrapper)}
-             [:div {:class (stl/css :component-name-wrapper)}
+             [:div {:class (stl/css-case :component-name-wrapper true :copy can-swap?)
+                    :on-click #(when can-swap? (st/emit! (dwsp/open-specialized-panel :component-swap shapes)))}
               [:span {:class (stl/css :component-icon)}
-               (if main-instance?
-                 i/component-refactor
-                 i/copy-refactor)]
+               (if all-main-instances?
+                 i/component
+                 i/component-copy)]
 
-              [:div {:class (stl/css :component-name)} shape-name]]
+
+              [:div {:class (stl/css :component-name)} (if multi
+                                                         (tr "settings.multiple")
+                                                         shape-name)]]
 
              [:div {:class (stl/css :component-actions)}
               [:button {:class (stl/css :menu-btn)
@@ -442,11 +454,9 @@
           [:div.row-flex.component-row
            {:class (stl/css-case :copy can-swap?)
             :on-click #(when can-swap? (st/emit! (dwsp/open-specialized-panel :component-swap shapes)))}
-           (if multi
-             i/component-copy
-             (if main-instance?
-               i/component
-               i/component-copy))
+           (if all-main-instances?
+             i/component
+             i/component-copy)
            [:div.component-name (if multi
                                   (tr "settings.multiple")
                                   shape-name)]
