@@ -586,15 +586,17 @@
         (rx/of (dch/commit-changes changes))))))
 
 (defn nav-to-component-file
-  [file-id]
+  [file-id page-id]
   (dm/assert! (uuid? file-id))
+  (dm/assert! (or (nil? page-id) (uuid? page-id)))
   (ptk/reify ::nav-to-component-file
     ptk/WatchEvent
     (watch [_ state _]
       (let [file         (get-in state [:workspace-libraries file-id])
             path-params  {:project-id (:project-id file)
                           :file-id (:id file)}
-            query-params {:page-id (first (get-in file [:data :pages]))
+            query-params {:page-id (or page-id
+                                       (first (get-in file [:data :pages])))
                           :layout :assets}]
         (rx/of (rt/nav-new-window* {:rname :workspace
                                     :path-params path-params
