@@ -58,15 +58,30 @@
         loading?    (not-any? (partial contains? embed) uris)
 
         pat-props   #js {:patternUnits "userSpaceOnUse"
+                        ;;  :preserveAspectRatio "xMidYMid slice"
+                        ;;  :transform-origin "center center"
+                        ;;  :transform-box "fill-box"
                          :x x
                          :y y
                          :width width
                          :height height
                          :data-loading loading?}
+        
+        ;; {;;  :patternUnits "userSpaceOnUse"
+        ;;  :patternContentUnits "objectBoundingBox"
+        ;;  :preserveAspectRatio "xMidYMid slice"
+        ;;  :viewBox (dm/str "0 0 1 1")
+        ;;  :transform-origin "center center"
+        ;;  :transform-box "fill-box"
+        ;;                 ;;  :x x
+        ;;                 ;;  :y y
+        ;;  :width "100%"
+        ;;  :height "100%"
+        ;;  :data-loading loading?}
 
         pat-props   (if (= :path type)
-                     (obj/set! pat-props "patternTransform" transform)
-                     pat-props)]
+                      (obj/set! pat-props "patternTransform" transform)
+                      pat-props)]
 
     (for [[shape-index shape] (d/enumerate (or (:position-data shape) [shape]))]
       [:* {:key (dm/str shape-index)}
@@ -102,6 +117,8 @@
                                         :preserveAspectRatio "xMidYMid slice"
                                         :width width
                                         :height height
+                                        ;; :width 1
+                                        ;; :height 1
                                         :key (dm/str fill-index)
                                         :opacity (:fill-opacity value)}]
                    [:> :image image-props])

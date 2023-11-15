@@ -72,9 +72,11 @@
            (dom/query (dm/str "#frame-title-" id)))]
 
         :else
-        [shape-node
-         (when (dbg/enabled? :shape-titles)
-           (dom/query (dm/str "#frame-title-" id)))]))))
+        (d/concat-vec
+          (dom/query-all shape-node "pattern")
+          [shape-node
+           (when (dbg/enabled? :shape-titles)
+             (dom/query (dm/str "#frame-title-" id)))])))))
 
 (defn transform-region!
   [node modifiers]
@@ -157,18 +159,80 @@
               (override-transform-att! node "transform" mtx))
 
             (or (= (dom/get-tag-name node) "mask")
-                (= (dom/get-tag-name node) "filter"))
+              (= (dom/get-tag-name node) "filter"))
             (transform-region! node modifiers)
 
             (or (= (dom/get-tag-name node) "linearGradient")
-                (= (dom/get-tag-name node) "radialGradient"))
+              (= (dom/get-tag-name node) "radialGradient"))
             (set-transform-att! node "gradientTransform" transform)
 
             (= (dom/get-tag-name node) "pattern")
-            (set-transform-att! node "patternTransform" transform)
+            (let [shape' (gsh/transform-shape shape modifiers)
+                  kk
+                  (gmt/transform-in
+                    (gpt/transform (gsh/shape->center shape') (:transform-inverse shape'))
+                    (gmt/inverse (gmt/multiply transform (:transform shape))))
+
+                  #_kk
+                  #_(gmt/inverse (gmt/multiply transform (:transform shape)))
+
+                  pttrn
+                  (-> (gmt/matrix)
+                      (gmt/multiply kk)
+                      (gmt/multiply (:transform shape')))
+
+                  ;; pttrn
+                  ;; (-> (gmt/matrix)
+                  ;;     #_(gmt/multiply (:transform shape'))
+                  ;;     (gmt/multiply (gmt/inverse transform)))
+                  
+                  distance (gpt/distance (-> shape' :points first) (-> shape :points first))
+
+                  p (-> (gpt/point (:x shape) (:y shape))
+                        (gpt/transform (:transform shape'))
+                        #_(gpt/transform (:transform shape')))
+                  
+                  
+                  pttrn
+                  (-> (gmt/matrix)
+                      
+                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point (:x shape) (:y shape))))
+                      
+                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gsh/shape->center shape')))
+                      
+                      (gmt/multiply (gmt/inverse (:transform shape')))
+                      (gmt/multiply (gmt/inverse transform))
+                      
+                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point 0 0)))
+                      
+                      )
+
+                  
+                  
+
+                  ]
+              
+              
+              (set-transform-att! node "patternTransform" pttrn)
+              (println "(:rotation shape')" (:x shape') (:y shape'))
+              
+              ;; (dom/set-attribute! node "patternTransform" (dm/str pttrn " rotate(" (:rotation shape') " " (:x (gsh/shape->center shape')) " " (:y (gsh/shape->center shape'))")" ))
+              
+              
+              (dom/set-attribute! node "x" (:x shape'))
+              (dom/set-attribute! node "y" (:y shape'))
+              (dom/set-attribute! node "width" (:width shape'))
+              (dom/set-attribute! node "height" (:height shape'))
+              (doseq [image-node (dom/query-all node "image")]
+                (dom/set-attribute! image-node "width" (:width shape'))
+                (dom/set-attribute! image-node "height" (:height shape')))
+              
+              )
 
             (and (some? transform) (some? node))
-            (set-transform-att! node "transform" transform)))))))
+            (set-transform-att! node "transform" transform)
+            #_(doseq [fill-node (dom/query-all node ".fills")]
+                (set-transform-att! fill-node "transform" transform))))))))
 
 (defn remove-transform!
   [base-node shapes]
@@ -201,10 +265,16 @@
             (dom/remove-attribute! node "data-old-transform")
 
             :else
-            (let [old-transform (dom/get-attribute node "data-old-transform")]
+            (let [old-transform (dom/get-attribute node "data-old-transform")
+                  old-patternTransform (dom/get-attribute node "data-old-patternTransform")]
               (if (some? old-transform)
                 (dom/remove-attribute! node "data-old-transform")
-                (dom/remove-attribute! node "transform")))))))))
+                (dom/remove-attribute! node "transform"))
+              (if (some? old-patternTransform)
+                (dom/remove-attribute! node "old-patternTransform")
+                (dom/remove-attribute! node "patternTransform"))
+              (doseq [fill-node (dom/query-all node ".fills")]
+                (dom/remove-attribute! fill-node "transform")))))))))
 
 (defn adapt-text-modifiers
   [modifiers shape]
