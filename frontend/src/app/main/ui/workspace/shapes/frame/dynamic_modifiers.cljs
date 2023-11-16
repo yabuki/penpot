@@ -172,53 +172,64 @@
                   (gmt/transform-in
                     (gpt/transform (gsh/shape->center shape') (:transform-inverse shape'))
                     (gmt/inverse (gmt/multiply transform (:transform shape))))
-
+                  
                   #_kk
                   #_(gmt/inverse (gmt/multiply transform (:transform shape)))
 
                   pttrn
                   (-> (gmt/matrix)
                       (gmt/multiply kk)
-                      (gmt/multiply (:transform shape')))
+                      #_(gmt/multiply (:transform shape')))
 
                   ;; pttrn
                   ;; (-> (gmt/matrix)
                   ;;     #_(gmt/multiply (:transform shape'))
                   ;;     (gmt/multiply (gmt/inverse transform)))
                   
+                  pttrn (gmt/transform-in (gpt/point (:x shape') (:y shape')) pttrn)
+                  
+                  
                   distance (gpt/distance (-> shape' :points first) (-> shape :points first))
 
                   p (-> (gpt/point (:x shape) (:y shape))
                         (gpt/transform (:transform shape'))
                         #_(gpt/transform (:transform shape')))
-                  
-                  
-                  pttrn
-                  (-> (gmt/matrix)
-                      
-                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point (:x shape) (:y shape))))
-                      
-                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gsh/shape->center shape')))
-                      
-                      (gmt/multiply (gmt/inverse (:transform shape')))
-                      (gmt/multiply (gmt/inverse transform))
-                      
-                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point 0 0)))
-                      
-                      )
 
-                  
-                  
+                  asd (gpt/rotate (gpt/point (:x shape') (:y shape')) (gsh/shape->center shape') (:rotation shape'))
+                  qwe (gpt/rotate (gpt/point (+ (:x shape') (:width shape')) (+ (:y shape') (:height shape'))) (gsh/shape->center shape') (:rotation shape'))
 
-                  ]
-              
-              
+
+                  #_pttrn
+                  #_(-> (gmt/matrix)
+                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point (:x shape) (:y shape))))                    
+                        
+
+
+
+
+
+
+                        (gmt/multiply (gmt/rotate-matrix (:rotation shape') (gpt/point (- (:x shape') (:x shape)) (- (:y shape') (:y shape)))))
+                        (gmt/multiply (gmt/translate-matrix (gpt/point (- (:x shape') (:x shape)) (- (:y shape') (:y shape)))))
+
+                      ;; (gmt/multiply (gmt/scale-matrix (gpt/point (/ (:width shape') (:width shape)) (/ (:height shape') (:height shape))) (gpt/point (- (:x shape') (:x shape)) (- (:y shape') (:y shape)))))                      
+                        
+
+                      ;; (gmt/multiply (gmt/rotate-matrix (:rotation shape) (gsh/shape->center shape)))
+                        
+                        (gmt/multiply (gmt/inverse (:transform shape')))
+                        (gmt/multiply (gmt/inverse transform)))]
+
+
               (set-transform-att! node "patternTransform" pttrn)
-              (println "(:rotation shape')" (:x shape') (:y shape'))
-              
-              ;; (dom/set-attribute! node "patternTransform" (dm/str pttrn " rotate(" (:rotation shape') " " (:x (gsh/shape->center shape')) " " (:y (gsh/shape->center shape'))")" ))
-              
-              
+              #_(println "(:rotation shape')" (:x shape') (:y shape')   (gpt/rotate (gpt/point (:x shape') (:y shape')) (gsh/shape->center shape') (:rotation shape')))
+
+              (println "w" (:x shape') (:x asd))
+              (println "w" (:y shape') (:y asd))
+
+              #_(dom/set-attribute! node "patternTransform" (dm/str pttrn " rotate(" (:rotation shape') " " (:x (gsh/shape->center shape')) " " (:y (gsh/shape->center shape'))")"))
+
+
               (dom/set-attribute! node "x" (:x shape'))
               (dom/set-attribute! node "y" (:y shape'))
               (dom/set-attribute! node "width" (:width shape'))
@@ -226,7 +237,8 @@
               (doseq [image-node (dom/query-all node "image")]
                 (dom/set-attribute! image-node "width" (:width shape'))
                 (dom/set-attribute! image-node "height" (:height shape')))
-              
+
+
               )
 
             (and (some? transform) (some? node))
