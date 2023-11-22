@@ -4,7 +4,7 @@
 
 (def ^:export default
   #js {:title "Primary Button"
-    :component  c/primary-button})
+       :component  c/primary-button})
 
 ;; (defn ^:export primary-button []
 ;;   [:& c/primary-button {} "Primary button" ])

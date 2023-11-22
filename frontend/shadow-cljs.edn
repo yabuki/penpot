@@ -80,6 +80,10 @@
    :modules
    {:primary-button-story {:exports {default app.main.ui.components.buttons.primary-button-stories/default} }}
 
+   :js-options
+   {:js-provider :import
+    }
+   
    :compiler-options
    {:output-feature-set :es2020
     :output-wrapper false
