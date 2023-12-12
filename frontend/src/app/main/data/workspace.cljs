@@ -58,7 +58,6 @@
    [app.main.data.workspace.notifications :as dwn]
    [app.main.data.workspace.path :as dwdp]
    [app.main.data.workspace.path.shapes-to-path :as dwps]
-   [app.main.data.workspace.persistence :as dwp]
    [app.main.data.workspace.selection :as dws]
    [app.main.data.workspace.shape-layout :as dwsl]
    [app.main.data.workspace.shapes :as dwsh]
@@ -1436,7 +1435,7 @@
                        (assoc :section section)
                        (some? frame-id)
                        (assoc :frame-id frame-id))]
-         (rx/of ::dwp/force-persist
+         (rx/of ::dp/force-persist
                 (rt/nav-new-window* {:rname :viewer
                                      :path-params pparams
                                      :query-params qparams
@@ -1449,7 +1448,7 @@
      ptk/WatchEvent
      (watch [_ state _]
        (when-let [team-id (or team-id (:current-team-id state))]
-         (rx/of ::dwp/force-persist
+         (rx/of ::dp/force-persist
                 (rt/nav :dashboard-projects {:team-id team-id})))))))
 
 (defn go-to-dashboard-fonts
@@ -1458,7 +1457,7 @@
     ptk/WatchEvent
     (watch [_ state _]
       (let [team-id (:current-team-id state)]
-        (rx/of ::dwp/force-persist
+        (rx/of ::dp/force-persist
                (rt/nav :dashboard-fonts {:team-id team-id}))))))
 
 

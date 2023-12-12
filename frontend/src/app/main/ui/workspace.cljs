@@ -10,10 +10,9 @@
    [app.common.data.macros :as dm]
    [app.main.data.messages :as msg]
    [app.main.data.modal :as modal]
-   [app.main.data.persistence :as dp]
+   [app.main.data.persistence :as dps]
    [app.main.data.workspace :as dw]
    [app.main.data.workspace.colors :as dc]
-   [app.main.data.workspace.persistence :as dwp]
    [app.main.features :as features]
    [app.main.refs :as refs]
    [app.main.store :as st]
@@ -180,7 +179,7 @@
         background-color (:background-color wglobal)]
 
     (mf/with-effect []
-      (st/emit! (dp/initialize-persistence)))
+      (st/emit! (dps/initialize-persistence)))
 
     ;; Setting the layout preset by its name
     (mf/with-effect [layout-name]
@@ -193,8 +192,8 @@
     (mf/with-effect [project-id file-id]
       (st/emit! (dw/initialize-file project-id file-id))
       (fn []
-        ;; FIXME
-        (st/emit! ::dwp/force-persist
+        ;; FIXME: not implemented !!!!!
+        (st/emit! ::dps/force-persist
                   (dc/stop-picker)
                   (modal/hide)
                   msg/hide
