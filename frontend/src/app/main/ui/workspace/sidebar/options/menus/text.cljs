@@ -10,7 +10,7 @@
    [app.common.data :as d]
    [app.common.text :as txt]
    [app.common.uuid :as uuid]
-   [app.main.data.workspace.changes :as dch]
+   [app.main.data.workspace.shapes :as dwsh]
    [app.main.data.workspace.libraries :as dwl]
    [app.main.data.workspace.shortcuts :as sc]
    [app.main.data.workspace.texts :as dwt]
@@ -127,8 +127,8 @@
                  grow-type (keyword value)]
              (st/emit!
               (dwu/start-undo-transaction uid)
-              (dch/update-shapes ids #(assoc % :grow-type grow-type)))
-            ;; We asynchronously commit so every sychronous event is resolved first and inside the transaction
+              (dwsh/update-shapes ids #(assoc % :grow-type grow-type)))
+             ;; We asynchronously commit so every sychronous event is resolved first and inside the transaction
              (ts/schedule #(st/emit! (dwu/commit-undo-transaction uid))))
            (when (some? on-blur) (on-blur))))]
 

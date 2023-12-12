@@ -13,7 +13,7 @@
    [app.common.schema :as sm]
    [app.common.types.shape-tree :as ctst]
    [app.main.data.comments :as dcm]
-   [app.main.data.workspace.changes :as dch]
+   [app.main.data.changes :as dch]
    [app.main.data.workspace.common :as dwco]
    [app.main.data.workspace.drawing :as dwd]
    [app.main.data.workspace.state-helpers :as wsh]
