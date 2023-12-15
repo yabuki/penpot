@@ -334,9 +334,12 @@
   [{:keys [file navigate? origin library-view?] :as props}]
   (let [new-css-system (mf/use-ctx ctx/new-css-system)
         file-id         (:id file)
-        local           (mf/use-state {:menu-open false
-                                       :menu-pos nil
-                                       :edition false})
+        open            (mf/use-state false)
+        position        (mf/use-state nil)
+        edition         (mf/use-state false)
+        ;; local           (mf/use-state {:menu-open false
+        ;;                               :menu-pos nil
+        ;;                               :edition false})
         selected-files  (mf/deref refs/dashboard-selected-files)
         dashboard-local (mf/deref refs/dashboard-local)
         node-ref        (mf/use-ref)
@@ -345,13 +348,12 @@
         selected?        (contains? selected-files file-id)
 
         on-menu-close
-        (mf/use-fn
-         #(swap! local assoc :menu-open false))
+        (mf/use-fn #(reset! open false))
 
         on-select
         (fn [event]
           (when (and (or (not selected?) (> (count selected-files) 1))
-                     (not (:menu-open @local)))
+                     (not @open))
             (dom/stop-propagation event)
             (let [shift? (kbd/shift? event)]
               (when-not shift?
@@ -401,6 +403,9 @@
         (mf/use-fn
          (mf/deps file selected?)
          (fn [event]
+           (js/console.log "clickiti clack!")
+           #_(js-debugger)
+           (dom/stop-propagation event)
            (dom/prevent-default event)
            (when-not selected?
              (when-not (kbd/shift? event)
@@ -408,14 +413,16 @@
              (st/emit! (dd/toggle-file-select file)))
 
            (let [client-position (dom/get-client-position event)
-                 position (if (and (nil? (:y client-position)) (nil? (:x client-position)))
+                 menu-position (if (and (nil? (:y client-position)) (nil? (:x client-position)))
                             (let [target-element (dom/get-target event)
                                   points         (dom/get-bounding-rect target-element)
                                   y              (:top points)
                                   x              (:left points)]
                               (gpt/point x y))
                             client-position)]
-             (swap! local assoc
+             (reset! open true)
+             (reset! position menu-position)
+             #_(swap! local assoc
                     :menu-open true
                     :menu-pos position))))
 
@@ -426,14 +433,17 @@
            (let [name (str/trim name)]
              (when (not= name "")
                (st/emit! (dd/rename-file (assoc file :name name)))))
-           (swap! local assoc :edition false)))
+           (reset! edition false)
+           #_(swap! local assoc :edition false)))
 
         on-edit
         (mf/use-fn
          (mf/deps file)
          (fn [event]
            (dom/stop-propagation event)
-           (swap! local assoc
+           (reset! edition true)
+           (reset! open false)
+           #_(swap! local assoc
                   :edition true
                   :menu-open false)))
 
@@ -449,9 +459,9 @@
                (on-select event)) ;; TODO Fix this
              )))]
 
-    (mf/with-effect [selected? local]
-      (when (and (not selected?) (:menu-open @local))
-        (swap! local assoc :menu-open false)))
+    #_(mf/with-effect [selected? open]
+      (when (and (not selected?) @open)
+        (reset! open false)))
 
     (if new-css-system
       [:li
@@ -482,13 +492,13 @@
 
         [:div {:class (stl/css :info-wrapper)}
          [:div {:class (stl/css :item-info)}
-          (if (:edition @local)
+          (if @edition
             [:& inline-edition {:content (:name file)
                                 :on-end edit}]
             [:h3 (:name file)])
           [:& grid-item-metadata {:modified-at (:modified-at file)}]]
 
-         [:div {:class (stl/css-case :project-th-actions true :force-display (:menu-open @local))}
+         [:div {:class (stl/css-case :project-th-actions true :force-display @open)}
           [:div
            {:class (stl/css :project-th-icon :menu)
             :tab-index "0"
@@ -502,9 +512,9 @@
            i/actions
            (when selected?
              [:& file-menu {:files (vals selected-files)
-                            :show? (:menu-open @local)
-                            :left (+ 24 (:x (:menu-pos @local)))
-                            :top (:y (:menu-pos @local))
+                            :show? @open
+                            :left (+ 24 (:x @position))
+                            :top (:y @position)
                             :navigate? navigate?
                             :on-edit on-edit
                             :on-menu-close on-menu-close
@@ -546,13 +556,13 @@
           [:div.item-badge i/library])
         [:div.info-wrapper
          [:div.item-info
-          (if (:edition @local)
+          (if @edition
             [:& inline-edition {:content (:name file)
                                 :on-end edit}]
             [:h3 (:name file)])
           [:& grid-item-metadata {:modified-at (:modified-at file)}]]
          [:div.project-th-actions {:class (dom/classnames
-                                           :force-display (:menu-open @local))}
+                                           :force-display @open)}
           [:div.project-th-icon.menu
            {:tab-index "0"
             :ref menu-ref
@@ -565,9 +575,9 @@
            i/actions
            (when selected?
              [:& file-menu {:files (vals selected-files)
-                            :show? (:menu-open @local)
-                            :left (+ 24 (:x (:menu-pos @local)))
-                            :top (:y (:menu-pos @local))
+                            :show? @open
+                            :left (+ 24 (:x @position))
+                            :top (:y @position)
                             :navigate? navigate?
                             :on-edit on-edit
                             :on-menu-close on-menu-close
