@@ -16,7 +16,6 @@
    [app.common.schema :as sm]
    [app.common.types.shape-tree :as ctst]
    [app.common.uuid :as uuid]
-   [app.main.data.workspace.undo :as dwu]
    [app.main.features :as features]
    [app.main.store :as st]
    [app.main.worker :as uw]

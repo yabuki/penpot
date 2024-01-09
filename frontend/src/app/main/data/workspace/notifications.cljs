@@ -238,6 +238,7 @@
         ;; file-revn
         (rx/of (dch/commit {:file-id file-id
                             :file-revn revn
+                            :save-undo? false
                             :source :remote
                             :redo-changes changes
                             :undo-changes []}))))))

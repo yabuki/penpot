@@ -231,7 +231,6 @@
              (->> stream
                   (rx/filter #(= % ::force-persist))))]
 
-
         (rx/merge
          (->> commits-s
               (rx/debounce 200)

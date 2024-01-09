@@ -17,9 +17,9 @@
    [app.main.data.shortcuts :as scd]
    [app.main.data.workspace :as dw]
    [app.main.data.workspace.colors :as dc]
-   [app.main.data.workspace.common :as dwc]
    [app.main.data.workspace.libraries :as dwl]
    [app.main.data.workspace.shortcuts :as sc]
+   [app.main.data.workspace.undo :as dwu]
    [app.main.refs :as refs]
    [app.main.store :as st]
    [app.main.ui.components.dropdown-menu :refer [dropdown-menu dropdown-menu-item*]]
@@ -392,8 +392,8 @@
    ::mf/wrap [mf/memo]}
   [{:keys [on-close]}]
   (let [select-all (mf/use-fn #(st/emit! (dw/select-all)))
-        undo       (mf/use-fn #(st/emit! dwc/undo))
-        redo       (mf/use-fn #(st/emit! dwc/redo))]
+        undo       (mf/use-fn #(st/emit! dwu/undo))
+        redo       (mf/use-fn #(st/emit! dwu/redo))]
     [:& dropdown-menu {:show true
                        :list-class (stl/css-case :sub-menu true
                                                  :edit true)
