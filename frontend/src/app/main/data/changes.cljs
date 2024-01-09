@@ -71,7 +71,7 @@
   (let [commit-id (or commit-id (uuid/next))
         commit    {:id commit-id
                    :created-at (dt/now)
-                   :source (d/nilv :local source)
+                   :source (d/nilv source :local)
                    :origin (ptk/type origin)
                    :file-id file-id
                    :file-revn file-revn

@@ -38,7 +38,9 @@
     ptk/UpdateEvent
     (update [_ state]
       (update state :persistence (fn [pstate]
-                                   (log/trc :hint "update-status" :status status :prev-status (:status pstate))
+                                   (log/trc :hint "update-status"
+                                            :from (:status pstate)
+                                            :to status)
                                    (let [status (if (and (= status :pending)
                                                          (= (:status pstate) :saving))
                                                   (:status pstate)
@@ -186,24 +188,24 @@
                        (assoc :changes rchg)))))))
 
 
-(defn apply-pending-changes
-  []
-  (prn "apply-pending-changes")
-  (ptk/reify ::apply-pending-changes
-    ptk/WatchEvent
-    (watch [_ state stream]
-      (let [{:keys [status index queue]} (get state :persistence)]
-        (when (= :error status)
-          (prn "apply-pending-changes" (count queue))
-          (->> (rx/from (seq queue))
-               (rx/map (d/getf index))
-               (rx/map (fn [{:keys [id] :as commit}]
-                         (let [commit (-> commit
-                                          (dissoc :id)
-                                          (assoc :commit-id id)
-                                          (assoc :source :pending))]
-                           (log/dbg :hint "replaying commit" :commit-id (dm/str id))
-                           (dch/commit commit))))))))))
+;; (defn apply-pending-changes
+;;   []
+;;   (prn "apply-pending-changes")
+;;   (ptk/reify ::apply-pending-changes
+;;     ptk/WatchEvent
+;;     (watch [_ state stream]
+;;       (let [{:keys [status index queue]} (get state :persistence)]
+;;         (when (= :error status)
+;;           (prn "apply-pending-changes" (count queue))
+;;           (->> (rx/from (seq queue))
+;;                (rx/map (d/getf index))
+;;                (rx/map (fn [{:keys [id] :as commit}]
+;;                          (let [commit (-> commit
+;;                                           (dissoc :id)
+;;                                           (assoc :commit-id id)
+;;                                           (assoc :source :pending))]
+;;                            (log/dbg :hint "replaying commit" :commit-id (dm/str id))
+;;                            (dch/commit commit))))))))))
 
 (defn initialize-persistence
   []
@@ -222,9 +224,12 @@
                  (rx/share))
 
             notifier-s
-            (->> commits-s
-                 (rx/debounce 3000)
-                 (rx/tap #(log/trc :hint "persistence beat")))]
+            (rx/merge
+             (->> commits-s
+                  (rx/debounce 3000)
+                  (rx/tap #(log/trc :hint "persistence beat")))
+             (->> stream
+                  (rx/filter #(= % ::force-persist))))]
 
 
         (rx/merge

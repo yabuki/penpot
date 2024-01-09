@@ -82,7 +82,8 @@
                              ;; position changes.
                              (->> stream
                                   (rx/filter mse/pointer-event?)
-                                  (rx/pipe (rxs/throttle 100))
+                                  (rx/filter #(= :viewport (mse/get-pointer-source %)))
+                                  (rx/pipe (rxs/throttle 50))
                                   (rx/map #(handle-pointer-send file-id (:pt %)))))
 
                             (rx/take-until stoper))]

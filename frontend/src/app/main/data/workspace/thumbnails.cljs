@@ -29,7 +29,7 @@
    [cuerdas.core :as str]
    [potok.v2.core :as ptk]))
 
-(l/set-level! :trace)
+(l/set-level! :warn)
 
 (declare update-thumbnail)
 
