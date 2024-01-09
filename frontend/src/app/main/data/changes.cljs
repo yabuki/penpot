@@ -57,9 +57,15 @@
                                        :changes changes})))
              (rx/ignore))))))
 
+(defn- get-pending-commits
+  [{:keys [persistence]}]
+  (->> (:queue persistence)
+       (map (d/getf (:index persistence)))
+       (not-empty)))
+
 (defn commit
   "Create a commit event instance"
-  [{:keys [commit-id redo-changes undo-changes origin save-undo? #_affected-frames
+  [{:keys [commit-id redo-changes undo-changes origin save-undo? features
            file-id file-revn page-id undo-group tags stack-undo? source]}]
 
   (dm/assert!
@@ -72,12 +78,12 @@
                    :created-at (dt/now)
                    :source (d/nilv source :local)
                    :origin (ptk/type origin)
+                   :features features
                    :file-id file-id
                    :file-revn file-revn
                    :changes redo-changes
                    :redo-changes redo-changes
                    :undo-changes undo-changes
-                   ;; :frames affected-frames
                    :save-undo? save-undo?
                    :undo-group undo-group
                    :tags tags
@@ -92,12 +98,35 @@
         (let [current-file-id (get state :current-file-id)
               path            (if (= file-id current-file-id)
                                 [:workspace-data]
-                                [:workspace-libraries file-id :data])]
+                                [:workspace-libraries file-id :data])
 
-          (d/update-in-when state path (fn [file]
-                                         (let [file (cpc/process-changes file redo-changes false)
-                                               pids (into #{} (map :page-id) redo-changes)]
-                                           (reduce #(ctst/update-object-indices %1 %2) file pids)))))))))
+              not-local?      (not= source :local)
+              pending         (if not-local?
+                                (get-pending-commits state)
+                                nil)
+
+              undo-changes    (if pending
+                                (->> pending
+                                     (map :undo-changes)
+                                     (reverse)
+                                     (mapcat identity)
+                                     (vec))
+                                nil)
+
+              redo-changes    (if pending
+                                (into redo-changes
+                                      (comp
+                                       (map :redo-changes)
+                                       (mapcat identity))
+                                      pending)
+                                redo-changes)]
+
+          (d/update-in-when state path
+                            (fn [file]
+                              (let [file (cpc/process-changes file undo-changes false)
+                                    file (cpc/process-changes file redo-changes false)
+                                    pids (into #{} (map :page-id) redo-changes)]
+                                (reduce #(ctst/update-object-indices %1 %2) file pids)))))))))
 
 (defn- resolve-file-revn
   [state file-id]
@@ -136,7 +165,6 @@
                    (assoc :stack-undo? stack-undo?)
                    (assoc :save-undo? save-undo?)
                    (assoc :file-id file-id)
-                   ;; FIXME: maybe move this to handle 100% on the persistence layer ??
                    (assoc :file-revn (resolve-file-revn state file-id))
                    (assoc :undo-changes uchg)
                    (assoc :redo-changes rchg)

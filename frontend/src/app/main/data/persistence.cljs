@@ -25,12 +25,11 @@
 
 (declare ^:private run-persistence-task)
 
-(log/set-level! :trace)
+(log/set-level! :warn)
 
 (def running (atom false))
 (def revn-data (atom {}))
 (def queue-conj (fnil conj #queue []))
-
 
 (defn- update-status
   [status]
@@ -111,12 +110,7 @@
     (watch [_ state stream]
       (log/dbg :hint "persist-commit" :commit-id (dm/str commit-id))
       (when-let [{:keys [file-id file-revn changes features] :as commit} (dm/get-in state [:persistence :index commit-id])]
-        (let [;; this features set does not includes the ffeat/enabled
-              ;; because they are already available on the backend and
-              ;; this request provides a set of features to enable in
-              ;; this request.
-              features (features/get-team-enabled-features state)
-              sid      (:session-id state)
+        (let [sid      (:session-id state)
               revn     (max file-revn (get @revn-data file-id 0))
               params   {:id file-id
                         :revn revn

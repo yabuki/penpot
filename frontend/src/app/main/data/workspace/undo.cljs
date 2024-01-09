@@ -19,14 +19,10 @@
    [beicon.v2.core :as rx]
    [potok.v2.core :as ptk]))
 
-(def discard-transaction-time-millis (* 20 1000))
-
 ;; Change this to :info :debug or :trace to debug this module
 (log/set-level! :warn)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Undo / Redo
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(def discard-transaction-time-millis (* 20 1000))
 
 (def ^:private
   schema:undo-entry
@@ -48,7 +44,6 @@
       (subvec undo (- cnt MAX-UNDO-SIZE))
       undo)))
 
-;; TODO: Review the necessity of this method
 (defn materialize-undo
   [_changes index]
   (ptk/reify ::materialize-undo
