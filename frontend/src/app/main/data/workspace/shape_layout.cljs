@@ -259,7 +259,7 @@
      (watch [_ _ _]
        (let [undo-id (js/Symbol)]
          (rx/of (dwu/start-undo-transaction undo-id)
-                (dch/update-shapes
+                (dwsh/update-shapes
                  ids
                  (fn [shape]
                    (case type
@@ -611,7 +611,7 @@
       (let [undo-id (js/Symbol)]
         (rx/of
          (dwu/start-undo-transaction undo-id)
-         (dch/update-shapes
+         (dwsh/update-shapes
           [layout-id]
           (fn [shape objects]
             (let [cells (->> ids (map #(get-in shape [:layout-grid-cells %])))

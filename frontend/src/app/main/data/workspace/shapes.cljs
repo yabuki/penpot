@@ -15,6 +15,7 @@
    [app.common.types.container :as ctn]
    [app.common.types.page :as ctp]
    [app.common.types.shape :as cts]
+   [app.common.types.shape.layout :as ctl]
    [app.common.types.shape-tree :as ctst]
    [app.common.types.shape.interactions :as ctsi]
    [app.main.data.comments :as dc]
@@ -92,7 +93,7 @@
           (if (seq (:redo-changes changes))
             (let [changes  (cond-> changes reg-objects? (pcb/resize-parents ids))
                   changes (cond-> changes ignore-remote? (pcb/ignore-remote))]
-              (rx/of (commit-changes changes)))
+              (rx/of (dch/commit-changes changes)))
             (rx/empty))
 
           ;; Update layouts for properties marked

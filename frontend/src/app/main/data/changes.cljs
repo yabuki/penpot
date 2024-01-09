@@ -17,11 +17,12 @@
    [app.common.types.shape-tree :as ctst]
    [app.common.uuid :as uuid]
    [app.main.data.workspace.undo :as dwu]
+   [app.main.features :as features]
    [app.main.store :as st]
    [app.main.worker :as uw]
    [app.util.time :as dt]
-   [beicon.core :as rx]
-   [potok.core :as ptk]))
+   [beicon.v2.core :as rx]
+   [potok.v2.core :as ptk]))
 
 ;; Change this to :info :debug or :trace to debug this module
 (log/set-level! :debug)
@@ -124,12 +125,14 @@
   (ptk/reify ::commit-changes
     ptk/WatchEvent
     (watch [_ state _]
-      (let [file-id (or file-id (:current-file-id state))
-            uchg    (vec undo-changes)
-            rchg    (vec redo-changes)]
+      (let [file-id  (or file-id (:current-file-id state))
+            uchg     (vec undo-changes)
+            rchg     (vec redo-changes)
+            features (features/get-team-enabled-features state)]
 
         (rx/of (-> params
                    (assoc :undo-group undo-group)
+                   (assoc :features features)
                    (assoc :tags tags)
                    (assoc :stack-undo? stack-undo?)
                    (assoc :save-undo? save-undo?)

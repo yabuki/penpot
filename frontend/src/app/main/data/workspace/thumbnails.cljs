@@ -299,7 +299,7 @@
                        (rx/map deref)
                        (rx/observe-on :async)
                        (rx/with-latest-from workspace-data-s)
-                       (rx/flat-map (partial extract-frame-changes page-id))
+                       (rx/merge-map (partial extract-frame-changes page-id))
                        (rx/tap #(l/trc :hint "inconming change" :origin "local" :frame-id (dm/str %))))
 
                   ;; NOTIFICATIONS CHANGES

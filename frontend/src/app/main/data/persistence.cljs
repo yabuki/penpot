@@ -19,9 +19,9 @@
    [app.main.store :as st]
    [app.util.router :as rt]
    [app.util.time :as dt]
-   [beicon.core :as rx]
+   [beicon.v2.core :as rx]
    [okulary.core :as l]
-   [potok.core :as ptk]))
+   [potok.v2.core :as ptk]))
 
 (declare ^:private run-persistence-task)
 
@@ -55,7 +55,7 @@
   (ptk/reify ::update-file-revn
     ptk/UpdateEvent
     (update [_ state]
-      (log/debug :hint "update-file-revn" :file-id (dm/str file-id) :revn revn)
+      (log/dbg :hint "update-file-revn" :file-id (dm/str file-id) :revn revn)
       (if-let [current-file-id (:current-file-id state)]
         (if (= file-id current-file-id)
           (update-in state [:workspace-file :revn] max revn)
@@ -108,7 +108,7 @@
     ptk/WatchEvent
     (watch [_ state stream]
       (log/dbg :hint "persist-commit" :commit-id (dm/str commit-id))
-      (when-let [{:keys [file-id file-revn changes] :as commit} (dm/get-in state [:persistence :index commit-id])]
+      (when-let [{:keys [file-id file-revn changes features] :as commit} (dm/get-in state [:persistence :index commit-id])]
         (let [;; this features set does not includes the ffeat/enabled
               ;; because they are already available on the backend and
               ;; this request provides a set of features to enable in
@@ -168,12 +168,18 @@
                  (rx/take-until stoper-s)))
           (rx/of (update-status :saved)))))))
 
+(def ^:private xf-mapcat-undo
+  (mapcat :undo-changes))
+
+(def ^:private xf-mapcat-redo
+  (mapcat :redo-changes))
+
 (defn- merge-commit
   [buffer]
   (->> (rx/from (group-by :file-id buffer))
        (rx/map (fn [[file-id [item :as commits]]]
-                 (let [uchg (into [] (mapcat :undo-changes) buffer)
-                       rchg (into [] (mapcat :redo-changes) buffer)]
+                 (let [uchg (into [] xf-mapcat-undo buffer)
+                       rchg (into [] xf-mapcat-redo buffer)]
                    (-> item
                        (assoc :undo-changes uchg)
                        (assoc :redo-changes rchg)
