@@ -25,8 +25,7 @@
 (defn tap
   [type data]
   (when-let [channel *channel*]
-    (sp/put! channel [type data])
-    nil))
+    (sp/put! channel [type data])))
 
 (defn start-listener
   [on-event on-close]
@@ -42,9 +41,17 @@
         (when-let [event (sp/take! *channel*)]
           (let [result (ex/try! (on-event event))]
             (if (ex/exception? result)
-              (do
-                (l/wrn :hint "unexpected exception" :cause result)
-                (sp/close! *channel*))
+              (cond
+                (or (instance? java.io.IOException result)
+                    (instance? java.nio.channels.ClosedChannelException result))
+                (do
+                  (l/trc :hint "channel closed" :msg (ex-message result))
+                  (sp/close! *channel*))
+
+                :else
+                (do
+                  (l/wrn :hint "unexpected exception" :cause result)
+                  (sp/close! *channel*)))
               (recur)))))
       (finally
         (on-close)))))

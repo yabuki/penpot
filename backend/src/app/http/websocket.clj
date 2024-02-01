@@ -153,7 +153,6 @@
       (sp/close! ch)
       (mbus/purge! msgbus [ch]))))
 
-
 (defmethod handle-message :subscribe-file
   [{:keys [::mbus/msgbus]} {:keys [::ws/id ::ws/state ::ws/output-ch ::session-id ::profile-id]} {:keys [file-id] :as params}]
   (l/trace :fn "handle-message" :event "subscribe-file" :file-id file-id :conn-id id)

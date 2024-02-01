@@ -46,6 +46,10 @@
    "Cache-Control" "no-cache, no-store, max-age=0, must-revalidate"
    "Pragma" "no-cache"})
 
+(defn emit!
+  [event payload]
+  (sp/put! events/*channel* [event payload]))
+
 (defn response
   [handler & {:keys [buf] :or {buf 32} :as opts}]
   (fn [request]
@@ -58,7 +62,7 @@
                                        (partial write! output)
                                        (partial pu/close! output))]
                          (try
-                           (let [result (handler)]
+                           (when-let [result (handler)]
                              (events/tap :end result))
                            (catch Throwable cause
                              (binding [l/*context* (errors/request->context request)]
