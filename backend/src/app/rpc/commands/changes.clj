@@ -46,33 +46,34 @@
   (files/check-read-permissions! pool profile-id file-id)
   (let [cfg (-> cfg
                 (assoc ::file-id file-id)
-                (assoc ::profile-id profile-id))
-        res (sse/response (partial stream-changes cfg))]
-    res))
-
+                (assoc ::profile-id profile-id))]
+    (sse/response (partial stream-changes cfg)
+                          :encode-fn sse/encode-json)))
 
 (defn- stream-changes
   [{:keys [::mbus/msgbus ::profile-id ::file-id]}]
-  (let [ch (sp/chan :buf 32)
-        tp (dt/tpoint)]
+  (let [sub-ch   (sp/chan :buf 32)
+        close-ch sse/*close-channel*
+        tpoint   (dt/tpoint)]
 
     (l/trc :hint "start streaming changes"
            :profile-id (str profile-id)
            :file-id (str file-id))
     (try
-      (mbus/sub! msgbus :topic file-id :chan ch)
+      (mbus/sub! msgbus :topic file-id :chan sub-ch)
       (loop []
         (let [timeout-ch (sp/timeout-chan 2000)
-              [val port] (sp/alts! [timeout-ch ch])]
+              [val port] (sp/alts! [timeout-ch sub-ch close-ch])]
           (cond
             (identical? port timeout-ch)
             (when (sse/emit! :keepalive {})
               (recur))
 
-            (nil? val)
+            (or (nil? val)
+                (identical? port close-ch))
             (do
-              (sp/close! ch)
-              (mbus/purge! msgbus [ch])
+              (sp/close! sub-ch)
+              (mbus/purge! msgbus [sub-ch])
               (sse/emit! :end {}))
 
             (= :file-change (:type val))
@@ -81,8 +82,9 @@
 
             :else
             (recur))))
+
       (finally
-        (let [elapsed (tp)]
+        (let [elapsed (tpoint)]
           (l/trc :hint "stop streaming changes"
                  :profile-id (str profile-id)
                  :file-id (str file-id)

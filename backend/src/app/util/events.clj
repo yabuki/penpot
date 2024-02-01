@@ -18,10 +18,6 @@
 
 (def ^:dynamic *channel* nil)
 
-(defn channel
-  []
-  (sp/chan :buf 32))
-
 (defn tap
   [type data]
   (when-let [channel *channel*]
