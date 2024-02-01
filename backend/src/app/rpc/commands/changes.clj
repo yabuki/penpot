@@ -47,8 +47,7 @@
   (let [cfg (-> cfg
                 (assoc ::file-id file-id)
                 (assoc ::profile-id profile-id))]
-    (sse/response (partial stream-changes cfg)
-                  :encode-fn sse/encode-json)))
+    (sse/response (partial stream-changes cfg))))
 
 (defn- stream-changes
   [{:keys [::mbus/msgbus ::profile-id ::file-id]}]
@@ -67,7 +66,6 @@
           (cond
             (identical? port timeout-ch)
             (when (sse/emit! :keepalive {})
-              (prn (promesa.exec/current-thread))
               (recur))
 
             (or (nil? val)

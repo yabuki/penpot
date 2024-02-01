@@ -24,31 +24,16 @@
     (sp/put! channel [type data])))
 
 (defn start-listener
-  [on-event on-close]
-
-  (dm/assert!
-   "expected active events channel"
-   (sp/chan? *channel*))
-
+  [channel on-event on-error on-close]
   (px/thread
     {:virtual true}
     (try
       (loop []
-        (when-let [event (sp/take! *channel*)]
-          (let [result (ex/try! (on-event event))]
-            (if (ex/exception? result)
-              (cond
-                (or (instance? java.io.IOException result)
-                    (instance? java.nio.channels.ClosedChannelException result))
-                (do
-                  (l/trc :hint "channel closed" :msg (ex-message result))
-                  (sp/close! *channel*))
-
-                :else
-                (do
-                  (l/wrn :hint "unexpected exception" :cause result)
-                  (sp/close! *channel*)))
-              (recur)))))
+        (when-let [event (sp/take! channel)]
+          (on-event event)
+          (recur)))
+      (catch Throwable cause
+        (on-error cause))
       (finally
         (on-close)))))
 
@@ -56,12 +41,15 @@
   "A high-level facility for to run a function in context of event
   emiter."
   [f on-event]
-
-  (binding [*channel* (sp/chan :buf 32)]
-    (let [listener (start-listener on-event (constantly nil))]
-      (try
-        (f)
-        (finally
-          (sp/close! *channel*)
-          (px/await! listener))))))
+  (let [events-ch (sp/chan :buf 32)
+        listener  (start-listener events-ch
+                                  on-event
+                                  (constantly nil)
+                                  (constantly nil))]
+    (try
+      (binding [*channel* (sp/chan :buf 32)]
+        (f))
+      (finally
+        (sp/close! events-ch)
+        (px/await! listener)))))
 
