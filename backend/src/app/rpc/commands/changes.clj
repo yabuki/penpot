@@ -34,21 +34,21 @@
 (declare stream-changes)
 
 (def ^:private
-  schema:stream-changes
-  [:map {:title "stream-changes"}
+  schema:stream-file-changes
+  [:map {:title "stream-file-changes"}
    [:file-id ::sm/uuid]])
 
-(sv/defmethod ::stream-changes
+(sv/defmethod ::stream-file-changes
   {::doc/added "undefined"
    ::sse/stream? true
-   ::sm/params schema:stream-changes}
+   ::sm/params schema:stream-file-changes}
   [{:keys [::db/pool] :as cfg} {:keys [::rpc/profile-id file-id] :as params}]
   (files/check-read-permissions! pool profile-id file-id)
   (let [cfg (-> cfg
                 (assoc ::file-id file-id)
                 (assoc ::profile-id profile-id))]
     (sse/response (partial stream-changes cfg)
-                          :encode-fn sse/encode-json)))
+                  :encode-fn sse/encode-json)))
 
 (defn- stream-changes
   [{:keys [::mbus/msgbus ::profile-id ::file-id]}]
@@ -56,7 +56,7 @@
         close-ch sse/*close-channel*
         tpoint   (dt/tpoint)]
 
-    (l/trc :hint "start streaming changes"
+    (l/trc :hint "start streaming file changes"
            :profile-id (str profile-id)
            :file-id (str file-id))
     (try
@@ -67,6 +67,7 @@
           (cond
             (identical? port timeout-ch)
             (when (sse/emit! :keepalive {})
+              (prn (promesa.exec/current-thread))
               (recur))
 
             (or (nil? val)
@@ -85,7 +86,7 @@
 
       (finally
         (let [elapsed (tpoint)]
-          (l/trc :hint "stop streaming changes"
+          (l/trc :hint "stop streaming file changes"
                  :profile-id (str profile-id)
                  :file-id (str file-id)
                  :elapsed (dt/format-duration elapsed)))))))
