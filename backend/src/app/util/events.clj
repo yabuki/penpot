@@ -22,10 +22,15 @@
 (defn tap
   [type data]
   (when-let [channel *channel*]
+    (px/sleep 2000)
+    (prn "TAP" (some-> *abort* deref))
     ;; Raise a special exception for process abort
     (when (some-> *abort* deref)
       (ex/raise :type ::abort))
     (sp/put! channel [type data])))
+
+(def ^:private noop
+  (constantly nil))
 
 (defn start-listener
   [channel on-event on-error on-close]

@@ -21,12 +21,12 @@
     <Logger name="com.zaxxer.hikari" level="error"/>
     <Logger name="org.postgresql" level="error" />
 
-    <Logger name="app.rpc.commands.binfile" level="debug" />
+    <Logger name="app.binfile" level="debug" />
     <Logger name="app.storage.tmp" level="info" />
     <Logger name="app.worker" level="trace" />
     <Logger name="app.msgbus" level="info" />
     <Logger name="app.http.websocket" level="info" />
-    <Logger name="app.http.sse" level="info" />
+    <Logger name="app.http.sse" level="debug" />
     <Logger name="app.util.websocket" level="info" />
     <Logger name="app.redis" level="info" />
     <Logger name="app.rpc.rlimit" level="info" />

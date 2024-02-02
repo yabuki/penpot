@@ -83,39 +83,43 @@
      ::rres/body
      (reify rres/StreamableResponseBody
        (-write-body-to-stream [_ _ output]
+         (l/dbg :hint "listener started")
          (let [encode-fn (or encode-fn (get-content-encoder request))
                events-ch (sp/chan :buf buf :xf (keep encode-fn))
                close-ch  (sp/chan)
+               abort     (atom false)
                listener  (events/start-listener
                           events-ch
                           (fn [data]
-                            (l/trc :hint "writting data" :data data :length (alength ^bytes data))
+                            (l/trc :hint "writting data" :length (alength ^bytes data))
                             (.write ^OutputStream output ^bytes data)
                             (.flush ^OutputStream output))
 
                           (fn [cause]
+                            (reset! abort true)
                             (if (or (instance? java.io.IOException cause)
                                     (instance? java.nio.channels.ClosedChannelException cause))
                               nil
                               (binding [l/*context* (errors/request->context request)]
-                                (l/wrn :hint "unexpected exception on listener" :cause cause))))
+                                (l/err :hint "unexpected exception on listener" :cause cause))))
 
                           (fn []
-                            (l/trc :hint "listener terminated")
+                            (l/dbg :hint "listener terminated")
                             (sp/close! close-ch)
                             (sp/close! events-ch)
                             (pu/close! output)))]
 
            (try
              (binding [events/*channel* events-ch
+                       events/*abort* abort
                        *close-channel*  close-ch]
                (when-let [result (handler)]
                  (emit! :end result)))
 
              (catch Throwable cause
                (let [cause' (pu/unwrap-exception cause)]
-                 (if (and (ex/error? cause)
-                          (= ::events/abort (:type (ex-data cause))))
+                 (if (and (ex/error? cause')
+                          (= ::events/abort (:type (ex-data cause'))))
                    (l/inf :hint "process aborted")
                    (binding [l/*context* (errors/request->context request)]
                      (l/err :hint "unexpected exception on streaming process"
