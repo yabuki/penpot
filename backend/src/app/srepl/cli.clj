@@ -133,7 +133,7 @@
 
     (try
       (let [result (-> (partial migrate-teams! main/system {:rollback? true})
-                       (events/run-with! on-event))]
+                       (events/run-with! on-event on-error (constantly nil)))]
         (println (str/ffmt "Migration process finished (elapsed: %)" (:elapsed result))))
       (catch Throwable cause
         (on-error cause)))))

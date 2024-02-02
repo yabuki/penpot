@@ -17,10 +17,14 @@
    [promesa.exec.csp :as sp]))
 
 (def ^:dynamic *channel* nil)
+(def ^:dynamic *abort* nil)
 
 (defn tap
   [type data]
   (when-let [channel *channel*]
+    ;; Raise a special exception for process abort
+    (when (some-> *abort* deref)
+      (ex/raise :type ::abort))
     (sp/put! channel [type data])))
 
 (defn start-listener
@@ -40,16 +44,17 @@
 (defn run-with!
   "A high-level facility for to run a function in context of event
   emiter."
-  [f on-event]
+  [f on-event on-error on-close]
   (let [events-ch (sp/chan :buf 32)
         listener  (start-listener events-ch
                                   on-event
-                                  (constantly nil)
-                                  (constantly nil))]
+                                  on-error
+                                  (fn []
+                                    (sp/close! events-ch)
+                                    (on-close)))]
     (try
       (binding [*channel* (sp/chan :buf 32)]
         (f))
       (finally
         (sp/close! events-ch)
         (px/await! listener)))))
-

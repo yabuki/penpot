@@ -113,10 +113,14 @@
                  (emit! :end result)))
 
              (catch Throwable cause
-               (binding [l/*context* (errors/request->context request)]
-                 (l/err :hint "unexpected exception on streaming process"
-                        :cause cause))
-               (emit! :error (errors/handle' cause request)))
+               (let [cause' (pu/unwrap-exception cause)]
+                 (if (and (ex/error? cause)
+                          (= ::events/abort (:type (ex-data cause))))
+                   (l/inf :hint "process aborted")
+                   (binding [l/*context* (errors/request->context request)]
+                     (l/err :hint "unexpected exception on streaming process"
+                            :cause cause)
+                     (emit! :error (errors/handle' cause request))))))
 
              (finally
                (sp/close! events-ch)
