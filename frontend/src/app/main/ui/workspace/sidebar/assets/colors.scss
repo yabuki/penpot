@@ -72,16 +72,15 @@
   grid-template-columns: auto 1fr;
   margin: 0;
   overflow: hidden;
-  .default-name-only,
-  .name {
-    color: var(--assets-item-name-foreground-color);
-    margin-right: $s-6;
-    @include textEllipsis;
-  }
-  .default-name {
-    min-width: 0;
-    color: var(--assets-item-name-foreground-color-rest);
-  }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(var(--width) - $s-88);
+  color: var(--assets-item-name-foreground-color-rest);
+}
+.name {
+  color: var(--assets-item-name-foreground-color);
+  margin-right: $s-6;
 }
 
 .element-name {
