@@ -84,6 +84,9 @@
   width: var(--input-width, calc(100% - $s-1));
   min-width: var(--input-min-width);
   height: var(--input-height, $s-32);
+  input {
+    margin: 0;
+  }
 }
 
 .help-icon {
