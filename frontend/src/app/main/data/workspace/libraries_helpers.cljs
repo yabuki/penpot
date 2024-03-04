@@ -1003,7 +1003,7 @@
                   (if (and (some? matching-inst) (not reset?))
                     (do
                       (log/trace :msg "Match slot inst"
-                                 :shape-inst (str (:name child-inst') " " (pretty-uuid (:id child-inst')))
+                                 :shape-inst (str (:name matching-inst) " " (pretty-uuid (:id matching-inst)))
                                  :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
                       (recur (remove #(= (:id %) (:id matching-inst)) children-inst)
                              (next children-main)
@@ -1018,9 +1018,9 @@
                     (do
                       (log/trace :msg "Match slot main"
                                  :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
-                                 :shape-main (str (:name child-main') " " (pretty-uuid (:id child-main'))))
+                                 :shape-main (str (:name matching-main) " " (pretty-uuid (:id matching-main))))
                       (recur (next children-inst)
-                             (remove #(= (:id %) (:id matching-main)) children-inst)
+                             (remove #(= (:id %) (:id matching-main)) children-main)
                              changes))
                     (recur (next children-inst)
                            children-main
@@ -1028,16 +1028,24 @@
 
                 :else
                 (if inverse?
-                  (recur (next children-inst)
+                  (do
+                    (log/trace :msg "Both exists (inverse)"
+                               :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
+                               :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                    (recur (next children-inst)
                          (remove #(= (:id %) (:id child-main')) children-main)
                          (-> changes
                              (both-cb child-inst child-main')
-                             (moved-cb child-inst child-main')))
-                  (recur (remove #(= (:id %) (:id child-inst')) children-inst)
-                         (next children-main)
-                         (-> changes
-                             (both-cb child-inst' child-main)
-                             (moved-cb child-inst' child-main))))))))))))
+                             (moved-cb child-inst child-main'))))
+                  (do
+                    (log/trace :msg "Both exists (not inverse)"
+                               :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
+                               :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                    (recur (remove #(= (:id %) (:id child-inst')) children-inst)
+                           (next children-main)
+                           (-> changes
+                               (both-cb child-inst' child-main)
+                               (moved-cb child-inst' child-main)))))))))))))
 
 (defn- add-shape-to-instance
   [changes component-shape index component-page container root-instance root-main omit-touched? set-remote-synced?]
