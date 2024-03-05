@@ -715,32 +715,24 @@
           only-inst (fn [changes child-inst]
                       (log/trace :msg "Only inst"
                                  :child-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst))))
-                      (if-not (and omit-touched?
-                                   (contains? (:touched shape-inst)
-                                              :shapes-group))
-                        (remove-shape changes
-                                      child-inst
-                                      container
-                                      omit-touched?)
-                        changes))
+                      (remove-shape changes
+                                    child-inst
+                                    container
+                                    omit-touched?))
 
           only-main (fn [changes child-main]
                       (log/trace :msg "Only main"
                                  :child-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
-                      (if-not (and omit-touched?
-                                   (contains? (:touched shape-inst)
-                                              :shapes-group))
-                        (add-shape-to-instance changes
-                                               child-main
-                                               (d/index-of children-main
-                                                           child-main)
-                                               component-container
-                                               container
-                                               root-inst
-                                               root-main
-                                               omit-touched?
-                                               set-remote-synced?)
-                        changes))
+                      (add-shape-to-instance changes
+                                             child-main
+                                             (d/index-of children-main
+                                                         child-main)
+                                             component-container
+                                             container
+                                             root-inst
+                                             root-main
+                                             omit-touched?
+                                             set-remote-synced?))
 
           both (fn [changes child-inst child-main]
                  (log/trace :msg "Both"
@@ -1118,9 +1110,7 @@
                                                        :shapes all-parents}))
         changes' (reduce del-obj-change changes' new-shapes)]
 
-    (if (and (cfh/touched-group? parent-shape :shapes-group) omit-touched?)
-      changes
-      changes')))
+    changes'))
 
 (defn- add-shape-to-main
   [changes shape index component component-container page root-instance root-main]
@@ -1273,9 +1263,7 @@
                          changes'
                          ids)]
 
-    (if (and (cfh/touched-group? parent :shapes-group) omit-touched?)
-      changes
-      changes')))
+    changes'))
 
 (defn- move-shape
   [changes shape index-before index-after container omit-touched?]
@@ -1309,9 +1297,7 @@
                                                   :ignore-touched true
                                                   :syncing true})))]
 
-    (if (and (cfh/touched-group? parent :shapes-group) omit-touched?)
-      changes
-      changes')))
+    changes'))
 
 (defn change-touched
   [changes dest-shape origin-shape container
