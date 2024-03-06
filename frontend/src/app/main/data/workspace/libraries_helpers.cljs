@@ -751,6 +751,13 @@
                                                        redirect-shaperef
                                                        components-v2))
 
+          swapped (fn [changes child-inst child-main]
+                    (log/trace :msg "Match slot"
+                               :child-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
+                               :child-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                    ;; For now we don't make any sync here.
+                    changes)
+
           moved (fn [changes child-inst child-main]
                   (log/trace :msg "Move"
                              :child-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
@@ -769,6 +776,7 @@
                         only-inst
                         only-main
                         both
+                        swapped
                         moved
                         false
                         reset?))))
@@ -925,6 +933,13 @@
                                                         redirect-shaperef
                                                         components-v2))
 
+          swapped (fn [changes child-inst child-main]
+                    (log/trace :msg "Match slot"
+                               :child-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
+                               :child-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                    ;; For now we don't make any sync here.
+                    changes)
+
           moved (fn [changes child-inst child-main]
                   (move-shape
                    changes
@@ -941,6 +956,7 @@
                             only-inst
                             only-main
                             both
+                            swapped
                             moved
                             true
                             true)
@@ -961,7 +977,7 @@
 ;; ---- Operation generation helpers ----
 
 (defn- compare-children
-  [changes children-inst children-main only-inst-cb only-main-cb both-cb moved-cb inverse? reset?]
+  [changes children-inst children-main only-inst-cb only-main-cb both-cb swapped-cb moved-cb inverse? reset?]
   (log/trace :msg "Compare children")
   (loop [children-inst (seq (or children-inst []))
          children-main (seq (or children-main []))
@@ -981,71 +997,53 @@
         (reduce only-inst-cb changes children-inst)
 
         :else
-        (if (ctk/is-main-of? child-main child-inst)
+        (if (or (ctk/is-main-of? child-main child-inst)
+                (ctk/match-swap-slot? child-main child-inst))
           (recur (next children-inst)
                  (next children-main)
-                 (both-cb changes child-inst child-main))
+                 (if (or (ctk/is-main-of? child-main child-inst) reset?)
+                   (both-cb changes child-inst child-main)
+                   (swapped-cb changes child-inst child-main)))
 
-          (if (and (ctk/match-swap-slot? child-main child-inst) (not reset?))
-            (do
-              (log/trace :msg "Match slot"
-                         :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
-                         :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
-              (recur (next children-inst)
-                     (next children-main)
-                     changes))
-
-            (let [child-inst' (d/seek #(ctk/is-main-of? child-main %) children-inst)
-                  child-main' (d/seek #(ctk/is-main-of? % child-inst) children-main)]
+            (let [child-inst' (d/seek #(or (ctk/is-main-of? child-main %)
+                                           (ctk/match-swap-slot? child-main %))
+                                      children-inst)
+                  child-main' (d/seek #(or (ctk/is-main-of? % child-inst)
+                                           (ctk/match-swap-slot? % child-inst))
+                                      children-main)]
               (cond
                 (nil? child-inst')
-                (let [matching-inst (d/seek #(ctk/match-swap-slot? % child-main) children-inst)]
-                  (if (and (some? matching-inst) (not reset?))
-                    (do
-                      (log/trace :msg "Match slot inst"
-                                 :shape-inst (str (:name matching-inst) " " (pretty-uuid (:id matching-inst)))
-                                 :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
-                      (recur (remove #(= (:id %) (:id matching-inst)) children-inst)
-                             (next children-main)
-                             changes))
-                    (recur children-inst
-                           (next children-main)
-                           (only-main-cb changes child-main))))
+                (recur children-inst
+                       (next children-main)
+                       (only-main-cb changes child-main))
 
                 (nil? child-main')
-                (let [matching-main (d/seek #(ctk/match-swap-slot? child-inst %) children-main)]
-                  (if (and (some? matching-main) (not reset?))
-                    (do
-                      (log/trace :msg "Match slot main"
-                                 :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
-                                 :shape-main (str (:name matching-main) " " (pretty-uuid (:id matching-main))))
-                      (recur (next children-inst)
-                             (remove #(= (:id %) (:id matching-main)) children-main)
-                             changes))
-                    (recur (next children-inst)
-                           children-main
-                           (only-inst-cb changes child-inst))))
+                (recur (next children-inst)
+                       children-main
+                       (only-inst-cb changes child-inst))
 
                 :else
                 (if inverse?
-                  (do
-                    (log/trace :msg "Both exists (inverse)"
-                               :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
-                               :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                  (let [is-main? (ctk/is-main-of? child-inst child-main')]
                     (recur (next children-inst)
-                         (remove #(= (:id %) (:id child-main')) children-main)
-                         (-> changes
+                           (remove #(= (:id %) (:id child-main')) children-main)
+                           (cond-> changes
+                             is-main?
                              (both-cb child-inst child-main')
+                             (not is-main?)
+                             (swapped-cb child-inst child-main')
+                             :always
                              (moved-cb child-inst child-main'))))
-                  (do
-                    (log/trace :msg "Both exists (not inverse)"
-                               :shape-inst (str (:name child-inst) " " (pretty-uuid (:id child-inst)))
-                               :shape-main (str (:name child-main) " " (pretty-uuid (:id child-main))))
+                  (let [is-main? (ctk/is-main-of? child-inst' child-main)]
                     (recur (remove #(= (:id %) (:id child-inst')) children-inst)
                            (next children-main)
-                           (-> changes
-                               (both-cb child-inst' child-main)
-                               (moved-cb child-inst' child-main)))))))))))))
+                           (cond-> changes
+                             is-main?
+                             (both-cb child-inst' child-main)
+                             (not is-main?)
+                             (swapped-cb child-inst' child-main)
+                             :always
+                             (moved-cb child-inst' child-main))))))))))))
 
 (defn- add-shape-to-instance
   [changes component-shape index component-page container root-instance root-main omit-touched? set-remote-synced?]
