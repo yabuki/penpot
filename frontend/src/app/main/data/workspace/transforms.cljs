@@ -15,6 +15,7 @@
    [app.common.geom.modifiers :as gm]
    [app.common.geom.point :as gpt]
    [app.common.geom.rect :as grc]
+   [app.common.geom.rect :as grc]
    [app.common.geom.shapes :as gsh]
    [app.common.geom.shapes.flex-layout :as gslf]
    [app.common.geom.shapes.grid-layout :as gslg]
@@ -979,3 +980,35 @@
             center    (grc/rect->center selrect)
             modifiers (dwm/create-modif-tree selected (ctm/resize-modifiers (gpt/point 1.0 -1.0) center))]
         (rx/of (dwm/apply-modifiers {:modifiers modifiers}))))))
+
+(defn board-fit-to-content
+  []
+  (ptk/reify ::board-fit-to-content
+    ptk/WatchEvent
+    (watch [_ state _]
+      (let [
+            ;; Selected board
+            selected-id (first (get-in state [:workspace-local :selected]))
+            objects (wsh/lookup-page-objects state)
+            selected (get objects selected-id)
+
+            page-id (:current-page-id state)
+
+            ;; Children of selection
+            children
+            (->> (:shapes selected)
+                 (map #(get objects %)))
+
+            ;; Children -> Bounding box
+            box (gsh/shapes->rect children)]
+
+        (rx/of (dch/update-shapes
+                [selected-id]
+                (fn [shape] ;; => Shape
+                  (-> shape
+                      (assoc :x (:x box))
+                      (assoc :y (:y box))
+                      (assoc :width (:width box))
+                      (assoc :height (:height box))
+                      (assoc :selrect box)
+                      (assoc :points (grc/rect->points box))))))))))

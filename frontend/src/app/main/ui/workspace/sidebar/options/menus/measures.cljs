@@ -15,6 +15,7 @@
    [app.main.data.workspace :as udw]
    [app.main.data.workspace.changes :as dch]
    [app.main.data.workspace.interactions :as dwi]
+   [app.main.data.workspace.transforms :as dwt]
    [app.main.data.workspace.undo :as dwu]
    [app.main.refs :as refs]
    [app.main.store :as st]
@@ -563,4 +564,6 @@
                     :class (stl/css-case  :clip-content-label true
                                           :selected (not (:hide-in-viewer values)))}
             [:span {:class (stl/css :icon)}
-             play-icon]]])])]))
+             play-icon]]])
+
+        [:button {:on-click (fn [] (st/emit! (dwt/board-fit-to-content)))} "FIT"]])]))
