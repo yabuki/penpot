@@ -10,10 +10,13 @@
    [app.common.data.macros :as dm]
    [app.common.files.changes-builder :as pcb]
    [app.common.files.helpers :as cfh]
+   [app.common.geom.modifiers :as gm]
    [app.common.geom.point :as gpt]
    [app.common.geom.shapes :as gsh]
    [app.common.geom.shapes.grid-layout :as gslg]
+   [app.common.geom.shapes.points :as gpo]
    [app.common.logging :as log]
+   [app.common.math :as mth]
    [app.common.spec :as us]
    [app.common.text :as txt]
    [app.common.types.color :as ctc]
@@ -21,6 +24,7 @@
    [app.common.types.components-list :as ctkl]
    [app.common.types.container :as ctn]
    [app.common.types.file :as ctf]
+   [app.common.types.modifiers :as ctm]
    [app.common.types.pages-list :as ctpl]
    [app.common.types.shape-tree :as ctst]
    [app.common.types.shape.layout :as ctl]
@@ -51,6 +55,7 @@
 (declare change-touched)
 (declare change-remote-synced)
 (declare update-attrs)
+(declare update-sizing-shapes)
 (declare update-grid-main-attrs)
 (declare update-grid-copy-attrs)
 (declare update-flex-child-main-attrs)
@@ -687,6 +692,7 @@
     (let [omit-touched?        (not reset?)
           clear-remote-synced? (and initial-root? reset?)
           set-remote-synced?   (and (not initial-root?) reset?)
+
           changes (cond-> changes
                     :always
                     (update-attrs shape-inst
@@ -695,6 +701,19 @@
                                   root-main
                                   container
                                   omit-touched?)
+
+                    ;; Change in the constraints we need to re-calculate the sizes
+                    (cond-> (or (not= (:constraints-h shape-main) (:constraints-h shape-inst))
+                                (not= (:constraints-v shape-main) (:constraints-v shape-inst))))
+                    (update-sizing-shapes shape-main
+                                          shape-inst
+                                          library
+                                          component
+                                          container
+                                          root-inst
+                                          (:constraints-h shape-main)
+                                          (:constraints-v shape-main)
+                                          omit-touched?)
 
                     (ctl/flex-layout? shape-main)
                     (update-flex-child-copy-attrs shape-main
@@ -1524,6 +1543,51 @@
                 (or (not (touched attr-group)) (not omit-touched?))
                 (assoc attr (get origin attr)))))
           dest))))
+
+(defn- update-sizing-shapes
+  [changes shape-main shape-copy main-container main-component copy-container root-copy constraints-h constraints-v _omit-touched?]
+
+  (let [parent-id (:parent-id shape-main)
+        parent-main (ctf/get-component-shape main-container main-component parent-id)
+        parent-copy (ctf/get-shape-in-copy copy-container parent-main root-copy)
+        scale-x       (/ (gpo/width-points (:points parent-main)) (max 0.01 (gpo/width-points (:points parent-copy))))
+        scale-y       (/ (gpo/height-points (:points parent-main)) (max 0.01 (gpo/height-points (:points parent-copy))))
+        resize-vector (gpt/point scale-x scale-y)
+        resize-origin (gpo/origin (:points parent-copy))]
+
+    (if (and (not (mth/almost-zero? scale-x)) (not (mth/almost-zero? scale-y)))
+      (let [modifiers
+            (-> (ctm/empty)
+                (ctm/resize-parent resize-vector resize-origin (:transform parent-copy) (:transform-inverse parent-copy))
+                (ctm/resize (gpt/inverse resize-vector) resize-origin (:transform parent-copy) (:transform-inverse parent-copy)))
+
+            ;; The constraint hasn't been updated yet so we need to manualy change it before calculating the positions
+            objects
+            (-> (:objects copy-container)
+                (assoc-in [(:id shape-copy) :constraints-h] constraints-h)
+                (assoc-in [(:id shape-copy) :constraints-v] constraints-v))
+
+            modif-tree
+            (gm/set-objects-modifiers {(:id parent-copy) {:modifiers modifiers}} objects)
+
+            new-changes
+            (-> (pcb/empty-changes)
+                (pcb/with-container copy-container)
+                (pcb/with-objects objects)
+
+                ;; Update the child flex properties from the parent
+                (pcb/update-shapes
+                 (keys modif-tree)
+                 (fn [shape]
+                   (let [modif (get-in modif-tree [(:id shape) :modifiers])]
+                     (-> shape
+                         (gsh/transform-shape modif))))
+                 {:ignore-touched true}))]
+
+        (pcb/concat-changes changes new-changes))
+
+      ;; scale = 0
+      changes)))
 
 (defn- update-flex-child-copy-attrs
   "Synchronizes the attributes inside the flex-child items (main->copy)"

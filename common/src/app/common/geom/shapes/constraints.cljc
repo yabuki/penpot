@@ -349,11 +349,11 @@
           (let [child-points-before  (gpo/parent-coords-bounds child-bounds parent-bounds)
                 child-points-after   (gpo/parent-coords-bounds transformed-child-bounds transformed-parent-bounds)
 
-                modifiers-h (constraint-modifier (constraints-h const->type+axis) :x
+                modifiers-h (constraint-modifier (get const->type+axis constraints-h) :x
                                                  child-points-before parent-bounds
                                                  child-points-after transformed-parent-bounds)
 
-                modifiers-v (constraint-modifier (constraints-v const->type+axis) :y
+                modifiers-v (constraint-modifier (get const->type+axis constraints-v) :y
                                                  child-points-before parent-bounds
                                                  child-points-after transformed-parent-bounds)]
             (-> modifiers
