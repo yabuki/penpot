@@ -1,16 +1,82 @@
-import { Canvas, Meta } from '@storybook/blocks';
-import * as SimpleButtonStories from "./simple_button.stories"
+import { Canvas, Meta, Controls } from "@storybook/blocks";
+import * as SimpleButtonStories from "./simple_button.stories";
 
 <Meta of={SimpleButtonStories} />
 
-# Lorem ipsum
+# SimpleButton
 
-This is an example of **markdown** docs within storybook, for the component `<SimpleButton>`.
+A button is a clickable or tap-able UI element representing an action or providing access to a specific function in an app. It has text or an icon indicating its purpose and is commonly used for form submissions, confirmation, or cancellation actions. Clear labeling, proper sizing, ample padding, and spacing contribute to ensuring accessibility and ease of use.
 
-Here's how we can render a simple button:
+<Canvas of={SimpleButtonStories.Default} />
+<Controls />
+
+## Usage
+
+## Where to use
+
+The main button highlights the primary action in a context, being visually distinct (e.g., color, size) from others. Users readily identify it as the key means to accomplish tasks. Proper placement, usually at the bottom right corner, ensures consistency and efficient goal completion.
+
+## When to use
+
+Utilize the main button for vital actions, highlighting priority and clarity. Keep each view or modal limited to one main button, accompanied by fewer secondary ones if needed. This approach promotes intuitive navigation and seamless user experience.
+
+## Behavior
+
+### Interactions
+
+- **Loading**: Upon engaging with long-lasting (>500ms) tasks, showcase a visible, contrasting loader near the source. Accompany it with brief status updates to keep users informed.
+
+## Interface
+
+### Types
+
+#### Primary
+
+Used to initiate the main / primary action of a view or flow. Avoid to have more than one primary buttons in the same view or flow.
 
 <Canvas of={SimpleButtonStories.Default} />
 
-Simple buttons can also have **icons**:
+#### Secondary
 
-<Canvas of={SimpleButtonStories.WithIcon} />
+Are the default and most common buttons in the interface. Use them for nor primary actions.
+
+#### Invisible
+
+> note: is more common to name this kind of button “gost” or similar. Use them for less prominent, and sometimes independent, actions (examples: add pages, add properties, etc.)
+
+#### Destructive
+
+Used for any action that implies remove / delete destroys any object or data.
+
+### States
+
+- Rest (default)
+- Hover
+- Selected (active)
+- Focus
+- Disabled
+
+### Variants
+
+#### Text
+
+Button label should express what action will occur when the user interacts with it.
+
+<Canvas of={SimpleButtonStories.Default} />
+
+#### Icon
+
+Button icon should depict what action will occur when the user interacts with it
+
+## Properties
+
+<Controls />
+
+## Tokens
+
+--avatar-background
+--avatar-border
+
+## Accesibility
+
+- Alternate text: “Image of [fullName]"

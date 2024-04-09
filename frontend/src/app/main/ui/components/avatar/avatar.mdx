@@ -1,0 +1,58 @@
+import { Meta } from "@storybook/blocks";
+import * as AvatarStories from "./avatar.stories";
+
+<Meta of={AvatarStories} />
+
+# Avatar
+
+A visual representation of a user. Avatars can show initials (default) or an image - set by the user.
+
+(not in current DS but in designs) -> Avatar component can also show the user name next to it in contexts like comments (dialogs and lists), dashboard - user menu - or user account settings. Maybe those should be another component.
+
+## Usage
+
+## Where to use
+
+(Empty)
+
+## When to use
+
+Avatars without user name are used in places where the space is limited or in stacked avatar component. [Missing link] See component stacked avatars AKA group avatars
+
+## Behavior
+
+### Interactions
+
+A tooltip with the full user name should appear on hover
+
+## Interface
+
+### Types
+
+### States
+
+### Variants
+
+## Properties
+
+**Size**
+
+Typed list of sizes:
+
+- x-small
+- small
+- medium
+- big
+
+**image**
+
+Url of the
+
+## Tokens
+
+--avatar-background
+--avatar-border
+
+## Accesibility
+
+- Alternate text: “Image of `${{fullName}}`”

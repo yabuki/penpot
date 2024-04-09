@@ -4,27 +4,30 @@ import Components from "@target/components";
 import Icons from "@target/icons";
 
 export default {
-  title: 'Buttons/Simple Button',
+  title: "Components/Simple Button",
   component: Components.SimpleButton,
+  argTypes: {
+    variant: {
+      description: "type description",
+      options: ["primary", "secondary"],
+      control: { type: "radio" },
+    },
+    children: {
+      description: "Call to action",
+      control: {
+        type: "text",
+      },
+    },
+  },
 };
 
 export const Default = {
-  render: () => (
+  args: {
+    children: "SimpleButton",
+  },
+  render: (args) => (
     <Components.StoryWrapper>
-      <Components.SimpleButton>
-        Simple Button
-      </Components.SimpleButton>
+      <Components.SimpleButton>{args.children}</Components.SimpleButton>
     </Components.StoryWrapper>
   ),
 };
-
-export const WithIcon = {
-  render: () => (
-    <Components.StoryWrapper>
-      <Components.SimpleButton>
-        {Icons.AddRefactor}
-        Simple Button
-      </Components.SimpleButton>
-    </Components.StoryWrapper>
-  ),
-}
