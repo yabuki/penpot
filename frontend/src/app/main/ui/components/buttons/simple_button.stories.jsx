@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import Components from "@target/components";
-import Icons from "@target/icons";
 
 export default {
   title: "Components/Simple Button",
@@ -9,21 +8,20 @@ export default {
   argTypes: {
     variant: {
       description: "type description",
+      control: "select",
       options: ["primary", "secondary"],
-      control: { type: "radio" },
     },
     children: {
       description: "Call to action",
-      control: {
-        type: "text",
-      },
+      control: "text",
     },
   },
 };
 
 export const Default = {
   args: {
-    children: "SimpleButton",
+    children: "call to action",
+    variant: "primary",
   },
   render: (args) => (
     <Components.StoryWrapper>

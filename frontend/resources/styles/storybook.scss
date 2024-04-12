@@ -1,0 +1,28 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+//
+// Copyright (c) KALEIDOS INC
+
+//#################################################
+// Import libraries
+//#################################################
+
+@use "sass:color";
+
+//#################################################
+// MAIN STYLES
+//#################################################
+
+@import "common/dependencies/colors";
+@import "common/dependencies/helpers";
+@import "common/dependencies/mixin";
+@import "common/dependencies/fonts";
+@import "common/dependencies/reset";
+@import "common/dependencies/animations";
+@import "common/dependencies/z-index";
+@import "common/dependencies/highlightjs-theme";
+
+@import "common/refactor/color-defs.scss";
+@import "common/refactor/themes.scss";
+@import "common/refactor/design-tokens.scss";
