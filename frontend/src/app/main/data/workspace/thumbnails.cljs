@@ -16,7 +16,7 @@
    [app.main.rasterizer :as thr]
    [app.main.refs :as refs]
    [app.main.render :as render]
-   #_[app.main.repo :as rp]
+   [app.main.repo :as rp]
    [app.main.store :as st]
    [app.util.http :as http]
    [app.util.queue :as q]
@@ -36,9 +36,8 @@
   (let [file-id (unchecked-get item "file-id")
         page-id  (unchecked-get item "page-id")
         shape-id (unchecked-get item "shape-id")
-        tag (unchecked-get item "tag")
-        requester (unchecked-get item "requester")]
-    (st/emit! (update-thumbnail file-id page-id shape-id tag requester))))
+        tag (unchecked-get item "tag")]
+    (st/emit! (update-thumbnail file-id page-id shape-id tag))))
 
 ;; Defines the thumbnail queue
 (defonce queue
@@ -46,8 +45,8 @@
 
 (defn create-request
   "Creates a request to generate a thumbnail for the given ids."
-  [file-id page-id shape-id tag requester]
-  #js {:file-id file-id :page-id page-id :shape-id shape-id :tag tag :requester requester})
+  [file-id page-id shape-id tag]
+  #js {:file-id file-id :page-id page-id :shape-id shape-id :tag tag})
 
 (defn find-request
   "Returns true if the given item matches the given ids."
@@ -68,7 +67,7 @@
        (l/dbg :hint "request thumbnail" :requester requester :file-id file-id :page-id page-id :shape-id shape-id :tag tag)
        (q/enqueue-unique
         queue
-        (create-request file-id page-id shape-id tag requester)
+        (create-request file-id page-id shape-id tag)
         (partial find-request file-id page-id shape-id tag))))))
 
 ;; This function first renders the HTML calling `render/render-frame` that
@@ -143,7 +142,7 @@
 (defn update-thumbnail
   "Updates the thumbnail information for the given `id`"
 
-  [file-id page-id frame-id tag requester]
+  [file-id page-id frame-id tag]
   (let [object-id (thc/fmt-object-id file-id page-id frame-id tag)]
     (ptk/reify ::update-thumbnail
       cljs.core/IDeref
@@ -151,7 +150,7 @@
 
       ptk/WatchEvent
       (watch [_ state stream]
-        (l/dbg :hint "update thumbnail" :object-id object-id :tag tag :requester requester)
+        (l/dbg :hint "update thumbnail" :object-id object-id :tag tag)
         ;; Send the update to the back-end
         (->> (get-thumbnail state file-id page-id frame-id tag)
              (rx/mapcat (fn [uri]
@@ -159,13 +158,12 @@
                            (rx/of (assoc-thumbnail object-id uri))
                            (->> (http/send! {:uri uri :response-type :blob :method :get})
                                 (rx/map :body)
-                                #_(rx/mapcat (fn [blob]
+                                (rx/mapcat (fn [blob]
                                              ;; Send the data to backend
                                              (let [params {:file-id file-id
                                                            :object-id object-id
                                                            :media blob
-                                                           :tag (or tag "frame")
-                                                           :requester requester}]
+                                                           :tag (or tag "frame")}]
                                                (rp/cmd! :create-file-object-thumbnail params))))
                                 (rx/catch rx/empty)
                                 (rx/ignore)))))
