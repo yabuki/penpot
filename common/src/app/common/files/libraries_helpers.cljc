@@ -253,15 +253,15 @@
     (reduce skip-near changes children)))
 
 (defn prepare-restore-component
-  ([library-data component-id current-page it]
+  ([changes library-data component-id current-page]
    (let [component    (ctkl/get-deleted-component library-data component-id)
          page         (or (ctf/get-component-page library-data component)
                           (when (some #(= (:id current-page) %) (:pages library-data)) ;; If the page doesn't belong to the library, it's not valid
                             current-page)
                           (ctpl/get-last-page library-data))]
-     (prepare-restore-component nil library-data component-id it page (gpt/point 0 0) nil nil nil)))
+     (prepare-restore-component changes library-data component-id page (gpt/point 0 0) nil nil nil)))
 
-  ([changes library-data component-id it page delta old-id parent-id frame-id]
+  ([changes library-data component-id page delta old-id parent-id frame-id]
    (let [component         (ctkl/get-deleted-component library-data component-id)
          parent            (get-in page [:objects parent-id])
          main-inst         (get-in component [:objects (:main-instance-id component)])
@@ -283,7 +283,7 @@
                              (not inside-component?)
                              (assoc :component-root true))
 
-         changes           (-> (or changes (pcb/empty-changes it))
+         changes           (-> changes
                                (pcb/with-page page)
                                (pcb/with-objects (:objects page))
                                (pcb/with-library-data library-data))
@@ -1787,5 +1787,23 @@
                            (:id new-main-instance-shape)
                            (:id main-instance-page)
                            (:annotation component)))))
+
+(defn generate-restore-component
+  "Restore a deleted component, with the given id, in the given file library."
+  [changes library-data component-id library-id current-page objects]
+  (let [{:keys [changes shape]} (prepare-restore-component changes library-data component-id current-page)
+        parent-id (:parent-id shape)
+        objects (cond-> (assoc objects (:id shape) shape)
+                  (not (nil? parent-id))
+                  (update-in [parent-id :shapes]
+                             #(conj % (:id shape))))
+
+        ;; Adds a resize-parents operation so the groups are updated. We add all the new objects
+        new-objects-ids (->> changes :redo-changes (filter #(= (:type %) :add-obj)) (mapv :id))
+        changes (-> changes
+                    (pcb/with-objects objects)
+                    (pcb/resize-parents new-objects-ids))]
+
+    (assoc changes :file-id library-id)))
 
 
