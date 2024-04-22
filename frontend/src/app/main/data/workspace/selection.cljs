@@ -375,54 +375,49 @@
 (defn prepare-duplicate-changes
   "Prepare objects to duplicate: generate new id, give them unique names,
   move to the desired position, and recalculate parents and frames as needed."
-  ([all-objects page ids delta it libraries library-data file-id]
-   (let [init-changes
-         (-> (pcb/empty-changes it)
-             (pcb/with-page page)
-             (pcb/with-objects all-objects))]
-     (prepare-duplicate-changes all-objects page ids delta it libraries library-data file-id init-changes)))
-
-  ([all-objects page ids delta it libraries library-data file-id init-changes]
-   (let [shapes         (map (d/getf all-objects) ids)
-         unames         (volatile! (cfh/get-used-names (:objects page)))
-         update-unames! (fn [new-name] (vswap! unames conj new-name))
-         all-ids        (reduce #(into %1 (cons %2 (cfh/get-children-ids all-objects %2))) (d/ordered-set) ids)
-
+  [changes all-objects page ids delta libraries library-data file-id]
+  (let [shapes         (map (d/getf all-objects) ids)
+        unames         (volatile! (cfh/get-used-names (:objects page)))
+        update-unames! (fn [new-name] (vswap! unames conj new-name))
+        all-ids        (reduce #(into %1 (cons %2 (cfh/get-children-ids all-objects %2))) (d/ordered-set) ids)
+        changes
+        (-> changes
+            (pcb/with-page page)
+            (pcb/with-objects all-objects))
          ;; We need ids-map for remapping the grid layout. But when duplicating the guides
          ;; we calculate a new one because the components will have created new shapes.
-         ids-map        (into {} (map #(vector % (uuid/next))) all-ids)
+        ids-map        (into {} (map #(vector % (uuid/next))) all-ids)
 
-         changes
-         (->> shapes
-              (reduce #(prepare-duplicate-shape-change %1
-                                                       all-objects
-                                                       page
-                                                       unames
-                                                       update-unames!
-                                                       ids-map
-                                                       %2
-                                                       delta
-                                                       nil
-                                                       libraries
-                                                       library-data
-                                                       it
-                                                       file-id)
-                      init-changes))
+        redo-changes
+        (->> shapes
+             (reduce #(prepare-duplicate-shape-change %1
+                                                      all-objects
+                                                      page
+                                                      unames
+                                                      update-unames!
+                                                      ids-map
+                                                      %2
+                                                      delta
+                                                      nil
+                                                      libraries
+                                                      library-data
+                                                      file-id)
+                     changes))
 
          ;; We need to check the changes to get the ids-map
-         ids-map
-         (into {}
-               (comp
-                (filter #(= :add-obj (:type %)))
-                (map #(vector (:old-id %) (-> % :obj :id))))
-               (:redo-changes changes))]
+        ids-map
+        (into {}
+              (comp
+               (filter #(= :add-obj (:type %)))
+               (map #(vector (:old-id %) (-> % :obj :id))))
+              (:redo-changes redo-changes))]
 
-     (-> changes
-         (prepare-duplicate-flows shapes page ids-map)
-         (prepare-duplicate-guides shapes page ids-map delta)))))
+    (-> changes
+        (prepare-duplicate-flows shapes page ids-map)
+        (prepare-duplicate-guides shapes page ids-map delta))))
 
 (defn- prepare-duplicate-component-change
-  [changes objects page component-root parent-id frame-id delta libraries library-data it]
+  [changes objects page component-root parent-id frame-id delta libraries library-data]
   (let [component-id (:component-id component-root)
         file-id (:component-file component-root)
         main-component    (ctf/get-component libraries file-id component-id)
@@ -458,16 +453,16 @@
 
 ;; TODO: move to common.files.shape-helpers
 (defn- prepare-duplicate-shape-change
-  ([changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data it file-id]
-   (prepare-duplicate-shape-change changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data it file-id (:frame-id obj) (:parent-id obj) false false true))
+  ([changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data file-id]
+   (prepare-duplicate-shape-change changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data file-id (:frame-id obj) (:parent-id obj) false false true))
 
-  ([changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data it file-id frame-id parent-id duplicating-component? child? remove-swap-slot?]
+  ([changes objects page unames update-unames! ids-map obj delta level-delta libraries library-data file-id frame-id parent-id duplicating-component? child? remove-swap-slot?]
    (cond
      (nil? obj)
      changes
 
      (ctf/is-main-of-known-component? obj libraries)
-     (prepare-duplicate-component-change changes objects page obj parent-id frame-id delta libraries library-data it)
+     (prepare-duplicate-component-change changes objects page obj parent-id frame-id delta libraries library-data)
 
      :else
      (let [frame?      (cfh/frame-shape? obj)
@@ -572,7 +567,6 @@
                                                  level-delta
                                                  libraries
                                                  library-data
-                                                 it
                                                  file-id
                                                  (if frame? new-id frame-id)
                                                  new-id
@@ -744,7 +738,8 @@
                    libraries       (wsh/get-libraries state)
                    library-data    (wsh/get-file state file-id)
 
-                   changes         (->> (prepare-duplicate-changes objects page selected delta it libraries library-data file-id)
+                   changes         (pcb/empty-changes it)
+                   changes         (->> (prepare-duplicate-changes changes objects page selected delta libraries library-data file-id)
                                         (duplicate-changes-update-indices objects selected))
 
                    tags            (or (:tags changes) #{})
