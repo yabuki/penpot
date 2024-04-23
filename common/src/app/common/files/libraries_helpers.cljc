@@ -1943,3 +1943,50 @@
                                                        (->> (map :id starting-flows)
                                                             (reduce ctp/remove-flow flows))))))]
     [changes all-parents]))
+
+(defn generate-component-for-swap
+  [changes shape file page libraries id-new-component index target-cell keep-props-values {:keys [undo-group]}]
+  (let [objects      (:objects page)
+        position     (gpt/point (:x shape) (:y shape))
+        changes      (-> changes
+                         (pcb/set-undo-group undo-group)
+                         (pcb/with-objects objects))
+        position     (-> position (with-meta {:cell target-cell}))
+        parent       (get objects (:parent-id shape))
+        inside-comp? (ctn/in-any-component? objects parent)
+
+        [new-shape changes]
+        (generate-instantiate-component changes
+                                        objects
+                                        (:id file)
+                                        id-new-component
+                                        position
+                                        page
+                                        libraries
+                                        nil
+                                        (:parent-id shape)
+                                        (:frame-id shape)
+                                        {:force-frame? true})
+
+        new-shape (cond-> new-shape
+                        ; if the shape isn't inside a main component, it shouldn't have a swap slot
+                    (and (nil? (ctk/get-swap-slot new-shape))
+                         inside-comp?)
+                    (update :touched cfh/set-touched-group (-> (ctf/find-swap-slot shape
+                                                                                   page
+                                                                                   {:id (:id file)
+                                                                                    :data file}
+                                                                                   libraries)
+                                                               (ctk/build-swap-slot-group))))]
+
+    [new-shape (-> changes
+            ;; Restore the properties
+                   (pcb/update-shapes [(:id new-shape)] #(d/patch-object % keep-props-values))
+
+            ;; We need to set the same index as the original shape
+                   (pcb/change-parent (:parent-id shape) [new-shape] index {:component-swap true
+                                                                            :ignore-touched true})
+                   (change-touched new-shape
+                                   shape
+                                   (ctn/make-container page :page)
+                                   {}))]))

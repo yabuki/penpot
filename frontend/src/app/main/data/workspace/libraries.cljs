@@ -880,62 +880,6 @@
                  second)
             0)))))
 
-(defn- add-component-for-swap
-  [shape file page libraries id-new-component index target-cell keep-props-values {:keys [undo-group]}]
-  (dm/assert! (uuid? id-new-component))
-  (ptk/reify ::add-component-for-swap
-    ptk/WatchEvent
-    (watch [it _ _]
-      (let [objects      (:objects page)
-            position     (gpt/point (:x shape) (:y shape))
-            changes      (-> (pcb/empty-changes it (:id page))
-                             (pcb/set-undo-group undo-group)
-                             (pcb/with-objects objects))
-            position     (-> position (with-meta {:cell target-cell}))
-            parent       (get objects (:parent-id shape))
-            inside-comp? (ctn/in-any-component? objects parent)
-
-            [new-shape changes]
-            (cflh/generate-instantiate-component changes
-                                                 objects
-                                                 (:id file)
-                                                 id-new-component
-                                                 position
-                                                 page
-                                                 libraries
-                                                 nil
-                                                 (:parent-id shape)
-                                                 (:frame-id shape)
-                                                 {:force-frame? true})
-
-            new-shape (cond-> new-shape
-                        ; if the shape isn't inside a main component, it shouldn't have a swap slot
-                        (and (nil? (ctk/get-swap-slot new-shape))
-                             inside-comp?)
-                        (update :touched cfh/set-touched-group (-> (ctf/find-swap-slot shape
-                                                                                       page
-                                                                                       {:id (:id file)
-                                                                                        :data file}
-                                                                                       libraries)
-                                                                   (ctk/build-swap-slot-group))))
-
-            changes
-            (-> changes
-                ;; Restore the properties
-                (pcb/update-shapes [(:id new-shape)] #(d/patch-object % keep-props-values))
-
-                ;; We need to set the same index as the original shape
-                (pcb/change-parent (:parent-id shape) [new-shape] index {:component-swap true
-                                                                         :ignore-touched true})
-                (cflh/change-touched new-shape
-                                     shape
-                                     (ctn/make-container page :page)
-                                     {}))]
-
-        ;; First delete so we don't break the grid layout cells
-        (rx/of (dch/commit-changes changes)
-               (dws/select-shape (:id new-shape) true))))))
-
 (defn- component-swap
   "Swaps a component with another one"
   [shape file-id id-new-component]
@@ -943,7 +887,7 @@
   (dm/assert! (uuid? file-id))
   (ptk/reify ::component-swap
     ptk/WatchEvent
-    (watch [_ state _]
+    (watch [it state _]
       ;; First delete shapes so we have space in the layout otherwise we can have problems
       ;; in the grid creating new rows/columns to make space
       (let [file      (wsh/get-file state file-id)
@@ -962,14 +906,18 @@
             keep-props-values (select-keys shape ctk/swap-keep-attrs)
 
             undo-id (js/Symbol)
-            undo-group (uuid/next)]
+            undo-group (uuid/next)
+
+            [new-shape changes] (-> (pcb/empty-changes it)
+                                    (cflh/generate-component-for-swap shape file page libraries id-new-component index target-cell keep-props-values
+                                                                      {:undo-group undo-group}))]
         (rx/of
          (dwu/start-undo-transaction undo-id)
          (dwsh/delete-shapes nil (d/ordered-set (:id shape)) {:component-swap true
                                                               :undo-id undo-id
                                                               :undo-group undo-group})
-         (add-component-for-swap shape file page libraries id-new-component index target-cell keep-props-values
-                                 {:undo-group undo-group})
+         (rx/of (dch/commit-changes changes)
+                (dws/select-shape (:id new-shape) true))
          (ptk/data-event :layout/update {:ids [(:parent-id shape)] :undo-group undo-group})
          (dwu/commit-undo-transaction undo-id))))))
 
