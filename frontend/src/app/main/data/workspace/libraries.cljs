@@ -351,7 +351,7 @@
             parents  (into #{} (map :parent-id) shapes)]
         (when-not (empty? shapes)
           (let [[root _ changes]
-                (cflh/generate-add-component it shapes objects page-id file-id components-v2
+                (cflh/generate-add-component (pcb/empty-changes it) shapes objects page-id file-id components-v2
                                              dwg/prepare-create-group
                                              cfsh/prepare-create-artboard-from-selection)]
             (when-not (empty? (:redo-changes changes))

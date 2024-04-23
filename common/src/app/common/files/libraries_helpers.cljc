@@ -1694,9 +1694,9 @@
   "If there is exactly one id, and it's a frame (or a group in v1), and not already a component,
   use it as root. Otherwise, create a frame (v2) or group (v1) that contains all ids. Then, make a
   component with it, and link all shapes to their corresponding one in the component."
-  [it shapes objects page-id file-id components-v2 prepare-create-group prepare-create-board]
+  [changes shapes objects page-id file-id components-v2 prepare-create-group prepare-create-board]
 
-  (let [changes      (pcb/empty-changes it page-id)
+  (let [changes      (pcb/with-page-id changes page-id)
         shapes-count (count shapes)
         first-shape  (first shapes)
 
@@ -1711,7 +1711,7 @@
                      (cfh/frame-shape? first-shape))
                  (not (ctk/instance-head? first-shape)))
           [first-shape
-           (-> (pcb/empty-changes it page-id)
+           (-> changes
                (pcb/with-objects objects))
            (:shapes first-shape)]
 
@@ -1723,7 +1723,7 @@
 
                 [root changes]
                 (if-not components-v2
-                  (prepare-create-group it            ; These functions needs to be passed as argument
+                  (prepare-create-group changes       ; These functions needs to be passed as argument
                                         objects       ; to avoid a circular dependence
                                         page-id
                                         shapes
