@@ -274,6 +274,13 @@
     (catch #?(:clj Throwable :cljs :default) _cause
       [0 0 0])))
 
+(defn hex->lum
+  [color]
+  (let [[r g b] (hex->rgb color)]
+    (mth/sqrt (+ (* 0.241 r)
+                 (* 0.691 g)
+                 (* 0.068 b)))))
+
 (defn- int->hex
   "Convert integer to hex string"
   [v]
@@ -455,3 +462,24 @@
 
     :else
     [r g (inc b)]))
+
+(defn sort-colors-by-hue
+  [a b]
+  (let [[ah] (hex->hsv (:color a))
+        [bh] (hex->hsv (:color b))]
+    (compare ah bh)))
+
+(defn sort-colors-by-lum
+  [a b]
+  (let [alum (hex->lum a)
+        blum (hex->lum b)]
+    (compare alum blum)))
+
+(defn sort-colors
+  [a b]
+  (let [alum (hex->lum a)
+        blum (hex->lum b)
+        [ah as al] (hex->hsv (:color a))
+        [bh bs bl] (hex->hsv (:color b))]
+    (prn alum blum ah bh as bs al bl)
+    (compare alum blum)))
