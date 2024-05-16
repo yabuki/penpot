@@ -1,9 +1,6 @@
 import * as React from "react";
 
 import Components from "@target/components";
-// export default {
-//   title: "Components/Avatar",
-// };
 
 export default {
   title: "Components/Avatar",
@@ -28,9 +25,7 @@ export default {
     },
     color: {
       description: "Avatar default color",
-      control: "range",
-      min: 1,
-      max: 9,
+      control: { type: "range", min: 1, max: 9, step: 1 },
     },
   },
 };
