@@ -4,7 +4,6 @@
    [rumext.v2 :as mf]))
 
 (mf/defc simple-button
-  {::mf/wrap-props false}
-  [{:keys [on-click children]}]
-  [:button {:on-click on-click :class (stl/css :button)} children])
+  [{:keys [children]}]
+  [:button {:class (stl/css :button)} children])
 

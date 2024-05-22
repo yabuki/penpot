@@ -1,30 +1,31 @@
 import * as React from "react";
 
 import Components from "@target/components";
-import Icons from "@target/icons";
 
 export default {
-  title: 'Buttons/Simple Button',
+  title: "Components/Simple Button",
   component: Components.SimpleButton,
+  argTypes: {
+    variant: {
+      description: "type description",
+      control: "select",
+      options: ["primary", "secondary"],
+    },
+    children: {
+      description: "Call to action",
+      control: "text",
+    },
+  },
 };
 
 export const Default = {
-  render: () => (
+  args: {
+    children: "call to action",
+    variant: "primary",
+  },
+  render: (args) => (
     <Components.StoryWrapper>
-      <Components.SimpleButton>
-        Simple Button
-      </Components.SimpleButton>
+      <Components.SimpleButton>{args.children}</Components.SimpleButton>
     </Components.StoryWrapper>
   ),
 };
-
-export const WithIcon = {
-  render: () => (
-    <Components.StoryWrapper>
-      <Components.SimpleButton>
-        {Icons.AddRefactor}
-        Simple Button
-      </Components.SimpleButton>
-    </Components.StoryWrapper>
-  ),
-}
