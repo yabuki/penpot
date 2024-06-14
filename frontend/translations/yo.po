@@ -2208,7 +2208,7 @@ msgid "labels.sketch"
 msgstr "Yàwòrán"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.some"
+msgid "labels.some"
 msgstr "Díẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
