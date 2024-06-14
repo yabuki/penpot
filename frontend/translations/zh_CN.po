@@ -2306,15 +2306,15 @@ msgid "profile.recovery.go-to-login"
 msgstr "去登录"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.11-30"
+msgid "onboarding.questions.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.2-10"
+msgid "onboarding.questions.team-size.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.31-50"
+msgid "onboarding.questions.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2358,7 +2358,7 @@ msgid "labels.marketing"
 msgstr "市场营销"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.more-than-50"
+msgid "onboarding.questions.team-size.more-than-50"
 msgstr "50以上"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2374,7 +2374,7 @@ msgid "labels.other"
 msgstr "其他（请注明）"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.personal-project"
+msgid "onboarding.questions.team-size.personal-project"
 msgstr "我在做个人项目"
 
 #: src/app/main/ui/onboarding/questions.cljs

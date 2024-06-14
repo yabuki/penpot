@@ -1894,15 +1894,15 @@ msgid "profile.recovery.go-to-login"
 msgstr "Gaa na mbanye"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.11-30"
+msgid "onboarding.questions.team-size.11-30"
 msgstr "Iri na otu ruo na iri atọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.2-10"
+msgid "onboarding.questions.team-size.2-10"
 msgstr "Abụọ ruo na iri"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.31-50"
+msgid "onboarding.questions.team-size.31-50"
 msgstr "Iri atọ na otu ruo na iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -1946,7 +1946,7 @@ msgid "labels.marketing"
 msgstr "Ịzụ ahịa"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.more-than-50"
+msgid "onboarding.questions.team-size.more-than-50"
 msgstr "Karịrị iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -1962,7 +1962,7 @@ msgid "labels.other"
 msgstr "Ọzọ (zipụta)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.personal-project"
+msgid "onboarding.questions.team-size.personal-project"
 msgstr "A na m arụ ọrụ n'arụmarụ onwe"
 
 #: src/app/main/ui/onboarding/questions.cljs

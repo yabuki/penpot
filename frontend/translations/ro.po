@@ -2334,15 +2334,15 @@ msgid "profile.recovery.go-to-login"
 msgstr "Mergi la autentificare"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.11-30"
+msgid "onboarding.questions.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.2-10"
+msgid "onboarding.questions.team-size.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.31-50"
+msgid "onboarding.questions.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2370,7 +2370,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Să începem!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.more-than-50"
+msgid "onboarding.questions.team-size.more-than-50"
 msgstr "Mai mult de 50"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2382,7 +2382,7 @@ msgid "labels.other"
 msgstr "Alta (specificați)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.personal-project"
+msgid "onboarding.questions.team-size.personal-project"
 msgstr "Lucrez la un proiect personal"
 
 #: src/app/main/ui/onboarding/questions.cljs

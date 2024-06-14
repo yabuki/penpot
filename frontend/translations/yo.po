@@ -2120,15 +2120,15 @@ msgid "profile.recovery.go-to-login"
 msgstr "Lọ láti wọlé"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.11-30"
+msgid "onboarding.questions.team-size.11-30"
 msgstr "Mọ́kànlá-Ọgbọ̀n"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.2-10"
+msgid "onboarding.questions.team-size.2-10"
 msgstr "Méjì – mẹ́wàá"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.31-50"
+msgid "onboarding.questions.team-size.31-50"
 msgstr "Mọ́kànlélọ́gbọ̀n-Àádọ́ta"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2172,7 +2172,7 @@ msgid "labels.marketing"
 msgstr "Títajà"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.more-than-50"
+msgid "onboarding.questions.team-size.more-than-50"
 msgstr "Ju àádọ́ta lọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2188,7 +2188,7 @@ msgid "labels.other"
 msgstr "Òmíìràn(ní pàtó)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.personal-project"
+msgid "onboarding.questions.team-size.personal-project"
 msgstr "Mò ń siṣẹ́ àgbéṣẹ ti ara mi ni"
 
 #: src/app/main/ui/onboarding/questions.cljs

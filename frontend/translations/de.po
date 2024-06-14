@@ -2500,15 +2500,15 @@ msgid "profile.recovery.go-to-login"
 msgstr "Zur Anmeldung"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.11-30"
+msgid "onboarding.questions.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.2-10"
+msgid "onboarding.questions.team-size.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.31-50"
+msgid "onboarding.questions.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2552,7 +2552,7 @@ msgid "labels.marketing"
 msgstr "Marketing"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.more-than-50"
+msgid "onboarding.questions.team-size.more-than-50"
 msgstr "Mehr als 50"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2568,7 +2568,7 @@ msgid "labels.other"
 msgstr "Sonstiges (bitte angeben)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.team-size.personal-project"
+msgid "onboarding.questions.team-size.personal-project"
 msgstr "Ich arbeite an einem persönlichen Projekt"
 
 #: src/app/main/ui/onboarding/questions.cljs
