@@ -2248,10 +2248,6 @@ msgid "questions.canva"
 msgstr "Canva"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.describe-your-experience-working-on"
-msgstr "ta  ya za ka bayyana kwarewarka akai..."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.developer"
 msgstr "ma su qirqira"
 

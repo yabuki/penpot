@@ -1922,10 +1922,6 @@ msgid "questions.canva"
 msgstr "Kanva"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.describe-your-experience-working-on"
-msgstr "Kedụ ka Ị ga-esi kọwaa ọfụma ihe ndị ị hụrụ ịrụ ọrụ na..."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.developer"
 msgstr "Onye nrụpụta"
 

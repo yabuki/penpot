@@ -2528,11 +2528,6 @@ msgid "questions.canva"
 msgstr "Canva"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.describe-your-experience-working-on"
-msgstr ""
-"Wie würden Sie Ihre Erfahrungen bei der Arbeit an … am besten beschreiben?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.developer"
 msgstr "Developer"
 

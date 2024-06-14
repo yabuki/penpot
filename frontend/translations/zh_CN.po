@@ -5018,10 +5018,6 @@ msgid "onboarding.team-modal.team-definition"
 msgstr "团队是什么？"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.describe-your-experience-working-on"
-msgstr "对你经历的最好描述是："
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.never-used-one"
 msgstr "都没用过"
 

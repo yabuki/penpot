@@ -2148,12 +2148,6 @@ msgid "questions.canva"
 msgstr "Káńfà"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.describe-your-experience-working-on"
-msgstr ""
-"Báwo ni ó ti le ṣe àpèjúwe bó ṣe dára tó lórí ìrírí rẹ lórí iṣẹ́ tí o ń ṣe "
-"lọ́wọ́..."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.developer"
 msgstr "Olùdásílẹ̀"
 
