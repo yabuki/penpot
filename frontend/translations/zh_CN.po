@@ -2322,10 +2322,6 @@ msgid "onboarding.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.a-lot"
-msgstr "非常多"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.adobe-xd"
 msgstr "Adobe XD"
 
