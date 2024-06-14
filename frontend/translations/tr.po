@@ -2487,10 +2487,6 @@ msgid "labels.freelancer"
 msgstr "Serbest çalışıyorum"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.get-the-code-from-my-team-project"
-msgstr "Takım projemin kodunu al "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... kullanıcı arayüzü tasarımı, görsel öğeler, tasarım sistemleri, vb."
 

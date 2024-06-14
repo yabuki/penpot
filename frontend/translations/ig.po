@@ -1934,10 +1934,6 @@ msgid "labels.freelancer"
 msgstr "Onye nwere onwe ya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.get-the-code-from-my-team-project"
-msgstr "Weta akara site n'arụmarụ otu m "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... Nhazi ihu nse, uru ahụmụzọ, usoro imewe , etc."
 

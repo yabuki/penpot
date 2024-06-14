@@ -2438,10 +2438,6 @@ msgid "labels.freelancer"
 msgstr "Jsem freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.get-the-code-from-my-team-project"
-msgstr "Získejte kód z mého týmového projektu "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... design rozhraní, vizuální aktiva, návrhové systémy atd."
 
