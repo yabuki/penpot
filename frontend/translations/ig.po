@@ -1994,7 +1994,7 @@ msgid "labels.student-teacher"
 msgstr "Nwata akwụkwọ ma ọ bụ onye nkụzi"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "Kedụ ka otu gị ha?"
 
 #: src/app/main/ui/onboarding/questions.cljs

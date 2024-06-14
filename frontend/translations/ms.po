@@ -2433,7 +2433,7 @@ msgid "labels.student-teacher"
 msgstr "Pelajar atau guru"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "Berapakah saiz pasukan anda?"
 
 #: src/app/main/ui/onboarding/questions.cljs

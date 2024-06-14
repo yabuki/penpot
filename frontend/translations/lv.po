@@ -2557,7 +2557,7 @@ msgid "labels.student-teacher"
 msgstr "Students vai pasniedzējs"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "Cik liela ir komanda?"
 
 #: src/app/main/ui/onboarding/questions.cljs

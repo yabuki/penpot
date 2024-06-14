@@ -2503,7 +2503,7 @@ msgid "labels.student-teacher"
 msgstr "סטודנט/ית או מרצה"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "מה גודל הצוות שלך?"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2402,7 +2402,7 @@ msgid "labels.student-teacher"
 msgstr "学生/教师"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "你的团队有多少人？"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2220,7 +2220,7 @@ msgid "labels.student-teacher"
 msgstr "Akẹ́kọ̀ọ́ tàbí olùkọ̀ọ́"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "kín ni ìwọ̀n ẹgbẹ́ rẹ ?"
 
 #: src/app/main/ui/onboarding/questions.cljs

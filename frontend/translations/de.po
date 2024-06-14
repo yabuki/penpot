@@ -2604,7 +2604,7 @@ msgid "labels.student-teacher"
 msgstr "Schüler oder Lehrer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "Wie groß ist Ihr Team?"
 
 #: src/app/main/ui/onboarding/questions.cljs

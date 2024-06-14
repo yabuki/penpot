@@ -2324,7 +2324,7 @@ msgid "labels.student-teacher"
 msgstr "malami ko dalibi"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.team-size"
+msgid "onboarding.questions.step3.question3"
 msgstr "bayyana yawan tawagarka?"
 
 #: src/app/main/ui/onboarding/questions.cljs
