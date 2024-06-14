@@ -2362,7 +2362,7 @@ msgid "labels.marketing"
 msgstr "市场营销"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "50以上"
 
 #: src/app/main/ui/onboarding/questions.cljs

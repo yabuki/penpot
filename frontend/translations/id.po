@@ -2448,7 +2448,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Mari kita mulai!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "Lebih dari 50"
 
 #: src/app/main/ui/onboarding/questions.cljs

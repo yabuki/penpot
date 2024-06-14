@@ -1950,7 +1950,7 @@ msgid "labels.marketing"
 msgstr "Ịzụ ahịa"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "Karịrị iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs

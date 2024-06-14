@@ -2469,7 +2469,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Vamos começar!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "Mais de 50"
 
 #: src/app/main/ui/onboarding/questions.cljs

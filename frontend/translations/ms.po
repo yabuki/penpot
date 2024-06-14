@@ -2385,7 +2385,7 @@ msgid "labels.marketing"
 msgstr "Pemasaran"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "Lebih daripada 50"
 
 #: src/app/main/ui/onboarding/questions.cljs

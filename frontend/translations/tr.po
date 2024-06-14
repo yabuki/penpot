@@ -2503,7 +2503,7 @@ msgid "labels.marketing"
 msgstr "Pazarlama"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "50'den fazla"
 
 #: src/app/main/ui/onboarding/questions.cljs
