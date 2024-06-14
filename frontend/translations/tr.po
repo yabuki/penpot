@@ -2499,7 +2499,7 @@ msgid "labels.product-management"
 msgstr "Ürün veya Proje yöneticisi"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Pazarlama"
 
 #: src/app/main/ui/onboarding/questions.cljs

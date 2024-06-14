@@ -2450,7 +2450,7 @@ msgid "labels.product-management"
 msgstr "Produktový nebo projektový manažer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Marketing"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2552,7 +2552,7 @@ msgid "labels.product-management"
 msgstr "Produkt- oder Projektmanager"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Marketing"
 
 #: src/app/main/ui/onboarding/questions.cljs

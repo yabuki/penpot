@@ -2358,7 +2358,7 @@ msgid "labels.product-management"
 msgstr "产品经理/项目经理"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "市场营销"
 
 #: src/app/main/ui/onboarding/questions.cljs

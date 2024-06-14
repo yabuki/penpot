@@ -2172,7 +2172,7 @@ msgid "labels.product-management"
 msgstr "Ohun títà tàbí iṣẹ́ àgbéṣe Olùṣàkóso"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Títajà"
 
 #: src/app/main/ui/onboarding/questions.cljs

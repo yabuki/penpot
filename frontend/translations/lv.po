@@ -2513,7 +2513,7 @@ msgid "labels.product-management"
 msgstr "Produktu vai projektu vadītājs"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Tirgvedība"
 
 #: src/app/main/ui/onboarding/questions.cljs

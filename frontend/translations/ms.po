@@ -2381,7 +2381,7 @@ msgid "labels.product-management"
 msgstr "Pengurus Produk atau Projek"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.marketing"
+msgid "labels.marketing"
 msgstr "Pemasaran"
 
 #: src/app/main/ui/onboarding/questions.cljs
