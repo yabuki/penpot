@@ -2386,10 +2386,6 @@ msgid "labels.previous"
 msgstr "前一项"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "你计划用Penpot做什么？"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "你是哪种身份？"
 

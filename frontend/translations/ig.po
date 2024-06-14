@@ -1970,10 +1970,6 @@ msgid "onboarding.team-size.personal-project"
 msgstr "A na m arụ ọrụ n'arụmarụ onwe"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Kedụ ka ị sị akwado iji ite mkpịsị arụ ọrụ ?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Gịnị bụ ọrụ gị ?"
 

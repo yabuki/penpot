@@ -2409,10 +2409,6 @@ msgid "labels.previous"
 msgstr "Sebelumnya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Bagaimanakah anda merancang untuk menggunakan Penpot?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Apakah peranan anda?"
 

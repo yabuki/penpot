@@ -2300,10 +2300,6 @@ msgid "labels.previous"
 msgstr "can baya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "ya kake tunanin aiki da fenfot?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "mi ne ne matsayinka?"
 

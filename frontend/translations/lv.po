@@ -2537,10 +2537,6 @@ msgid "labels.previous"
 msgstr "Iepriekšējais"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Kā ir iecerēts izmantot Penpot?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Kāda ir ieņemamā loma?"
 

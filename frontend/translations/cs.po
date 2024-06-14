@@ -2478,10 +2478,6 @@ msgid "labels.previous"
 msgstr "Předchozí"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Jak plánujete používat Penpot?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Jaká je vaše role?"
 

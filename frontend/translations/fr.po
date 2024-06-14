@@ -2427,10 +2427,6 @@ msgid "labels.previous"
 msgstr "Précédent"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Comment comptez-vous utiliser Penpot ?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Quel est votre rôle ?"
 

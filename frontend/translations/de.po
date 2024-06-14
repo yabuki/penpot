@@ -2580,10 +2580,6 @@ msgid "labels.previous"
 msgstr "Zurück"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.questions-how-are-you-planning-to-use-penpot"
-msgstr "Wie wollen Sie Penpot nutzen?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.role"
 msgstr "Was ist Ihre Rolle?"
 
