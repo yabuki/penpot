@@ -2338,10 +2338,6 @@ msgid "labels.developer"
 msgstr "开发者"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "深入了解Penpot的精彩之处"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Figma"
 

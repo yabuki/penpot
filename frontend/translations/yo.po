@@ -2158,10 +2158,6 @@ msgid "labels.developer"
 msgstr "Olùdásílẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "Ṣàwárí sí i nípa pẹ́ńpọtì"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Fígímà"
 

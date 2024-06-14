@@ -2493,10 +2493,6 @@ msgid "labels.developer"
 msgstr "Izstrādātājs"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "Atklāt vairāk par Penpot"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Figma"
 

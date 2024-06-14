@@ -2537,10 +2537,6 @@ msgid "labels.developer"
 msgstr "Developer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "Mehr über Penpot erfahren"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Figma"
 

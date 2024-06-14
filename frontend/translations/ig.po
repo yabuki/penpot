@@ -1930,10 +1930,6 @@ msgid "labels.developer"
 msgstr "Onye nrụpụta"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "Chọpụta ihe ndị ọzọ gbasara ite mkpịsị"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Ihe onyonyo"
 

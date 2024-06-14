@@ -2256,10 +2256,6 @@ msgid "labels.developer"
 msgstr "ma su qirqira"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.discover-more-about-penpot"
-msgstr "qara samun bayanin fenfot"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.figma"
 msgstr "Figma"
 
