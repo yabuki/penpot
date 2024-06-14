@@ -2529,7 +2529,7 @@ msgid "labels.other"
 msgstr "Cits (jānorāda)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "Strādāju personīgā projektā"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2470,7 +2470,7 @@ msgid "labels.other"
 msgstr "Jiné (upřesněte)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "Pracuji na osobním projektu"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2386,7 +2386,7 @@ msgid "labels.other"
 msgstr "Alta (specificați)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "Lucrez la un proiect personal"
 
 #: src/app/main/ui/onboarding/questions.cljs

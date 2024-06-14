@@ -2292,7 +2292,7 @@ msgid "labels.other"
 msgstr "idan akwai qari (bayyana)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "ina aikin kaina"
 
 #: src/app/main/ui/onboarding/questions.cljs

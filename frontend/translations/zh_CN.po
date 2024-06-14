@@ -2378,7 +2378,7 @@ msgid "labels.other"
 msgstr "其他（请注明）"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "我在做个人项目"
 
 #: src/app/main/ui/onboarding/questions.cljs
