@@ -2475,7 +2475,7 @@ msgid "labels.next"
 msgstr "הבאה"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "אחר (נא לפרט)"
 
 #: src/app/main/ui/onboarding/questions.cljs

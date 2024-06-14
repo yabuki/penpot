@@ -2288,7 +2288,7 @@ msgid "labels.none"
 msgstr "babu"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "idan akwai qari (bayyana)"
 
 #: src/app/main/ui/onboarding/questions.cljs

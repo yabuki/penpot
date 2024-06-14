@@ -2397,7 +2397,7 @@ msgid "labels.none"
 msgstr "Tiada"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Lain-lain (nyatakan)"
 
 #: src/app/main/ui/onboarding/questions.cljs

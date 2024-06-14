@@ -2374,7 +2374,7 @@ msgid "labels.none"
 msgstr "无"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "其他（请注明）"
 
 #: src/app/main/ui/onboarding/questions.cljs

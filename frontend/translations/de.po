@@ -2568,7 +2568,7 @@ msgid "labels.none"
 msgstr "Keine"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Sonstiges (bitte angeben)"
 
 #: src/app/main/ui/onboarding/questions.cljs

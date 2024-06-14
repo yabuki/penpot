@@ -2466,7 +2466,7 @@ msgid "labels.none"
 msgstr "Žádný"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Jiné (upřesněte)"
 
 #: src/app/main/ui/onboarding/questions.cljs

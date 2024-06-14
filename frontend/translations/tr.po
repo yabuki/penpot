@@ -2515,7 +2515,7 @@ msgid "labels.none"
 msgstr "Hiçbiri"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Diğer (lütfen belirtiniz)"
 
 #: src/app/main/ui/onboarding/questions.cljs

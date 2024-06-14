@@ -2188,7 +2188,7 @@ msgid "labels.none"
 msgstr "Kòsí"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Òmíìràn(ní pàtó)"
 
 #: src/app/main/ui/onboarding/questions.cljs

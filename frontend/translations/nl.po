@@ -2527,7 +2527,7 @@ msgid "labels.next"
 msgstr "Volgende"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Anders (namelijk…)"
 
 #: src/app/main/ui/onboarding/questions.cljs

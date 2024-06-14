@@ -2382,7 +2382,7 @@ msgid "labels.next"
 msgstr "Următor"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Alta (specificați)"
 
 #: src/app/main/ui/onboarding/questions.cljs

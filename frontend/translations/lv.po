@@ -2525,7 +2525,7 @@ msgid "labels.next"
 msgstr "Nākamais"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.other"
+msgid "labels.other"
 msgstr "Cits (jānorāda)"
 
 #: src/app/main/ui/onboarding/questions.cljs
