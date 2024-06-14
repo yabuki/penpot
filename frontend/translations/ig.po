@@ -1998,10 +1998,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "Kedụ ka otu gị ha?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "Nwale ite mkpịsị ịhụ ma ọ bụ ihe ndaba maka otu "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "Gbalịa mee mbụ tupu ị jiri ite mkpịsị rụọ ọrụ n'ebe ọ dị"
 

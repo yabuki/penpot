@@ -2561,10 +2561,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "Cik liela ir komanda?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "Izmēģini Penpot, lai saprastu, vai tā der komandai "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "Izmēģināt pirms izvietotas Penpot izmantošanas"
 

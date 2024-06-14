@@ -2509,10 +2509,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "De que tamanho é a tua equipa?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "Testar o Penpot para ver se é adequado para a minha equipa "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "Experimentar o Penpot antes de usar num servidor privado"
 

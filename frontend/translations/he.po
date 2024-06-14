@@ -2507,10 +2507,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "מה גודל הצוות שלך?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "לבדוק את Penpot ולראות אם הוא מתאים לצוות שלי "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "אפשר להתנסות לפני שימוש ב־Penpot אצלך בעבודה"
 

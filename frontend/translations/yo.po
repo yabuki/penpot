@@ -2224,10 +2224,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "kín ni ìwọ̀n ẹgbẹ́ rẹ ?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "Ṣàyẹ̀wọ̀ pẹ́ńpọtì láti rí pé ó bẹ́gbẹ́ mu "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "Gbìyànjú láti mọ̀ kí o tó bẹ̀rẹ̀ sí lo pẹ́ńpọtì ní àyíká"
 

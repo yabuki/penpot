@@ -2328,10 +2328,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "bayyana yawan tawagarka?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "jaraba fenfot ka ga ko ta yi daidai da tawaga "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "jaraba kafin ka yi aiki da fenfot"
 

@@ -2406,10 +2406,6 @@ msgid "onboarding.questions.step3.question3"
 msgstr "你的团队有多少人？"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.test-penpot-to-see-if-its-a-fit-for-team"
-msgstr "试用Penpot，来看它是否适合团队 "
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.try-out-before-using-penpot-on-premise"
 msgstr "在本地部署Penpot前进行试用"
 
