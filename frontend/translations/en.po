@@ -2517,27 +2517,27 @@ msgid "onboarding.questions.step3.question3"
 msgstr "What's the size of your company?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "More than 50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.31-50"
+msgid "onboarding.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.11-30"
+msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.2-10"
+msgid "onboarding.team-size.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.freelancer"
+msgid "onboarding.team-size.freelancer"
 msgstr "I'm a freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "I’m working in a personal project"
 
 #: src/app/main/ui/onboarding/questions.cljs

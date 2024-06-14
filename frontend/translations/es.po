@@ -2628,15 +2628,15 @@ msgid "onboarding.questions.step3.question3"
 msgstr "¿Cuál es el tamaño de tu empresa?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.more-than-50"
+msgid "onboarding.team-size.more-than-50"
 msgstr "Más de 50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.31-50"
+msgid "onboarding.team-size.31-50"
 msgstr "31-50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.11-30"
+msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2644,11 +2644,11 @@ msgid "onboarding.questions.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.labels.freelancer"
+msgid "onboarding.team-size.freelancer"
 msgstr "Soy autónomo"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.team-size.personal-project"
+msgid "onboarding.team-size.personal-project"
 msgstr "Estoy trabajando en un proyecto personal"
 
 #: src/app/main/ui/onboarding/questions.cljs

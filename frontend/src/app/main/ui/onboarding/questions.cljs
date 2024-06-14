@@ -269,12 +269,12 @@
         team-size-options
         (mf/with-memo []
           [{:label (tr "labels.select-option") :value "" :key "team-size" :disabled true}
-           {:label (tr "onboarding.questions.team-size.more-than-50") :value "more-than-50" :key "more-than-50"}
-           {:label (tr "onboarding.questions.team-size.31-50") :value "31-50"  :key "31-50"}
-           {:label (tr "onboarding.questions.team-size.11-30") :value "11-30" :key "11-30"}
-           {:label (tr "onboarding.questions.team-size.2-10") :value "2-10" :key "2-10"}
-           {:label (tr "onboarding.questions.team-size.freelancer") :value "freelancer" :key "freelancer"}
-           {:label (tr "onboarding.questions.team-size.personal-project") :value "personal-project" :key "personal-project"}])
+           {:label (tr "onboarding.team-size.more-than-50") :value "more-than-50" :key "more-than-50"}
+           {:label (tr "onboarding.team-size.31-50") :value "31-50"  :key "31-50"}
+           {:label (tr "onboarding.team-size.11-30") :value "11-30" :key "11-30"}
+           {:label (tr "onboarding.team-size.2-10") :value "2-10" :key "2-10"}
+           {:label (tr "onboarding.team-size.freelancer") :value "freelancer" :key "freelancer"}
+           {:label (tr "onboarding.team-size.personal-project") :value "personal-project" :key "personal-project"}])
 
         current-role
         (dm/get-in @form [:data :role])
