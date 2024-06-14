@@ -2398,10 +2398,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Přejít na přihlášení"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "S jakým designovým nástrojem máte více zkušeností?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

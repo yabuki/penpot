@@ -2220,10 +2220,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "je ka hanyar shiga"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "wane kayan zane ka fi iya aiki da shi?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

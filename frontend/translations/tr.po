@@ -2447,10 +2447,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Oturum açmaya git"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Hangi tasarım aracını daha iyi kullanıyorsunuz?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

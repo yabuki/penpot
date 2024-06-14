@@ -2461,10 +2461,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Doties uz pieteikšanos"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Ar kuru no šiem rīkiem ir bijusi lielākā pieredze?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

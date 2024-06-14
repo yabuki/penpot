@@ -2423,10 +2423,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "מעבר למסך הכניסה"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "באיזה כלי עיצוב יש לך יותר ניסיון?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11‏-30"
 

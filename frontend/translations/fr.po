@@ -2347,10 +2347,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Aller à la page de connexion"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Quel est l'outil de design avec lequel vous avez plus d'expérience?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

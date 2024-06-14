@@ -2120,10 +2120,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Lọ láti wọlé"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Èwo ni ohun èlò irin iṣẹ́ tí o ní ìmọ̀ kíkún nínú pẹ̀lú rẹ̀?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "Mọ́kànlá-Ọgbọ̀n"
 

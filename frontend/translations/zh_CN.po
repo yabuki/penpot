@@ -2306,10 +2306,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "去登录"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "你最熟悉哪个设计工具？"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

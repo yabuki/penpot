@@ -2334,10 +2334,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Mergi la autentificare"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Care este unealta de design cu care aveți mai multă experiență?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

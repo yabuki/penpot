@@ -2500,10 +2500,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Zur Anmeldung"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Mit welchem Design-Tool haben Sie mehr Erfahrung?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

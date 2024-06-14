@@ -2479,10 +2479,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Ga naar inlogscherm"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Met welke ontwerptool heb je meer ervaring?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 

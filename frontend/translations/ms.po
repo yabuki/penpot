@@ -2329,10 +2329,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Pergi ke log masuk"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Alat reka bentuk yang manakah anda mempunyai lebih banyak pengalaman?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 
