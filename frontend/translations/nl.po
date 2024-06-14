@@ -2503,11 +2503,11 @@ msgid "questions.canva"
 msgstr "Canva"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Ik ben een freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs

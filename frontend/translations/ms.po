@@ -2373,15 +2373,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Ketahui lebih lanjut tentang Penpot"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Pengasas/VP"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Saya seorang pekerja bebas (freelancer)"
 
 #: src/app/main/ui/onboarding/questions.cljs

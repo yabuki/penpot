@@ -2545,15 +2545,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Mehr über Penpot erfahren"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Gründer/VP"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Ich bin ein Freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2442,15 +2442,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Zjistěte více o Penpot"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Zakladatel / viceprezident"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Jsem freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs

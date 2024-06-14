@@ -2346,15 +2346,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "深入了解Penpot的精彩之处"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "创始人/副总裁"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "我是一名自由职业者"
 
 #: src/app/main/ui/onboarding/questions.cljs

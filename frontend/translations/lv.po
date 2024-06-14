@@ -2501,15 +2501,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Atklāt vairāk par Penpot"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Dibinātājs/viceprezidents"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Esmu ārštātnieks(-ce)/Pašnodarbināts(-ā)"
 
 #: src/app/main/ui/onboarding/questions.cljs

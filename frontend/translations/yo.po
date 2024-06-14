@@ -2166,15 +2166,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Ṣàwárí sí i nípa pẹ́ńpọtì"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Fígímà"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Olùdásílẹ̀/VP"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Oníṣẹ́ ni mí"
 
 #: src/app/main/ui/onboarding/questions.cljs

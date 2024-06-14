@@ -2644,7 +2644,7 @@ msgid "onboarding.questions.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.freelancer"
+msgid "onboarding.labels.freelancer"
 msgstr "Soy autónomo"
 
 #: src/app/main/ui/onboarding/questions.cljs

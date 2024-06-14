@@ -1934,15 +1934,15 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Chọpụta ihe ndị ọzọ gbasara ite mkpịsị"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Ihe onyonyo"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.founder"
+msgid "labels.founder"
 msgstr "Onye malitere /VP"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Onye nwere onwe ya"
 
 #: src/app/main/ui/onboarding/questions.cljs

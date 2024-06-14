@@ -2445,11 +2445,11 @@ msgid "questions.discover-more-about-penpot"
 msgstr "Jelajahi lebih lanjut tentang Penpot"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.figma"
+msgid "labels.figma"
 msgstr "Figma"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.freelancer"
+msgid "labels.freelancer"
 msgstr "Saya seorang pekerja lepas"
 
 #: src/app/main/ui/onboarding/questions.cljs
