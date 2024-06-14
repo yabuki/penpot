@@ -2350,10 +2350,6 @@ msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.leave-feedback-for-my-team-project"
-msgstr "给我的团队项目做反馈"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.lets-get-started"
 msgstr "让我们开始吧！"
 

@@ -2544,10 +2544,6 @@ msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.leave-feedback-for-my-team-project"
-msgstr "Feedback für mein Team-Projekt hinterlassen"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.lets-get-started"
 msgstr "Los geht's!"
 

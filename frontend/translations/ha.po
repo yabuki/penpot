@@ -2264,10 +2264,6 @@ msgid "labels.invision"
 msgstr "teburin aiki"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.leave-feedback-for-my-team-project"
-msgstr "barin aikin tawaga"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.lets-get-started"
 msgstr "za mu fara!"
 
