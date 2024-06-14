@@ -2124,15 +2124,15 @@ msgid "question.design-tool-more-experienced-with"
 msgstr "Èwo ni ohun èlò irin iṣẹ́ tí o ní ìmọ̀ kíkún nínú pẹ̀lú rẹ̀?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.11-30"
+msgid "onboarding.team-size.11-30"
 msgstr "Mọ́kànlá-Ọgbọ̀n"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.2-10"
+msgid "onboarding.team-size.2-10"
 msgstr "Méjì – mẹ́wàá"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.31-50"
+msgid "onboarding.team-size.31-50"
 msgstr "Mọ́kànlélọ́gbọ̀n-Àádọ́ta"
 
 #: src/app/main/ui/onboarding/questions.cljs

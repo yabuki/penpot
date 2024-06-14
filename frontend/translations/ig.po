@@ -1898,15 +1898,15 @@ msgid "question.design-tool-more-experienced-with"
 msgstr "Kedu ngwa ọrụ nse ị ka mara eji arụ ọrụ ?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.11-30"
+msgid "onboarding.team-size.11-30"
 msgstr "Iri na otu ruo na iri atọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.2-10"
+msgid "onboarding.team-size.2-10"
 msgstr "Abụọ ruo na iri"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.31-50"
+msgid "onboarding.team-size.31-50"
 msgstr "Iri atọ na otu ruo na iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs
