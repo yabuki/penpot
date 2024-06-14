@@ -2505,7 +2505,7 @@ msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.lets-get-started"
+msgid "onboarding.lets-get-started"
 msgstr "Ķeramies pie darba!"
 
 #: src/app/main/ui/onboarding/questions.cljs

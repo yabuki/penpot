@@ -116,7 +116,7 @@
 
      [:img {:class (stl/css :header-image)
             :src "images/form/use-for-1.png"
-            :alt (tr "onboarding.questions.lets-get-started")}]
+            :alt (tr "onboarding.lets-get-started")}]
      [:h1 {:class (stl/css :modal-title)}
       (tr "onboarding.questions.step1.title")]
      [:p {:class (stl/css :modal-text)}

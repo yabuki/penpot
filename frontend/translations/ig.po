@@ -1938,7 +1938,7 @@ msgid "labels.invision"
 msgstr "Mmakpo"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.lets-get-started"
+msgid "onboarding.lets-get-started"
 msgstr "Ka anyị bido!"
 
 #: src/app/main/ui/onboarding/questions.cljs

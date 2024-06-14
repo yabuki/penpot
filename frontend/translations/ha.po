@@ -2264,7 +2264,7 @@ msgid "labels.invision"
 msgstr "teburin aiki"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.lets-get-started"
+msgid "onboarding.lets-get-started"
 msgstr "za mu fara!"
 
 #: src/app/main/ui/onboarding/questions.cljs

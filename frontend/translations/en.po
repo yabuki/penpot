@@ -2589,7 +2589,7 @@ msgid "labels.article"
 msgstr "Article (Blog, Post, Newsletter)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.lets-get-started"
+msgid "onboarding.lets-get-started"
 msgstr "Let's get started!"
 
 #: src/app/main/ui/onboarding/questions.cljs
