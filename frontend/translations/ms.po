@@ -2409,7 +2409,7 @@ msgid "labels.previous"
 msgstr "Sebelumnya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Apakah peranan anda?"
 
 #: src/app/main/ui/onboarding/questions.cljs

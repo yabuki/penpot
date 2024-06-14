@@ -2300,7 +2300,7 @@ msgid "labels.previous"
 msgstr "can baya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "mi ne ne matsayinka?"
 
 #: src/app/main/ui/onboarding/questions.cljs

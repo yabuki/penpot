@@ -2427,7 +2427,7 @@ msgid "labels.previous"
 msgstr "Précédent"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Quel est votre rôle ?"
 
 #: src/app/main/ui/onboarding/questions.cljs

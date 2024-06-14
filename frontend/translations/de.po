@@ -2580,7 +2580,7 @@ msgid "labels.previous"
 msgstr "Zurück"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Was ist Ihre Rolle?"
 
 #: src/app/main/ui/onboarding/questions.cljs

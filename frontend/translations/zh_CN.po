@@ -2386,7 +2386,7 @@ msgid "labels.previous"
 msgstr "前一项"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "你是哪种身份？"
 
 #: src/app/main/ui/onboarding/questions.cljs

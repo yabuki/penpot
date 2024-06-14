@@ -1970,7 +1970,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "A na m arụ ọrụ n'arụmarụ onwe"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Gịnị bụ ọrụ gị ?"
 
 #: src/app/main/ui/onboarding/questions.cljs

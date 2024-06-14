@@ -2537,7 +2537,7 @@ msgid "labels.previous"
 msgstr "Iepriekšējais"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Kāda ir ieņemamā loma?"
 
 #: src/app/main/ui/onboarding/questions.cljs

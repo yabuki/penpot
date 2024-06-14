@@ -2478,7 +2478,7 @@ msgid "labels.previous"
 msgstr "Předchozí"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.role"
+msgid "onboarding.questions.step3.question2"
 msgstr "Jaká je vaše role?"
 
 #: src/app/main/ui/onboarding/questions.cljs
