@@ -2489,11 +2489,7 @@ msgid "questions.describe-your-experience-working-on"
 msgstr "Kā vislabāk raksturotu savu pieredzi strādājot pie..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "Modelētājs"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "Izstrādātājs"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2513,7 +2509,7 @@ msgid "labels.freelancer"
 msgstr "Esmu ārštātnieks(-ce)/Pašnodarbināts(-ā)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

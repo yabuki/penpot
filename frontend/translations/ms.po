@@ -2361,11 +2361,7 @@ msgid "questions.describe-your-experience-working-on"
 msgstr "Bagaimanakah cara terbaik anda menerangkan pengalaman anda bekerja pada..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "Pereka bentuk"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "Pembangun"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2393,7 +2389,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... reka bentuk antara muka, aset visual, sistem reka bentuk, dsb."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2334,11 +2334,7 @@ msgid "questions.canva"
 msgstr "Canva"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "设计师"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "开发者"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2366,7 +2362,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "...界面设计，视觉素材，设计系统等。"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

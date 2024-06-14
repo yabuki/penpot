@@ -2467,7 +2467,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "… עיצוב מנשק, נכסים חזותיים, מערכות עיצוב, וכו׳."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

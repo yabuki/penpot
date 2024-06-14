@@ -2433,11 +2433,7 @@ msgstr ""
 "Bagaimana cara terbaik Anda menggambarkan pengalaman Anda mengerjakan..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "Perancang"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "Pengembang"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2453,7 +2449,7 @@ msgid "labels.freelancer"
 msgstr "Saya seorang pekerja lepas"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

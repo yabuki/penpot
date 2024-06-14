@@ -2379,11 +2379,7 @@ msgid "questions.describe-your-experience-working-on"
 msgstr "Comment décririez-vous votre expérience de travail sur..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "Designer"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "Développeur"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2411,7 +2407,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... design d'interface, éléments visuels, systèmes de conception, etc."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs

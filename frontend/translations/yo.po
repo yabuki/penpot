@@ -2154,11 +2154,7 @@ msgstr ""
 "lọ́wọ́..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "Olùyà nǹkan"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "Olùdásílẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2186,7 +2182,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... wíwò ètò ọnà , ìrírí àwọn ohun ìní, àwọn ètò ọnà, abbl."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "Ìkógun wọ̀lú"
 
 #: src/app/main/ui/onboarding/questions.cljs

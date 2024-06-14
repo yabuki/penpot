@@ -2252,11 +2252,7 @@ msgid "questions.describe-your-experience-working-on"
 msgstr "ta  ya za ka bayyana kwarewarka akai..."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.designer"
-msgstr "ma su tsarawa"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.developer"
+msgid "labels.developer"
 msgstr "ma su qirqira"
 
 #: src/app/main/ui/onboarding/questions.cljs
@@ -2284,7 +2280,7 @@ msgid "questions.interface-design-visual-assets-design-systems"
 msgstr "... zane-zane, kayan kallo, tsarin qira, etc."
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "teburin aiki"
 
 #: src/app/main/ui/onboarding/questions.cljs

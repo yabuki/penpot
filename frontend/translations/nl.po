@@ -2511,7 +2511,7 @@ msgid "labels.freelancer"
 msgstr "Ik ben een freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.invision"
+msgid "labels.invision"
 msgstr "InVision"
 
 #: src/app/main/ui/onboarding/questions.cljs
