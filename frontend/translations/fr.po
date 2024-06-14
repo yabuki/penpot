@@ -2367,7 +2367,7 @@ msgid "questions.adobe-xd"
 msgstr "Adobe XD"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.canva"
+msgid "labels.canva"
 msgstr "Canevas"
 
 #: src/app/main/ui/onboarding/questions.cljs

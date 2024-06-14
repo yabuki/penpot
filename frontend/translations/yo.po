@@ -2140,7 +2140,7 @@ msgid "questions.adobe-xd"
 msgstr "Àdòbí XD"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.canva"
+msgid "labels.canva"
 msgstr "Káńfà"
 
 #: src/app/main/ui/onboarding/questions.cljs

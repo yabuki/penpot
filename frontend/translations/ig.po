@@ -1914,7 +1914,7 @@ msgid "questions.adobe-xd"
 msgstr "Ngwa nrụkọrịta ọrụ Adobe"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.canva"
+msgid "labels.canva"
 msgstr "Kanva"
 
 #: src/app/main/ui/onboarding/questions.cljs
