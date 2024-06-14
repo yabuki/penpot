@@ -2308,7 +2308,7 @@ msgid "labels.select-option"
 msgstr "dauki wanda kake so"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.sketch"
+msgid "labels.sketch"
 msgstr "zana"
 
 #: src/app/main/ui/onboarding/questions.cljs

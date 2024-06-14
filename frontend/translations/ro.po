@@ -2398,7 +2398,7 @@ msgid "labels.select-option"
 msgstr "Selectați opțiune"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.sketch"
+msgid "labels.sketch"
 msgstr "Sketch"
 
 #: src/app/main/ui/onboarding/questions.cljs

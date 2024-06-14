@@ -1978,7 +1978,7 @@ msgid "labels.select-option"
 msgstr "Họrọ nhọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.sketch"
+msgid "labels.sketch"
 msgstr "Eserese"
 
 #: src/app/main/ui/onboarding/questions.cljs
