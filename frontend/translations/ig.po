@@ -1910,7 +1910,7 @@ msgid "onboarding.team-size.31-50"
 msgstr "Iri atọ na otu ruo na iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.adobe-xd"
+msgid "labels.adobe-xd"
 msgstr "Ngwa nrụkọrịta ọrụ Adobe"
 
 #: src/app/main/ui/onboarding/questions.cljs

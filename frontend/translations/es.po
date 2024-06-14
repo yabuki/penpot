@@ -2673,7 +2673,7 @@ msgstr "Creando sistemas de diseño"
 
 #: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.questions.start-with.code"
-msgstr "Generando código a partir de diseños" 
+msgstr "Generando código a partir de diseños"
 
 #: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.questions.step5.title"

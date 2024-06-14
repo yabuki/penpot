@@ -2136,7 +2136,7 @@ msgid "onboarding.team-size.31-50"
 msgstr "Mọ́kànlélọ́gbọ̀n-Àádọ́ta"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.adobe-xd"
+msgid "labels.adobe-xd"
 msgstr "Àdòbí XD"
 
 #: src/app/main/ui/onboarding/questions.cljs
