@@ -1954,7 +1954,7 @@ msgid "onboarding.team-size.more-than-50"
 msgstr "Karịrị iri ise"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.next"
+msgid "labels.next"
 msgstr "Ọzọ"
 
 #: src/app/main/ui/onboarding/questions.cljs

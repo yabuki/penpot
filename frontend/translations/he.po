@@ -2471,7 +2471,7 @@ msgid "onboarding.team-size.more-than-50"
 msgstr "גדול מ־50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.next"
+msgid "labels.next"
 msgstr "הבאה"
 
 #: src/app/main/ui/onboarding/questions.cljs

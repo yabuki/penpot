@@ -2507,7 +2507,7 @@ msgid "onboarding.team-size.more-than-50"
 msgstr "50'den fazla"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.next"
+msgid "labels.next"
 msgstr "Sonraki"
 
 #: src/app/main/ui/onboarding/questions.cljs

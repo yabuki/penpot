@@ -2180,7 +2180,7 @@ msgid "onboarding.team-size.more-than-50"
 msgstr "Ju àádọ́ta lọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.next"
+msgid "labels.next"
 msgstr "Èyí tó kàn"
 
 #: src/app/main/ui/onboarding/questions.cljs
