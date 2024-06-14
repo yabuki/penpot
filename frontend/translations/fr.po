@@ -2443,7 +2443,7 @@ msgid "labels.some"
 msgstr "Un peu"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Commencer"
 
 #: src/app/main/ui/onboarding/questions.cljs

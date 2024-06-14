@@ -2316,7 +2316,7 @@ msgid "labels.some"
 msgstr "wasu"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "fara"
 
 #: src/app/main/ui/onboarding/questions.cljs

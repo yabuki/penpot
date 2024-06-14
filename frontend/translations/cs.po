@@ -2494,7 +2494,7 @@ msgid "labels.some"
 msgstr "Nějaké"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Start"
 
 #: src/app/main/ui/onboarding/questions.cljs

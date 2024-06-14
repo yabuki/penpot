@@ -2394,7 +2394,7 @@ msgid "labels.sketch"
 msgstr "Sketch"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "开始"
 
 #: src/app/main/ui/onboarding/questions.cljs

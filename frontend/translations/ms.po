@@ -2425,7 +2425,7 @@ msgid "labels.some"
 msgstr "Beberapa"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Mula"
 
 #: src/app/main/ui/onboarding/questions.cljs

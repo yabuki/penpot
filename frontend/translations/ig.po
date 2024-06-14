@@ -1986,7 +1986,7 @@ msgid "labels.some"
 msgstr "Ụfọdụ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Bido"
 
 #: src/app/main/ui/onboarding/questions.cljs

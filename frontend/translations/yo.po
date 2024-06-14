@@ -2212,7 +2212,7 @@ msgid "labels.some"
 msgstr "Díẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Bẹ̀rẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs

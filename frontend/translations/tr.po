@@ -2543,7 +2543,7 @@ msgid "labels.some"
 msgstr "Biraz"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start"
+msgid "labels.start"
 msgstr "Başla"
 
 #: src/app/main/ui/onboarding/questions.cljs
