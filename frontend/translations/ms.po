@@ -2369,10 +2369,6 @@ msgid "labels.freelancer"
 msgstr "Saya seorang pekerja bebas (freelancer)"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... reka bentuk antara muka, aset visual, sistem reka bentuk, dsb."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 

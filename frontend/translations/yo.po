@@ -2160,10 +2160,6 @@ msgid "labels.freelancer"
 msgstr "Oníṣẹ́ ni mí"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... wíwò ètò ọnà , ìrírí àwọn ohun ìní, àwọn ètò ọnà, abbl."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "Ìkógun wọ̀lú"
 

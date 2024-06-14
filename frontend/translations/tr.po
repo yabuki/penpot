@@ -2487,10 +2487,6 @@ msgid "labels.freelancer"
 msgstr "Serbest çalışıyorum"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... kullanıcı arayüzü tasarımı, görsel öğeler, tasarım sistemleri, vb."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 

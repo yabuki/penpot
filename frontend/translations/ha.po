@@ -2260,10 +2260,6 @@ msgid "labels.freelancer"
 msgstr "ni mai zaman kansa ne"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... zane-zane, kayan kallo, tsarin qira, etc."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "teburin aiki"
 

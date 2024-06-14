@@ -2438,10 +2438,6 @@ msgid "labels.freelancer"
 msgstr "Jsem freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... design rozhraní, vizuální aktiva, návrhové systémy atd."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 

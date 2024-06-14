@@ -2540,10 +2540,6 @@ msgid "labels.freelancer"
 msgstr "Ich bin ein Freelancer"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "... Interface-Design, visuelle Assets, Designsysteme usw."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 

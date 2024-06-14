@@ -2459,10 +2459,6 @@ msgid "labels.freelancer"
 msgstr "יש לי עסק משלי"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "… עיצוב מנשק, נכסים חזותיים, מערכות עיצוב, וכו׳."
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 

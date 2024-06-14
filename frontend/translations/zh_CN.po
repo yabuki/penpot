@@ -2346,10 +2346,6 @@ msgid "labels.freelancer"
 msgstr "我是一名自由职业者"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.interface-design-visual-assets-design-systems"
-msgstr "...界面设计，视觉素材，设计系统等。"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "labels.invision"
 msgstr "InVision"
 
