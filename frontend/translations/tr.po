@@ -2495,7 +2495,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Haydi başlayalım!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.manager"
+msgid "labels.product-management"
 msgstr "Ürün veya Proje yöneticisi"
 
 #: src/app/main/ui/onboarding/questions.cljs

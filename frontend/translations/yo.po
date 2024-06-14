@@ -2168,7 +2168,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Ẹjẹ́ 'ká bẹ̀rẹ̀ !"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.manager"
+msgid "labels.product-management"
 msgstr "Ohun títà tàbí iṣẹ́ àgbéṣe Olùṣàkóso"
 
 #: src/app/main/ui/onboarding/questions.cljs

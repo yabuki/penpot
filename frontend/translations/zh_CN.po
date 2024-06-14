@@ -2354,7 +2354,7 @@ msgid "onboarding.lets-get-started"
 msgstr "让我们开始吧！"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.manager"
+msgid "labels.product-management"
 msgstr "产品经理/项目经理"
 
 #: src/app/main/ui/onboarding/questions.cljs

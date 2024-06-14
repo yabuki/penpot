@@ -1942,7 +1942,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Ka anyị bido!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.manager"
+msgid "labels.product-management"
 msgstr "Onye njikwa ngwaahịa ma ọ bụ arụmarụ"
 
 #: src/app/main/ui/onboarding/questions.cljs

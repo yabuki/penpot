@@ -2446,7 +2446,7 @@ msgid "onboarding.lets-get-started"
 msgstr "Pusťme se do toho!"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.manager"
+msgid "labels.product-management"
 msgstr "Produktový nebo projektový manažer"
 
 #: src/app/main/ui/onboarding/questions.cljs
