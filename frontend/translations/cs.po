@@ -2505,24 +2505,6 @@ msgstr "Student nebo učitel"
 msgid "onboarding.questions.step3.question3"
 msgstr "Jaká je velikost vašeho týmu?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Před použitím Penpot on-premise si to vyzkoušejte"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... drátové modely, cesty a toky uživatelů, navigační stromy atd."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Práce v konceptech"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Vaše zpětná vazba nám pomůže porozumět vašim zvykům a preferencím, abychom "
-"mohli i nadále dělat Penpot užitečným nástrojem."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "Odpojit"

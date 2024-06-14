@@ -2560,24 +2560,6 @@ msgstr "Students vai pasniedzējs"
 msgid "onboarding.questions.step3.question3"
 msgstr "Cik liela ir komanda?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Izmēģināt pirms izvietotas Penpot izmantošanas"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... struktūrskices, lietotāju ceļi un plūsmas, pārvietošanās koki utt."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Darbs koncepcijas idejās"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Atsauksmes palīdzēs mums saprast, kādi ir lietotāju paradumi un izvēles, "
-"lai mēs varētu turpināt padarīt Penpot par noderīgu un patīkamu rīku."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "Atdalīt"

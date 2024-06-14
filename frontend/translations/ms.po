@@ -2436,25 +2436,6 @@ msgstr "Pelajar atau guru"
 msgid "onboarding.questions.step3.question3"
 msgstr "Berapakah saiz pasukan anda?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Cuba sebelum menggunakan Penpot pada pelayar peribadi"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... rangka wayar, perjalanan & aliran pengguna, pepohon navigasi, dsb."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Bekerja dalam idea konsep"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Maklum balas anda akan membantu kami memahami tabiat dan keutamaan anda "
-"supaya kami boleh terus menjadikan Penpot sebagai alat yang berguna dan "
-"menyeronokkan."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 #, fuzzy
 msgid "settings.detach"

@@ -1997,24 +1997,6 @@ msgstr "Nwata akwụkwọ ma ọ bụ onye nkụzi"
 msgid "onboarding.questions.step3.question3"
 msgstr "Kedụ ka otu gị ha?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Gbalịa mee mbụ tupu ị jiri ite mkpịsị rụọ ọrụ n'ebe ọ dị"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... waya etiti , ndị ọrụ njem na eruba , osisi ngagharị gasị , dgz."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Na-arụ ọrụ n'echiche ihe"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Nzaghachi gị ga-enyere anyị aka ịghọta ihe agwa na mmasị gị bụ Ka anyị ga "
-"na-eme Ite mkpịsị ụdị ngwa ọrụ bara uru dị ụtọ ."
-
 msgid "shortcuts.bring-backward"
 msgstr "Wega ebe azụ"
 

@@ -2554,27 +2554,6 @@ msgstr "Öğrenci veya öğretmen"
 msgid "onboarding.questions.step3.question3"
 msgstr "Takımınızın büyüklüğü nedir?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Penpot'u fiziksel bir sunucuda kullanmadan önce deneyin"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr ""
-"... taslak çizimler, kullanıcı deneyimi yol haritası ve akışları, gezinme "
-"menüsü, vb."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Konsept fikirler üzerinde çalışmak"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Geri bildiriminiz, Penpot'u kullanışlı ve eğlenceli bir araç haline "
-"getirmeye devam edebilmemiz için alışkanlıklarınızı ve tercihlerinizi "
-"anlamamıza yardımcı olacaktır."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "Çıkar"

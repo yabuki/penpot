@@ -2454,26 +2454,6 @@ msgstr "Étudiant ou enseignant"
 msgid "onboarding.questions.step3.question3"
 msgstr "Quelle est la taille de votre équipe ?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Essayer Penpot avant de l'utiliser en local"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr ""
-"... wireframes, parcours et flux utilisateurs, arborescence de navigation, "
-"etc."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Travailler sur des idées de concept"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Vos retours nous aideront à comprendre vos habitudes et préférences afin "
-"que nous puissions continuer à améliorer Penpot."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "Détacher"

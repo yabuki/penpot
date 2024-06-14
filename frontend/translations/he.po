@@ -2506,24 +2506,6 @@ msgstr "סטודנט/ית או מרצה"
 msgid "onboarding.questions.step3.question3"
 msgstr "מה גודל הצוות שלך?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "אפשר להתנסות לפני שימוש ב־Penpot אצלך בעבודה"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "… תרשימי מתאר, סיפורי ותהליכי משתמשים, עצי ניווט ועוד."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "עבודה עם רעיונות למימוש"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"המשוב שלך יסייע לנו להבין מה הם ההרגלים וההעדפות שלך כדי שנוכל להמשיך להפוך "
-"את Penpot לכלי מהנה ושימושי."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "ניתוק"

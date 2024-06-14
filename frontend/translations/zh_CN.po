@@ -2405,24 +2405,6 @@ msgstr "学生/教师"
 msgid "onboarding.questions.step3.question3"
 msgstr "你的团队有多少人？"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "在本地部署Penpot前进行试用"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "...线框图，用户轨迹和用户流程，导航树等。"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "从事概念构想的工作"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"你的反馈将帮助我们更好地理解你的习惯和偏好，以便我们不断改进Penpot，使其成为"
-"一个有用且好用的工具。"
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 #: src/app/main/ui/workspace/sidebar/options/menus/stroke.cljs,
 #: src/app/main/ui/workspace/sidebar/options/menus/layer.cljs,

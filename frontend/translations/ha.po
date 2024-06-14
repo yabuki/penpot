@@ -2327,24 +2327,6 @@ msgstr "malami ko dalibi"
 msgid "onboarding.questions.step3.question3"
 msgstr "bayyana yawan tawagarka?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "jaraba kafin ka yi aiki da fenfot"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... jagora, yawan amfani da shiga, leqe-leqe, dss."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "yin aikin kan tunani mai kyau"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"bayaninka za ya sanya mu fahimci kwarewarka da xabi'unka ta haka ne za mu "
-"mayar maka da fenfot kayan aikin da ka ke jin daxin aiki da shi."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "cire"

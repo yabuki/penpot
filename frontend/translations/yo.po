@@ -2223,25 +2223,6 @@ msgstr "Akẹ́kọ̀ọ́ tàbí olùkọ̀ọ́"
 msgid "onboarding.questions.step3.question3"
 msgstr "kín ni ìwọ̀n ẹgbẹ́ rẹ ?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.try-out-before-using-penpot-on-premise"
-msgstr "Gbìyànjú láti mọ̀ kí o tó bẹ̀rẹ̀ sí lo pẹ́ńpọtì ní àyíká"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.wireframes-user-journeys-flows-navigation-trees"
-msgstr "... wáyà-fèrèsé, ìrìàjò àwọn onílò & sísàn, àwọn igi ìyíkiri, abbl."
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.work-in-concept-ideas"
-msgstr "Iṣẹ́ lórí èròǹgbà àti àwọn èrò"
-
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.your-feedback-will-help-us"
-msgstr ""
-"Èsì rẹ yó ràn wá lọ́wọ́ láti jẹ́ kó yé wa lórí kín ni ìhùwàsí rẹ àti àwọn "
-"ohun tí o fẹ́ràn jù èyí yó jẹ́ kí á má ṣàmúlò pẹ́ńpọtì gẹ́gẹ́ bí èyí tí ó "
-"wúlò àti ohun èlò fun ìgbáládùn."
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,
 msgid "settings.detach"
 msgstr "Yọ kúrò"
