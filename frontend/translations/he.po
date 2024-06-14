@@ -2487,7 +2487,7 @@ msgid "labels.previous"
 msgstr "הקודמת"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "בחירת אפשרות"
 
 #: src/app/main/ui/onboarding/questions.cljs

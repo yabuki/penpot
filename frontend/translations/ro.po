@@ -2394,7 +2394,7 @@ msgid "labels.previous"
 msgstr "Anterior"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Selectați opțiune"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2431,7 +2431,7 @@ msgid "onboarding.questions.step3.question2"
 msgstr "Quel est votre rôle ?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Sélectionnez une option"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -1974,7 +1974,7 @@ msgid "onboarding.questions.step3.question2"
 msgstr "Gịnị bụ ọrụ gị ?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Họrọ nhọ"
 
 #: src/app/main/ui/onboarding/questions.cljs

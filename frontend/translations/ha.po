@@ -2304,7 +2304,7 @@ msgid "onboarding.questions.step3.question2"
 msgstr "mi ne ne matsayinka?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "dauki wanda kake so"
 
 #: src/app/main/ui/onboarding/questions.cljs

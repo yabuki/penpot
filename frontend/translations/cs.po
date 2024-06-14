@@ -2482,7 +2482,7 @@ msgid "onboarding.questions.step3.question2"
 msgstr "Jaká je vaše role?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Vyberte možnost"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2531,7 +2531,7 @@ msgid "onboarding.questions.step3.question2"
 msgstr "Göreviniz nedir?"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Bir seçenek belirleyin"
 
 #: src/app/main/ui/onboarding/questions.cljs

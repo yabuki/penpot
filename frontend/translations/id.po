@@ -2468,7 +2468,7 @@ msgid "labels.previous"
 msgstr "Sebelumnya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.select-option"
+msgid "labels.select-option"
 msgstr "Pilih opsi"
 
 #: src/app/main/ui/onboarding/questions.cljs
