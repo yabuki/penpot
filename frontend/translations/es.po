@@ -2640,7 +2640,7 @@ msgid "onboarding.team-size.11-30"
 msgstr "11-30"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "onboarding.questions.2-10"
+msgid "onboarding.team-size.2-10"
 msgstr "2-10"
 
 #: src/app/main/ui/onboarding/questions.cljs
