@@ -5124,10 +5124,6 @@ msgstr "Tampilkan / Sembunyikan panduan"
 msgid "onboarding.team-modal.team-definition"
 msgstr "Apa itu tim?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.never-used-one"
-msgstr "Tidak ada"
-
 msgid "shortcuts.toggle-snap-guides"
 msgstr "Pasang ke panduan"
 

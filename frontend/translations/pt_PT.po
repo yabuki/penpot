@@ -5157,10 +5157,6 @@ msgstr[1] "Mover bibliotecas"
 msgid "onboarding.team-modal.team-definition"
 msgstr "O que é uma equipa?"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.never-used-one"
-msgstr "Nenhuma"
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs
 msgid "settings.select-this-color"
 msgstr "Selecionar itens que usem este estilo"

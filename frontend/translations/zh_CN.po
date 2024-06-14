@@ -5001,10 +5001,6 @@ msgstr "保持宽高比"
 msgid "onboarding.team-modal.team-definition"
 msgstr "团队是什么？"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.never-used-one"
-msgstr "都没用过"
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs
 msgid "settings.select-this-color"
 msgstr "选择使用此样式的项目"

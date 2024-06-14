@@ -5157,10 +5157,6 @@ msgid_plural "modals.move-shared-confirm.accept"
 msgstr[0] "Déplacer"
 msgstr[1] "Déplacer"
 
-#: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.never-used-one"
-msgstr "Aucune"
-
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs
 msgid "settings.select-this-color"
 msgstr "Sélectionnez les éléments qui utilisent ce style"

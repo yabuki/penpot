@@ -2560,10 +2560,6 @@ msgid "onboarding.team-size.more-than-50"
 msgstr "Mehr als 50"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.never-used-one"
-msgstr "Keine"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.next"
 msgstr "Weiter"
 
