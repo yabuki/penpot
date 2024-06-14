@@ -1894,10 +1894,6 @@ msgid "profile.recovery.go-to-login"
 msgstr "Gaa na mbanye"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "question.design-tool-more-experienced-with"
-msgstr "Kedu ngwa ọrụ nse ị ka mara eji arụ ọrụ ?"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "onboarding.team-size.11-30"
 msgstr "Iri na otu ruo na iri atọ"
 
