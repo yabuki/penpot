@@ -2499,7 +2499,7 @@ msgid "labels.start"
 msgstr "התחלה"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "סטודנט/ית או מרצה"
 
 #: src/app/main/ui/onboarding/questions.cljs

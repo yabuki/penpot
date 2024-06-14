@@ -1990,7 +1990,7 @@ msgid "labels.start"
 msgstr "Bido"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Nwata akwụkwọ ma ọ bụ onye nkụzi"
 
 #: src/app/main/ui/onboarding/questions.cljs

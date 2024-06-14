@@ -2429,7 +2429,7 @@ msgid "labels.start"
 msgstr "Mula"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Pelajar atau guru"
 
 #: src/app/main/ui/onboarding/questions.cljs

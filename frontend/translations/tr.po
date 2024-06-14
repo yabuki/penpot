@@ -2547,7 +2547,7 @@ msgid "labels.start"
 msgstr "Başla"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Öğrenci veya öğretmen"
 
 #: src/app/main/ui/onboarding/questions.cljs

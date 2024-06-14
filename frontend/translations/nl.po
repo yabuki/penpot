@@ -2551,7 +2551,7 @@ msgid "labels.start"
 msgstr "Starten"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Student of docent"
 
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,

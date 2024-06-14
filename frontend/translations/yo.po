@@ -2216,7 +2216,7 @@ msgid "labels.start"
 msgstr "Bẹ̀rẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Akẹ́kọ̀ọ́ tàbí olùkọ̀ọ́"
 
 #: src/app/main/ui/onboarding/questions.cljs

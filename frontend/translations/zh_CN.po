@@ -2398,7 +2398,7 @@ msgid "labels.start"
 msgstr "开始"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "学生/教师"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2406,7 +2406,7 @@ msgid "labels.start"
 msgstr "Începeți"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Student sau profesor"
 
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,

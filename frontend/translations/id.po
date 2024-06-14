@@ -2480,7 +2480,7 @@ msgid "labels.start"
 msgstr "Mulai"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Siswa atau Guru"
 
 #: src/app/main/ui/workspace/sidebar/options/rows/color_row.cljs,

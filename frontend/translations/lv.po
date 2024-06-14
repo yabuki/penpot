@@ -2553,7 +2553,7 @@ msgid "labels.start"
 msgstr "Sākt"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "Students vai pasniedzējs"
 
 #: src/app/main/ui/onboarding/questions.cljs

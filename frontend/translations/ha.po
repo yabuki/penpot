@@ -2320,7 +2320,7 @@ msgid "labels.start"
 msgstr "fara"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.student-teacher"
+msgid "labels.student-teacher"
 msgstr "malami ko dalibi"
 
 #: src/app/main/ui/onboarding/questions.cljs
