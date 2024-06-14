@@ -2474,7 +2474,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Pracuji na osobním projektu"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Předchozí"
 
 #: src/app/main/ui/onboarding/questions.cljs

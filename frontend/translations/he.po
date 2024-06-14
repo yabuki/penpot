@@ -2483,7 +2483,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "זאת עבודה על מיזם פרטי"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "הקודמת"
 
 #: src/app/main/ui/onboarding/questions.cljs

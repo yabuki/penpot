@@ -2296,7 +2296,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "ina aikin kaina"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "can baya"
 
 #: src/app/main/ui/onboarding/questions.cljs

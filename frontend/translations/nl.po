@@ -2535,7 +2535,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Ik werk aan een persoonlijk project"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Vorige"
 
 #: src/app/main/ui/onboarding/questions.cljs

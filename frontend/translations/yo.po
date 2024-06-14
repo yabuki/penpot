@@ -2196,7 +2196,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Mò ń siṣẹ́ àgbéṣẹ ti ara mi ni"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Tàtẹ̀yìn wá"
 
 #: src/app/main/ui/onboarding/questions.cljs

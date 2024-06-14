@@ -2382,7 +2382,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "我在做个人项目"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "前一项"
 
 #: src/app/main/ui/onboarding/questions.cljs

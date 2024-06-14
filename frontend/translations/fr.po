@@ -2423,7 +2423,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Je travaille sur un projet personnel"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Précédent"
 
 #: src/app/main/ui/onboarding/questions.cljs

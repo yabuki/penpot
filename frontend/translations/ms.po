@@ -2405,7 +2405,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Saya sedang menjalankan projek peribadi"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Sebelumnya"
 
 #: src/app/main/ui/onboarding/questions.cljs

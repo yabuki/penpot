@@ -2533,7 +2533,7 @@ msgid "onboarding.team-size.personal-project"
 msgstr "Strādāju personīgā projektā"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.previous"
+msgid "labels.previous"
 msgstr "Iepriekšējais"
 
 #: src/app/main/ui/onboarding/questions.cljs
