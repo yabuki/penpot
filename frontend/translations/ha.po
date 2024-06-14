@@ -2320,10 +2320,6 @@ msgid "questions.start"
 msgstr "fara"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "fara aiki na"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "malami ko dalibi"
 

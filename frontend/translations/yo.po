@@ -2216,10 +2216,6 @@ msgid "questions.start"
 msgstr "Bẹ̀rẹ̀"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "Bẹ̀rẹ̀ láti lórí iṣẹ́ àgbéṣe mi"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "Akẹ́kọ̀ọ́ tàbí olùkọ̀ọ́"
 

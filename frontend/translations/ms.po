@@ -2429,10 +2429,6 @@ msgid "questions.start"
 msgstr "Mula"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "Mula mengerjakan projek saya"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "Pelajar atau guru"
 

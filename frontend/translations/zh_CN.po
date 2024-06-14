@@ -2398,10 +2398,6 @@ msgid "questions.start"
 msgstr "开始"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "开始着手我的项目"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "学生/教师"
 

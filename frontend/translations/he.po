@@ -2499,10 +2499,6 @@ msgid "questions.start"
 msgstr "התחלה"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "התחלת עבודה על מיזם משלי"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "סטודנט/ית או מרצה"
 

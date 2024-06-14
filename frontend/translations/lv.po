@@ -2553,10 +2553,6 @@ msgid "questions.start"
 msgstr "Sākt"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "Sākt strādāt pie sava projekta"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "Students vai pasniedzējs"
 

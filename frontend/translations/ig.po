@@ -1990,10 +1990,6 @@ msgid "questions.start"
 msgstr "Bido"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.start-to-work-on-my-project"
-msgstr "Bido ịrụ ọrụ m"
-
-#: src/app/main/ui/onboarding/questions.cljs
 msgid "questions.student-teacher"
 msgstr "Nwata akwụkwọ ma ọ bụ onye nkụzi"
 
