@@ -2462,7 +2462,7 @@ msgid "labels.next"
 msgstr "Další"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Žádný"
 
 #: src/app/main/ui/onboarding/questions.cljs

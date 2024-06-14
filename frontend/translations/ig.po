@@ -1958,7 +1958,7 @@ msgid "labels.next"
 msgstr "Ọzọ"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Onweghị"
 
 #: src/app/main/ui/onboarding/questions.cljs

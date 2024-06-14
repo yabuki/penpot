@@ -2511,7 +2511,7 @@ msgid "labels.next"
 msgstr "Sonraki"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Hiçbiri"
 
 #: src/app/main/ui/onboarding/questions.cljs

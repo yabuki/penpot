@@ -2284,7 +2284,7 @@ msgid "labels.next"
 msgstr "na gaba"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "babu"
 
 #: src/app/main/ui/onboarding/questions.cljs

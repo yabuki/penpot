@@ -2393,7 +2393,7 @@ msgid "labels.next"
 msgstr "Seterusnya"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Tiada"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2370,7 +2370,7 @@ msgid "labels.next"
 msgstr "下一项"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "无"
 
 #: src/app/main/ui/onboarding/questions.cljs

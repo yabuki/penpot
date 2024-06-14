@@ -2564,7 +2564,7 @@ msgid "labels.next"
 msgstr "Weiter"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Keine"
 
 #: src/app/main/ui/onboarding/questions.cljs

@@ -2184,7 +2184,7 @@ msgid "labels.next"
 msgstr "Èyí tó kàn"
 
 #: src/app/main/ui/onboarding/questions.cljs
-msgid "questions.none"
+msgid "labels.none"
 msgstr "Kòsí"
 
 #: src/app/main/ui/onboarding/questions.cljs
