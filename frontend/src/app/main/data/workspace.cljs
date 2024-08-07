@@ -529,17 +529,46 @@
                     objs (assoc objs id new-shape)]
                 (merge objs children)))
 
+            _ (js/console.log "old objects" (clj->js objects))
+            id-map (as-> objects $
+                     (keys $)
+                     (remove #(or (uuid/zero? %)
+                                  (ids-to-remove %)
+                                  (main-instances-ids %)))
+                     (into {} (map #(vector % (uuid/next)) $)))
+
+            _ (js/console.log "id-map" (clj->js id-map))
+            _ (js/console.log "main-instances-ids" (str main-instances-ids))
+            _ (js/console.log "ids-to-remove" (str ids-to-remove))
+            remap-id (fn [id] (get id-map id id))
+
+            remap-shape
+            (fn [shape]
+              (cond-> shape
+                :always
+                (-> (update :id remap-id)
+                    (update :parent-id remap-id)
+                    (update :frame-id remap-id)
+                    (update :shapes #(mapv remap-id %)))
+
+                (some? (:shape-ref shape))
+                (update :shape-ref remap-id)))
+
             objects
             (reduce
              (fn [objs [id shape]]
-               (cond (contains? main-instances-ids id)
-                     (add-component-copy objs id shape)
-                     (contains? ids-to-remove id)
-                     objs
-                     :else
-                     (assoc objs id shape)))
+               (let [new-id (remap-id id)]
+                 (js/console.log "  === reduce" (str id) (str new-id))
+                 (js/console.log "   -> objs " (clj->js objs))
+                 (cond (contains? main-instances-ids id)
+                       (add-component-copy objs id shape)
+                       (contains? ids-to-remove id)
+                       objs
+                       :else
+                       (assoc objs new-id (remap-shape shape)))))
              {}
              objects)
+            _ (js/console.log "new objects" (clj->js objects))
 
             page    (-> page
                         (assoc :name name)

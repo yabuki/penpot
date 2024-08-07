@@ -538,6 +538,91 @@
          [parent-id (get-frame parent-id)]
          (recur (:parent-id parent) objects children pasting? libraries))))))
 
+(defn reduce-shapes
+  [container initial & {:keys [shape-id
+                               on-main-root-top
+                               on-copy-root-top
+                               on-main-root-nested
+                               on-copy-root-nested
+                               on-copy-not-root
+                               on-main-not-root
+                               on-not-component]
+                        :or {shape-id uuid/zero}}]
+
+  (letfn [(process-shape [shape-id container context acc]
+           (let [shape (ctst/get-shape container shape-id)]
+             (if (ctk/instance-head? shape)
+               (if (ctk/instance-root? shape)
+                 (if (ctk/main-instance? shape)
+                   (process-shape-main-root-top shape container context acc)
+                   (process-shape-copy-root-top shape container context acc))
+                 (if (ctk/main-instance? shape)
+                   (process-shape-main-root-nested container shape context acc)
+                   (process-shape-copy-root-nested container shape context acc)))
+               (if (ctk/in-component-copy? shape)
+                 (process-shape-copy-not-root shape container context acc)
+                 (if (inside-component-main? (:objects container) shape)
+                   (process-shape-main-not-root shape container context acc)
+                   (process-shape-not-component shape container context acc))))))
+
+          (process-shape-main-root-top [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-main-root-top)
+                        (on-main-root-top shape context))]
+              (reduce #(process-shape %2 container :main-top %1)
+                      acc
+                      (:shapes shape))))
+
+          (process-shape-copy-root-top [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-copy-root-top)
+                        (on-copy-root-top shape context))]
+              (reduce #(process-shape %2 container :copy-top %1)
+                      acc
+                      (:shapes shape))))
+
+          (process-shape-main-root-nested [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-main-root-nested)
+                        (on-main-root-nested shape context))]
+              (reduce #(process-shape %2 container :main-nested %1)
+                      acc
+                      (:shapes shape))))
+
+          (process-shape-copy-root-nested [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-copy-root-nested)
+                        (on-copy-root-nested shape context))]
+              (reduce #(process-shape %2 container :copy-nested %1)
+                      acc
+                      (:shapes shape))))
+          
+          (process-shape-copy-not-root [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-copy-not-root)
+                        (on-copy-not-root shape context))]
+              (reduce #(process-shape %2 container :copy-any %1)
+                      acc
+                      (:shapes shape))))
+          
+          (process-shape-main-not-root [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-main-not-root)
+                        (on-main-not-root shape context))]
+              (reduce #(process-shape %2 container :main-any %1)
+                      acc
+                      (:shapes shape))))
+          
+          (process-shape-not-component [shape container context acc]
+            (let [acc (cond->> acc
+                        (some? on-not-component)
+                        (on-not-component shape context))]
+              (reduce #(process-shape %2 container :not-component %1)
+                      acc
+                      (:shapes shape))))]
+                      
+        (process-shape shape-id container :not-component initial)))
+
 ;; --- SHAPE UPDATE
 
 (defn set-shape-attr
