@@ -6,6 +6,7 @@
 
 (ns app.common.types.file
   (:require
+   #?(:clj [app.common.fressian :as fres])
    [app.common.data :as d]
    [app.common.data.macros :as dm]
    [app.common.features :as cfeat]
@@ -17,6 +18,7 @@
    [app.common.logging :as l]
    [app.common.schema :as sm]
    [app.common.text :as ct]
+   [app.common.transit :as t]
    [app.common.types.color :as ctc]
    [app.common.types.colors-list :as ctcl]
    [app.common.types.component :as ctk]
@@ -29,8 +31,8 @@
    [app.common.types.typographies-list :as ctyl]
    [app.common.types.typography :as cty]
    [app.common.uuid :as uuid]
-   [cuerdas.core :as str]
-   [app.util.time :as dt]))
+   [app.util.time :as dt]
+   [cuerdas.core :as str]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SCHEMA
@@ -68,7 +70,6 @@
 
 (def check-media-object!
   (sm/check-fn ::media-object))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; prrrruebas
@@ -179,7 +180,7 @@
     [file token-theme-id]  ;; token-theme-id is unique in a file
     ...)
 
-  (defn move-token-theme 
+  (defn move-token-theme
     [file index]           ;; token themes may not be grouped, they have a global index
     ...)
 
@@ -235,11 +236,144 @@
   )
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; BEGIN: TOKENS INTERFACE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#_(ns app.common.types.tokens)
+
+(defrecord Token [id type description value])
+
+(defn create-token
+  [& {:as params}]
+  (map->Token params))
+
+(defn valid-token?
+  [o]
+  (and (instance? Token o)
+       (string? (:id o))
+       (some? (:value o))))
+
+(defprotocol ITokens
+  "A data structure for persist tokens."
+  (-validate [_] "")
+  (-add-token [_ set-id token] "add token to a set")
+  (-update-token [_ set-id token-id f] "update a token")
+
+  (-resolve-token [_ active-sets type id]
+    "resolve the currently applying token; uses the currently active sets"))
+
+(defn- update-usage-index
+  "Function responsible of updating the usage index in function of the token"
+  [index token-add token-del]
+  ;; TODO
+  index)
+
+(defprotocol ITokenSets
+  (-get-sets [_] "get available sets"))
+
+(def assoc* (fnil assoc (d/ordered-map)))
+
+(comment
+  ;; For now the internal structucture of data is:
+  {"core" {"color.fg" #_Token {:id "color.fg" :value "#00000"}
+           "color.bg" #_Token {:id "color.bg" :value "#fffff"}}})
+
+(deftype Tokens [data usage-index]
+  ;; NOTE: This is only for debug purposes, pending to properly
+  ;; implelement the toString and alternative printing.
+  #?@(:clj  [clojure.lang.IDeref
+             (deref [_] {:data data :usage-index usage-index})]
+      :cljs [cljs.core/IDeref
+             (-deref [_] {:data data :usage-index usage-index})])
+
+  ITokenSets
+  (-get-sets [_]
+    (into #{} (keys data)))
+
+  ITokens
+  (-add-token [_ set-id token]
+    (assert (valid-token? token) "expected valid token instance")
+    (let [uindex (update-usage-index usage-index token nil)
+          data   (update data set-id assoc* (:id token) token)]
+      (Tokens. data uindex)))
+
+  (-update-token [this set-id token-id f]
+    (if-let [token (get-in data [set-id token-id])]
+      (let [token' (f token)]
+        (let [changed?    (not= (:value token) (:value token'))
+              data        (update data set-id assoc token-id token')
+              usage-index (if changed?
+                            (update-usage-index usage-index token' token)
+                            usage-index)]
+
+          ;; NOTE: if we have resovle cache, here is where we will
+          ;; need to invalidate/remove cache values for the token and
+          ;; all depending tokens
+
+          (Tokens. data usage-index)))
+      this))
+
+  (-resolve-token [_ active-sets type id]
+    #_(execute-algorithm data type id active-sets)))
+
+(defn create-tokens
+  "Create an empty or prepopulated value for `tokens` container."
+  ([]
+   ;; NOTE: is possible that ordered map is not the most apropriate
+   ;; data structure and maybe we need a specific that allows us an
+   ;; easy way to reorder it, or just store inside Tokens data
+   ;; structure the data and the order separatelly as we already do
+   ;; with pages and pages-index.
+   (Tokens. (d/ordered-map) {}))
+  ([{:keys [data usage-index]}]
+   ;; NOTE: for now we expect persist the data structure as is,
+   ;; including all indexes, this will allow restore it as is, without
+   ;; needing to recalculate indexes;
+   (Tokens. data usage-index)))
+
+;; #?(:clj
+;;    (fres/add-handlers!
+;;     {:name "penpot/tokens"
+;;      :class Tokens
+;;      :wfn fres/write-map-like
+;;      :rfn fres/read-map-like}))
+
+(t/add-handlers!
+ {:id "penpot/tokens"
+  :class Tokens
+  :wfn #(into {} %)
+  :rfn create-tokens})
+
+;; Usage examples
+(comment
+  (let [token  (create-token :id "color.fg" :value "#111111")
+
+        tokens (-> (create-tokens)
+                   (-add-token "core" token))
+
+        _ (pp/pprint @tokens)
+
+        tokens (-> tokens
+                   (-update-token "core" "color.fg" (fn [token] (assoc token :value "#444444"))))
+
+        _ (pp/pprint @tokens)]))
+
+(comment
+  (binding [*current-sets* #{"core" "dark"}]
+    (println (-resolve-token tokens  "color" "color.fg"))
+    ;; => "#99999"
+    ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; END: TOKENS INTERFACE
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (comment
   ;; Token
   (definterface IToken
     (edit [{:keys [name value description]}]))
-    
+
   (deftype Token [id type name value description modified-at]
     IToken
     (edit [{:keys [name value description]}])
