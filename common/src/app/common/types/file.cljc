@@ -106,7 +106,7 @@
   ;;  -> token types act as kind of first level groups
 
   (defn move-token
-    [file token-id index] ;; index is relative to the token set, type and group
+    [file token-id index] ;; index is relative to the token innermost group
     ...)                  ;; tokens may not be moved to a different set
 
 
@@ -135,6 +135,9 @@
   (defn get-tokens
     [file token-set-id]  ;; sorted by type and path
     ...)
+
+  [{:type :spacing :id "pepito.uno" :value 1}
+   {}]
 
   ;; (methods to group / ungroup)
   ;;  -> this has a similar structure as shape layers, but groups and sets are different entities
@@ -197,15 +200,15 @@
   ;; === Display tokens in the sidebar
   ;; ===
 
-  (defn token-sets
+  (defn get-token-sets
     [file]          ;; ordered by groups (depth-first) and index
     ...)
 
-  (defn token-types
+  (defn get-token-types
     []
     (cto/token-types))
 
-  (defn tokens-by-type
+  (defn get-tokens-by-type
     [file token-set-id token-type]
     (-> file :tokens (.get-by-type token-set-id token-type))) ;; ordered by path and index
 
@@ -214,13 +217,13 @@
   ;; === Resolve tokens
   ;; ===
 
-  (defn resolve-token-name
+  (defn get-token
     [file token-type token-name] ;; traverse tokens in set order, and only sets that are active in the current theme
     ...)                         ;; returns the last token with this name
 
-  (defn token-value   ;; if the token has a literal value, return it
-    [file token-id]   ;; if it has a plain formula, calculate it
-    ...)              ;; if it has a formula that referenced other tokens, recursively calculate their value
+  (defn resolve-token  ;; if the token has a literal value, return it
+    [file token-id]    ;; if it has a plain formula, calculate it
+    ...)               ;; if it has a formula that referenced other tokens, recursively calculate their value
 
    ;; Value cache invalidation:
    ;;  - when a token's value changes, trigger calculation of all tokens referencing it's name (unless overriden
