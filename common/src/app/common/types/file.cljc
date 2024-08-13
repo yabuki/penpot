@@ -29,7 +29,8 @@
    [app.common.types.typographies-list :as ctyl]
    [app.common.types.typography :as cty]
    [app.common.uuid :as uuid]
-   [cuerdas.core :as str]))
+   [cuerdas.core :as str]
+   [app.util.time :as dt]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SCHEMA
@@ -67,6 +68,213 @@
 
 (def check-media-object!
   (sm/check-fn ::media-object))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; prrrruebas
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(comment
+
+  ;; ===
+  ;; === CRUD tokens
+  ;; ===
+
+  (defn create-token
+    [file token-set-id & args]
+    (let [token (cto/make-token args)]
+      (-> file
+          (update :tokens .add token)
+          (update :token-sets .add-token-to token-set-id token))))  ; set-id attribute inside token?
+
+  (defn edit-token
+    [file token-id & args]
+    (update file :tokens .update token-id
+            (fn [token]
+              (.edit token args))))
+
+  (defn delete-token
+    [file token-id]
+    (update file :tokens .remove token-id))
+
+  (defn get-token
+    [file token-id]   ;; token-id is unique inside a file
+    (-> file :tokens (.get token-id)))
+
+  ;; (methods to group / ungroup)
+  ;;  -> this works exactly the same as asset groups, with "." instead of "/" for path separator
+  ;;  -> token types act as kind of first level groups
+
+  (defn move-token
+    [file token-id index] ;; index is relative to the token set, type and group
+    ...)                  ;; tokens may not be moved to a different set
+
+
+  ;; ===
+  ;; === CRUD token sets
+  ;; ===
+
+  ;; A file always have at least one set. This behaves like pages.
+
+  (defn create-token-set
+    [file token-set-group-id name]
+    ...)
+
+  (defn edit-token-set
+    [file new-name]
+    ...)
+
+  (defn delete-token-set
+    [file token-set-id]   ;; it also deletes all tokens inside
+    ...)                  ;; cannot delete a set if this is the last one
+
+  (defn get-token-set
+    [file token-set-id]  ;; token-set-id is unique in a file
+    ...)
+
+  (defn get-tokens
+    [file token-set-id]  ;; sorted by type and path
+    ...)
+
+  ;; (methods to group / ungroup)
+  ;;  -> this has a similar structure as shape layers, but groups and sets are different entities
+  ;;     (a set cannot have children, and a group cannot have tokens).
+  ;;  -> we can define a root group, invisible in the UI, as we do with shape layers.
+
+  (defn get-root-token-set-group
+    [file]
+    ...)
+
+  (defn token-set-group-children
+    [file token-set-group-d]         ;; children may be sets or other groups, interleaved
+    ...)
+
+  (defn move-token-set
+    [file token-set-id token-set-group-id index]
+    ...)
+
+
+  ;; ===
+  ;; === CRUD token themes
+  ;; ===
+
+  ;; A file always have at least one theme. And also there is a current theme and this is a persistent feature.
+
+  (defn create-token-theme
+    [file name]
+    ...)
+
+  (defn edit-token-theme
+    [file new-name]
+    ...)
+
+  (defn delete-token-theme
+    [file token-theme-id]  ;; cannot delete a theme if this is the last one
+    ...)
+
+  (defn get-token-theme
+    [file token-theme-id]  ;; token-theme-id is unique in a file
+    ...)
+
+  (defn move-token-theme 
+    [file index]           ;; token themes may not be grouped, they have a global index
+    ...)
+
+  (defn set-current-theme
+    [file token-theme-id]
+    ...)
+
+  (defn toggle-active-set
+    [file token-set-id]  ;; toogle active flag of the set in the current theme
+    ...)
+
+  (defn set-active?
+    [file token-set-id]  ;; true if set is active in the current theme
+    ...)
+
+
+  ;; ===
+  ;; === Display tokens in the sidebar
+  ;; ===
+
+  (defn token-sets
+    [file]          ;; ordered by groups (depth-first) and index
+    ...)
+
+  (defn token-types
+    []
+    (cto/token-types))
+
+  (defn tokens-by-type
+    [file token-set-id token-type]
+    (-> file :tokens (.get-by-type token-set-id token-type))) ;; ordered by path and index
+
+
+  ;; ===
+  ;; === Resolve tokens
+  ;; ===
+
+  (defn resolve-token-name
+    [file token-type token-name] ;; traverse tokens in set order, and only sets that are active in the current theme
+    ...)                         ;; returns the last token with this name
+
+  (defn token-value   ;; if the token has a literal value, return it
+    [file token-id]   ;; if it has a plain formula, calculate it
+    ...)              ;; if it has a formula that referenced other tokens, recursively calculate their value
+
+   ;; Value cache invalidation:
+   ;;  - when a token's value changes, trigger calculation of all tokens referencing it's name (unless overriden
+   ;;    in a token with the same name, later in the index, in an active set). This cascades recursively.
+   ;;  - when a token set is activated / deactivated, trigger calculations of all tokens inside it
+   ;;  - when a token set is moved, trigger calculations of all tokens inside it
+   ;;  - when the current theme changes, trigger calculations of all token sets that have changed active status
+
+  )
+
+
+(comment
+  ;; Token
+  (definterface IToken
+    (edit [{:keys [name value description]}]))
+    
+  (deftype Token [id type name value description modified-at]
+    IToken
+    (edit [{:keys [name value description]}])
+     ...)
+
+  (defn make-token
+    [{:keys [id token-set-id type name value description modified-at] :as args
+      :or {id (uuid/next)
+           modified-at (dt/now)}}]
+    (dm/assert! (uuid? id))
+    (dm/assert! (uuid? token-set-id))
+    (dm/assert! (token-type? type))
+    (dm/assert! (string? name))
+    (dm/assert! (some? value))
+    (dm/assert! (or (nil? description) (string? description)))
+    (dm/assert! (dt/datetime? modified-at))
+    (Token. args))
+
+  ;; Tokens container
+  (definterface ITokens
+    (add [token])                     ;; Interfaz parecido a IMap pero no igual
+    (update [token-id update-fn])
+    (remove [token-id])
+    (get [token-id])
+    (get-by-type [token-type]))
+
+  (deftype Tokens [index]
+    ITokens
+    (add [token]
+      (Tokens. (assoc index (:id token) token)))
+    (update [token-id update-fn & args]
+      (Tokens. (update index token-id update-fn args)))
+    (get [token-id]
+      (get index token-id))
+    (get-by-type [token-type]
+      ...))
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; INITIALIZATION
