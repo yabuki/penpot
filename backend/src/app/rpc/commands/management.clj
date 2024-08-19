@@ -397,8 +397,8 @@
 
 ;; --- COMMAND: Clone Template
 
-(defn- clone-template
-  [cfg {:keys [project-id ::rpc/profile-id] :as params} template]
+(defn clone-template
+  [cfg {:keys [project-id profile-id] :as params} template]
   (db/tx-run! cfg (fn [{:keys [::db/conn ::wrk/executor] :as cfg}]
                     ;; NOTE: the importation process performs some operations that
                     ;; are not very friendly with virtual threads, and for avoid
@@ -439,7 +439,8 @@
   [{:keys [::db/pool] :as cfg} {:keys [::rpc/profile-id project-id template-id] :as params}]
   (let [project   (db/get-by-id pool :project project-id {:columns [:id :team-id]})
         _         (teams/check-edition-permissions! pool profile-id (:team-id project))
-        template  (tmpl/get-template-stream cfg template-id)]
+        template  (tmpl/get-template-stream cfg template-id)
+        params    (assoc params :profile-id profile-id)]
 
     (when-not template
       (ex/raise :type :not-found

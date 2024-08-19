@@ -68,7 +68,7 @@
 
 (mf/defc team-form-step-2
   {::mf/props :obj}
-  [{:keys [name on-back]}]
+  [{:keys [name on-back go-to-team?]}]
   (let [initial (mf/use-memo
                  #(do {:role "editor"
                        :name name}))
@@ -87,7 +87,8 @@
            (let [team-id (:id response)]
              (st/emit! (du/update-profile-props {:onboarding-team-id team-id
                                                  :onboarding-viewed true})
-                       (rt/nav :dashboard-projects {:team-id team-id})))))
+                       (when go-to-team?
+                         (rt/nav :dashboard-projects {:team-id team-id}))))))
 
         on-error
         (mf/use-fn
@@ -248,7 +249,7 @@
 
 (mf/defc onboarding-team-modal
   {::mf/props :obj}
-  []
+  [{:keys [go-to-team?]}]
   (let [name* (mf/use-state nil)
         name  (deref name*)
 
@@ -270,6 +271,6 @@
       [:& left-sidebar]
       [:div {:class (stl/css :separator)}]
       (if name
-        [:& team-form-step-2 {:name name :on-back on-back}]
+        [:& team-form-step-2 {:name name :on-back on-back :go-to-team? go-to-team?}]
         [:& team-form-step-1 {:on-submit on-submit}])]]))
 

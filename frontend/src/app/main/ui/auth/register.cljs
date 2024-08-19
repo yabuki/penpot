@@ -227,6 +227,8 @@
                                 :validators validators
                                 :initial params)
 
+        welcome-file? (cf/external-feature-flag "onboarding-03" "test")
+
         submitted? (mf/use-state false)
 
         on-success
@@ -246,7 +248,8 @@
         (mf/use-fn
          (fn [form _]
            (reset! submitted? true)
-           (let [params (:clean-data @form)]
+           (let [params (cond-> (:clean-data @form)
+                          welcome-file? (assoc :welcome-file true))]
              (->> (rp/cmd! :register-profile params)
                   (rx/finalize #(reset! submitted? false))
                   (rx/subs! on-success on-error)))))]
