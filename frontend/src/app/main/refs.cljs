@@ -357,6 +357,9 @@
 (def workspace-editor-state
   (l/derived :workspace-editor-state st/state))
 
+(def workspace-new-editor-state
+  (l/derived :workspace-new-editor-state st/state))
+
 (def workspace-modifiers
   (l/derived :workspace-modifiers st/state =))
 

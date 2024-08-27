@@ -55,6 +55,9 @@
                          :fontSize 0 ;;(str (:font-size data (:font-size txt/default-text-attrs)) "px")
                          :lineHeight (:line-height data (:line-height txt/default-text-attrs))
                          :margin 0}]
+
+    (js/console.log "line-height" line-height)
+
     (cond-> base
       (some? line-height)       (obj/set! "lineHeight" line-height)
       (some? text-align)        (obj/set! "textAlign" text-align))))
@@ -74,6 +77,7 @@
          font-variant-id (:font-variant-id data)
 
          font-size       (:font-size data)
+
          fill-color      (or (-> data :fills first :fill-color) (:fill-color data))
          fill-opacity    (or (-> data :fills first :fill-opacity) (:fill-opacity data))
          fill-gradient   (or (-> data :fills first :fill-color-gradient) (:fill-color-gradient data))
@@ -92,6 +96,7 @@
 
          base            #js {:textDecoration text-decoration
                               :textTransform text-transform
+                              :fontSize font-size
                               :color (if (and show-text? (not gradient?)) text-color "transparent")
                               :background (when (and show-text? gradient?) text-color)
                               :caretColor (if (and (not gradient?) text-color) text-color "black")
@@ -130,11 +135,11 @@
        (some? fills)
        (obj/set! "--fills" (transit/encode-str fills))
 
-       (and (string? letter-spacing) (pos? (alength letter-spacing)))
-       (obj/set! "letterSpacing" (str letter-spacing "px"))
+       (string? letter-spacing)
+       (obj/set! "letterSpacing" letter-spacing)
 
-       (and (string? font-size) (pos? (alength font-size)))
-       (obj/set! "fontSize" (str font-size "px"))
+       (string? font-size)
+       (obj/set! "fontSize" font-size)
 
        (some? font)
        (-> (obj/set! "fontFamily" font-family)
