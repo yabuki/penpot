@@ -10,6 +10,7 @@
    [app.common.text :as txt]
    [app.common.types.shape.layout :as ctl]
    [app.main.data.workspace.texts :as dwt]
+   [app.main.features :as features]
    [app.main.refs :as refs]
    [app.main.store :as st]
    [app.main.ui.hooks :as hooks]
@@ -86,12 +87,11 @@
                        :shape shape
                        :attrs txt/text-node-attrs}))
         layout-item-values (select-keys shape layout-item-attrs)
-
-        fill-values (if (and (= st/*text-editor* "v2") (some? v2-editor-state))
+        fill-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
                       (d/merge fill-values (select-keys v2-editor-state fill-attrs))
                       fill-values)
 
-        text-values (if (and (= st/*text-editor* "v2") (some? v2-editor-state))
+        text-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
                       (d/merge text-values v2-editor-state)
                       text-values)]
 

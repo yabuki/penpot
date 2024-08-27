@@ -15,6 +15,7 @@
    [app.common.types.shape-tree :as ctt]
    [app.common.types.shape.layout :as ctl]
    [app.main.data.workspace.modifiers :as dwm]
+   [app.main.features :as features]
    [app.main.refs :as refs]
    [app.main.ui.context :as ctx]
    [app.main.ui.flex-controls :as mfc]
@@ -390,7 +391,7 @@
 
       [:g {:style {:pointer-events (if disable-events? "none" "auto")}}
        (when show-text-editor?
-         (if (= st/*text-editor* "v2")
+         (if (features/active-feature? @st/state "editor/v2")
            [:& editor-v2/text-editor {:shape editing-shape
                                       :modifiers modifiers}]
            [:& editor-v1/text-editor-svg {:shape editing-shape

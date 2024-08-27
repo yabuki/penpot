@@ -10,7 +10,9 @@
    [app.common.data :as d]
    [app.common.text :as txt]
    [app.common.transit :as transit]
+   [app.main.features :as features]
    [app.main.fonts :as fonts]
+   [app.main.store :as st]
    [app.main.ui.formats :as fmt]
    [app.util.color :as uc]
    [app.util.object :as obj]
@@ -136,10 +138,14 @@
        (obj/set! "--fills" (transit/encode-str fills))
 
        (string? letter-spacing)
-       (obj/set! "letterSpacing" letter-spacing)
+       (obj/set! "letterSpacing" (if (features/active-feature? @st/state "editor/v2")
+                                   letter-spacing
+                                   (str letter-spacing "px")))
 
        (string? font-size)
-       (obj/set! "fontSize" font-size)
+       (obj/set! "fontSize" (if (features/active-feature? @st/state "editor/v2")
+                              font-size
+                              (str font-size "px")))
 
        (some? font)
        (-> (obj/set! "fontFamily" font-family)
