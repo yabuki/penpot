@@ -671,33 +671,34 @@
   (ptk/reify ::update-attrs
     ptk/WatchEvent
     (watch [_ state _]
-           (let [text-editor-instance (:workspace-editor state)]
-             (if (some? text-editor-instance)
-               (rx/empty)
-               (rx/concat
-                (let [attrs (select-keys attrs txt/root-attrs)]
-                  (if-not (empty? attrs)
-                    (rx/of (update-root-attrs {:id id :attrs attrs}))
-                    (rx/empty)))
+      (let [text-editor-instance (:workspace-editor state)]
+        (if (some? text-editor-instance)
+          (rx/empty)
+          (rx/concat
+           (let [attrs (select-keys attrs txt/root-attrs)]
+             (if-not (empty? attrs)
+               (rx/of (update-root-attrs {:id id :attrs attrs}))
+               (rx/empty)))
 
-                (let [attrs (select-keys attrs txt/paragraph-attrs)]
-                  (if-not (empty? attrs)
-                    (rx/of (update-paragraph-attrs {:id id :attrs attrs}))
-                    (rx/empty)))
+           (let [attrs (select-keys attrs txt/paragraph-attrs)]
+             (if-not (empty? attrs)
+               (rx/of (update-paragraph-attrs {:id id :attrs attrs}))
+               (rx/empty)))
 
-                (let [attrs (select-keys attrs txt/text-node-attrs)]
-                  (if-not (empty? attrs)
-                    (rx/of (update-text-attrs {:id id :attrs attrs}))
-                    (rx/empty)))))))
+           (let [attrs (select-keys attrs txt/text-node-attrs)]
+             (if-not (empty? attrs)
+               (rx/of (update-text-attrs {:id id :attrs attrs}))
+               (rx/empty)))
+
+           ;; FIXME: ¿Esto debería estar aquí? Tengo mis dudas.
+           (rx/of (v2-update-text-editor-styles id attrs))))))
 
     ptk/EffectEvent
     (effect [_ state _]
-            (let [text-editor-instance (:workspace-editor state)
-                  _ (js/console.log "attrs" attrs)
-                  styles (styles/attrs->styles attrs)
-                  _ (js/console.log "styles" styles)]
-              (when (some? text-editor-instance)
-                (.applyStylesToSelection text-editor-instance styles))))))
+      (let [text-editor-instance (:workspace-editor state)
+            styles (styles/attrs->styles attrs)]
+        (when (some? text-editor-instance)
+          (.applyStylesToSelection text-editor-instance styles))))))
 
 (defn update-all-attrs
   [ids attrs]

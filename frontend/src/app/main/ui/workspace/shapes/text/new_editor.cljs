@@ -53,7 +53,6 @@
                  container (mf/ref-val text-editor-container-ref)
                  new-content (content/dom->cljs (impl/getRoot text-editor-instance))]
              (when (some? new-content)
-               (js/console.log "new-content" new-content)
                (st/emit! (dwt/v2-update-text-shape-content shape-id new-content true)))
              (dom/set-style! container "opacity" 0))))
 
