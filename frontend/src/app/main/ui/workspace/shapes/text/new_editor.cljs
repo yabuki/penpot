@@ -67,7 +67,7 @@
         (mf/use-fn
          (fn [e]
            (let [new-styles (content/get-styles-from-event e)]
-             (js/console.log "new-styles" (clj->js new-styles))
+             (js/console.log "new-styles" (clj->js new-styles) (.-detail e) (.getPropertyValue (.-detail e) "--fills"))
              (st/emit! (dwt/v2-update-text-editor-styles shape-id new-styles)))))
 
         on-needslayout

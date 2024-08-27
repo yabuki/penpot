@@ -693,7 +693,9 @@
     ptk/EffectEvent
     (effect [_ state _]
             (let [text-editor-instance (:workspace-editor state)
-                  styles (styles/attrs->styles attrs)]
+                  _ (js/console.log "attrs" attrs)
+                  styles (styles/attrs->styles attrs)
+                  _ (js/console.log "styles" styles)]
               (when (some? text-editor-instance)
                 (.applyStylesToSelection text-editor-instance styles))))))
 
@@ -800,6 +802,7 @@
       (let [merged-styles (d/merge txt/default-text-attrs
                                    (get-in state [:workspace-global :default-font])
                                    new-styles)]
+        (js/console.log "merged-styles" (clj->js merged-styles))
         (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
 
 (defn v2-update-text-shape-content

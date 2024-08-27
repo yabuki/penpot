@@ -18,11 +18,11 @@
 (defn set-styles
   [element styles]
   (doseq [[style-name style-value] styles]
-    (when (= style-name :vertical-align)
-      (js/console.log "style-name" style-name style-value styles))
+    (js/console.log "style-name" style-name style-value)
     (if (contains? styles/mapping style-name)
-      (let [[style-encode] (get styles/mapping style-name)]
-        (dom/set-style! element (name style-name) (style-encode style-value)))
+      (let [[style-encode] (get styles/mapping style-name)
+            style-encoded-value (style-encode style-value)]
+        (dom/set-style! element (str "--" (name style-name)) style-encoded-value))
       (dom/set-style! element (name style-name) style-value))))
 
 (defn create-element

@@ -635,7 +635,7 @@
 (defn set-style!
   [^js node ^string style value]
   (when (some? node)
-    (unchecked-set (.-style node) style value)))
+    (.setProperty (.-style node) style value)))
 
 (defn remove-attribute! [^js node ^string attr]
   (when (some? node)
