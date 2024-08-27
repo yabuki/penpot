@@ -78,6 +78,10 @@
 
 (def text-all-attrs (d/concat-set shape-attrs root-attrs paragraph-attrs text-node-attrs))
 
+(def text-style-attrs
+  (d/concat-vec root-attrs paragraph-attrs text-node-attrs))
+
+
 (def default-text-attrs
   {:typography-ref-file nil
    :typography-ref-id nil

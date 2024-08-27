@@ -219,7 +219,6 @@
   {::mf/wrap-props false
    ::mf/wrap [mf/memo]}
   [props]
-
   (let [shape   (obj/get props "shape")
 
         workspace-editor-state (mf/deref refs/workspace-editor-state)
@@ -246,7 +245,9 @@
 
         shape (hooks/use-equal-memo shape)
 
-        handle-update-shape (mf/use-callback update-text-modifier)]
+        handle-update-shape (mf/use-callback update-text-modifier)
+
+        _ (js/console.log "viewport-text-editing!" (clj->js shape))]
 
     (mf/use-effect
      (mf/deps (:id shape))
@@ -288,6 +289,8 @@
 
         editing-shape
         (hooks/use-equal-memo editing-shape)
+
+        _ (js/console.log "editing-shape" editing-shape (:content editing-shape))
 
         text-shapes-changes
         (mf/use-memo

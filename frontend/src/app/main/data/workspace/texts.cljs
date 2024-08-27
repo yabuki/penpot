@@ -32,6 +32,12 @@
    [cuerdas.core :as str]
    [potok.v2.core :as ptk]))
 
+;; -- V2 Editor
+
+(declare v2-update-text-shape-layout)
+(declare v2-update-text-shape-content)
+(declare v2-update-text-editor-styles)
+
 ;; -- Editor
 
 (defn update-editor
@@ -773,3 +779,74 @@
            (rx/of (update-attrs (:id shape)
                                 {:typography-ref-id typ-id
                                  :typography-ref-file file-id}))))))))
+
+;; -- New Editor
+
+(defn v2-update-text-editor-styles
+  [id new-styles]
+  (ptk/reify ::v2-update-text-editor-styles
+    ptk/UpdateEvent
+    (update [_ state]
+      (let [merged-styles (d/merge txt/default-text-attrs
+                                   (get-in state [:workspace-global :default-font])
+                                   new-styles)]
+        (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
+
+#_(defn v2-update-text-shape-layout
+  [& {:keys [page-id object-id position-data]}]
+  (ptk/reify ::v2-update-text-shape-layout
+    ptk/UpdateEvent
+    (update [_ state]
+      (let [;; if page-id is null, then we assume that the object-id
+            ;; is from the current page.
+            page-id (if (nil? page-id)
+                      (:current-page-id state)
+                      page-id)
+             ;; if position-data is nil, then we perform the layout
+             ;; of the shape.
+            position-data (if (nil? position-data)
+                            (let [shape (get-in state [:workspace-data :pages-index page-id :objects object-id])]
+                              (layout/layout-from-shape shape))
+                            position-data)]
+        (update-in state [:workspace-data :pages-index page-id :objects object-id]
+                   (fn [object]
+                     (let [modified-object (assoc object :position-data position-data)]
+                       modified-object)))))
+
+    ptk/WatchEvent
+    (watch [_ _ _]
+      (rx/of (dwsh/update-shapes
+              [object-id]
+              (fn [shape]
+                (assoc shape :position-data (get position-data (:id shape))))
+              {:stack-undo? true :reg-objects? false})))))
+
+(defn v2-update-text-shape-content
+  ([id content]
+   (v2-update-text-shape-content id content false nil))
+  ([id content update-name?]
+   (v2-update-text-shape-content id content update-name? nil))
+  ([id content update-name? name]
+   (ptk/reify ::v2-update-text-shape-content
+     ptk/WatchEvent
+     (watch [_ state _]
+       (let [objects      (wsh/lookup-page-objects state)
+             shape        (get objects id)
+             modifiers    (get-in state [:workspace-text-modifier id])
+             new-shape?   (nil? (:content shape))]
+         (rx/of
+          (dwsh/update-shapes
+           [id]
+           (fn [shape]
+             (js/console.log "assoc shape :content" content)
+             (let [{:keys [width height position-data]} modifiers]
+               (let [new-shape (-> shape
+                                   (assoc :content content)
+                                   (cond-> position-data
+                                     (assoc :position-data position-data))
+                                   (cond-> (and update-name? (some? name))
+                                     (assoc :name name))
+                                   (cond-> (or (some? width) (some? height))
+                                     (gsh/transform-shape (ctm/change-size shape width height))))]
+                 new-shape)))
+           {:undo-group (when new-shape? id)})))))))
