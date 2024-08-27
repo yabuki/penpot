@@ -27,6 +27,7 @@
    [app.main.fonts :as fonts]
    [app.util.router :as rt]
    [app.util.text-editor :as ted]
+   [app.util.text.content.styles :as styles]
    [app.util.timers :as ts]
    [beicon.v2.core :as rx]
    [cuerdas.core :as str]
@@ -34,7 +35,6 @@
 
 ;; -- V2 Editor
 
-(declare v2-update-text-shape-layout)
 (declare v2-update-text-shape-content)
 (declare v2-update-text-editor-styles)
 
@@ -670,22 +670,32 @@
   [id attrs]
   (ptk/reify ::update-attrs
     ptk/WatchEvent
-    (watch [_ _ _]
-      (rx/concat
-       (let [attrs (select-keys attrs txt/root-attrs)]
-         (if-not (empty? attrs)
-           (rx/of (update-root-attrs {:id id :attrs attrs}))
-           (rx/empty)))
+    (watch [_ state _]
+           (let [text-editor-instance (:workspace-editor state)]
+             (if (some? text-editor-instance)
+               (rx/empty)
+               (rx/concat
+                (let [attrs (select-keys attrs txt/root-attrs)]
+                  (if-not (empty? attrs)
+                    (rx/of (update-root-attrs {:id id :attrs attrs}))
+                    (rx/empty)))
 
-       (let [attrs (select-keys attrs txt/paragraph-attrs)]
-         (if-not (empty? attrs)
-           (rx/of (update-paragraph-attrs {:id id :attrs attrs}))
-           (rx/empty)))
+                (let [attrs (select-keys attrs txt/paragraph-attrs)]
+                  (if-not (empty? attrs)
+                    (rx/of (update-paragraph-attrs {:id id :attrs attrs}))
+                    (rx/empty)))
 
-       (let [attrs (select-keys attrs txt/text-node-attrs)]
-         (if-not (empty? attrs)
-           (rx/of (update-text-attrs {:id id :attrs attrs}))
-           (rx/empty)))))))
+                (let [attrs (select-keys attrs txt/text-node-attrs)]
+                  (if-not (empty? attrs)
+                    (rx/of (update-text-attrs {:id id :attrs attrs}))
+                    (rx/empty)))))))
+
+    ptk/EffectEvent
+    (effect [_ state _]
+            (let [text-editor-instance (:workspace-editor state)
+                  styles (styles/attrs->styles attrs)]
+              (when (some? text-editor-instance)
+                (.applyStylesToSelection text-editor-instance styles))))))
 
 (defn update-all-attrs
   [ids attrs]
@@ -791,35 +801,6 @@
                                    (get-in state [:workspace-global :default-font])
                                    new-styles)]
         (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
-
-#_(defn v2-update-text-shape-layout
-  [& {:keys [page-id object-id position-data]}]
-  (ptk/reify ::v2-update-text-shape-layout
-    ptk/UpdateEvent
-    (update [_ state]
-      (let [;; if page-id is null, then we assume that the object-id
-            ;; is from the current page.
-            page-id (if (nil? page-id)
-                      (:current-page-id state)
-                      page-id)
-             ;; if position-data is nil, then we perform the layout
-             ;; of the shape.
-            position-data (if (nil? position-data)
-                            (let [shape (get-in state [:workspace-data :pages-index page-id :objects object-id])]
-                              (layout/layout-from-shape shape))
-                            position-data)]
-        (update-in state [:workspace-data :pages-index page-id :objects object-id]
-                   (fn [object]
-                     (let [modified-object (assoc object :position-data position-data)]
-                       modified-object)))))
-
-    ptk/WatchEvent
-    (watch [_ _ _]
-      (rx/of (dwsh/update-shapes
-              [object-id]
-              (fn [shape]
-                (assoc shape :position-data (get position-data (:id shape))))
-              {:stack-undo? true :reg-objects? false})))))
 
 (defn v2-update-text-shape-content
   ([id content]

@@ -67,6 +67,7 @@
         (mf/use-fn
          (fn [e]
            (let [new-styles (content/get-styles-from-event e)]
+             (js/console.log "new-styles" (clj->js new-styles))
              (st/emit! (dwt/v2-update-text-editor-styles shape-id new-styles)))))
 
         on-needslayout
@@ -90,12 +91,6 @@
                  new-content (content/dom->cljs (impl/getRoot text-editor-instance))]
              (when (some? new-content)
                (st/emit! (dwt/v2-update-text-shape-content shape-id new-content true))))))
-
-        on-click
-        (mf/use-fn
-         (fn []
-           (let [text-editor-instance (mf/ref-val text-editor-instance-ref)]
-             (.focus text-editor-instance))))
 
         on-key-up
         (mf/use-fn
@@ -151,7 +146,7 @@
               ;; IMPORTANT! This is now done through DOM mutations (see on-blur and on-focus)
               ;; but I keep this for future references.
               ;; :opacity (when @blurred 0)}}
-      :on-click on-click}
+              }
      [:div
       {:class (stl/css :text-editor-selection-imposter)
        :ref text-editor-selection-ref}]
