@@ -1080,6 +1080,18 @@ class SelectionController extends EventTarget {
    */
   selectAll() {
     __privateGet(this, _selection).selectAllChildren(__privateGet(this, _textEditor).root);
+    return this;
+  }
+  /**
+   * Moves cursor to end.
+   */
+  cursorToEnd() {
+    const range = document.createRange();
+    range.selectNodeContents(__privateGet(this, _textEditor).element);
+    range.collapse(false);
+    __privateGet(this, _selection).removeAllRanges();
+    __privateGet(this, _selection).addRange(range);
+    return this;
   }
   /**
    * Collapses a selection.
@@ -1789,7 +1801,7 @@ class SelectionController extends EventTarget {
     }
     const paragraphToBeRemoved = this.focusParagraph;
     paragraphToBeRemoved.remove();
-    const previousInline = previousParagraph.children.length > 1 ? previousParagraph.children.item(previousParagraph.children.length - 1) : previousParagraph.firstChild;
+    const previousInline = previousParagraph.children.length > 1 ? previousParagraph.lastElementChild : previousParagraph.firstChild;
     const previousOffset = isLineBreak(previousInline.firstChild) ? 0 : previousInline.firstChild.nodeValue.length;
     this.collapse(previousInline.firstChild, previousOffset);
     __privateGet(this, _mutations).remove(paragraphToBeRemoved);
@@ -1828,6 +1840,21 @@ class SelectionController extends EventTarget {
     mergeParagraphs(this.focusParagraph, nextParagraph);
     __privateGet(this, _mutations).update(currentParagraph);
     __privateGet(this, _mutations).remove(nextParagraph);
+  }
+  /**
+   * Removes the forward paragraph.
+   */
+  removeForwardParagraph() {
+    const nextParagraph = this.focusParagraph.nextSibling;
+    if (!nextParagraph) {
+      return;
+    }
+    const paragraphToBeRemoved = this.focusParagraph;
+    paragraphToBeRemoved.remove();
+    const nextInline = nextParagraph.firstChild;
+    const nextOffset = this.focusOffset;
+    this.collapse(nextInline.firstChild, nextOffset);
+    __privateGet(this, _mutations).remove(paragraphToBeRemoved);
   }
   /**
    * Cleans up all the affected paragraphs.
@@ -2077,11 +2104,13 @@ applyStylesTo_fn = function(startNode, startOffset, endNode, endOffset, newStyle
       if (__privateGet(this, _textNodeIterator).currentNode === startNode && startOffset > 0) {
         const newInline = splitInline(inline, startOffset);
         setInlineStyles(newInline, newStyles);
-      } else if (__privateGet(this, _textNodeIterator).currentNode === startNode && startOffset === 0 || __privateGet(this, _textNodeIterator).currentNode !== startNode && __privateGet(this, _textNodeIterator).currentNode !== endNode || __privateGet(this, _textNodeIterator).currentNode === endNode && endOffset === __privateGet(this, _textNodeIterator).currentNode.nodeValue.length) {
+        inline.after(newInline);
+      } else if (__privateGet(this, _textNodeIterator).currentNode === startNode && startOffset === 0 || __privateGet(this, _textNodeIterator).currentNode !== startNode && __privateGet(this, _textNodeIterator).currentNode !== endNode || __privateGet(this, _textNodeIterator).currentNode === endNode && endOffset === endNode.nodeValue.length) {
         setInlineStyles(inline, newStyles);
-      } else if (__privateGet(this, _textNodeIterator).currentNode === endNode && endOffset < __privateGet(this, _textNodeIterator).currentNode.nodeValue.length) {
-        splitInline(inline, endOffset);
+      } else if (__privateGet(this, _textNodeIterator).currentNode === endNode && endOffset < endNode.nodeValue.length) {
+        const newInline = splitInline(inline, endOffset);
         setInlineStyles(inline, newStyles);
+        inline.after(newInline);
       }
       if (__privateGet(this, _textNodeIterator).currentNode === expectedEndNode)
         return;
@@ -2218,7 +2247,19 @@ class TextEditor extends EventTarget {
      * @param {ClipboardEvent} e
      */
     __privateAdd(this, _onPaste, (e) => clipboard.paste(e, this, __privateGet(this, _selectionController)));
+    /**
+     * Event called when the user cuts some text from the
+     * editor.
+     *
+     * @param {ClipboardEvent} e
+     */
     __privateAdd(this, _onCut, (e) => clipboard.cut(e, this, __privateGet(this, _selectionController)));
+    /**
+     * Event called when the user copies some text from the
+     * editor.
+     *
+     * @param {ClipboardEvent} e
+     */
     __privateAdd(this, _onCopy, (e) => clipboard.copy(e, this, __privateGet(this, _selectionController)));
     /**
      * Event called before the DOM is modified.
@@ -2226,6 +2267,9 @@ class TextEditor extends EventTarget {
      * @param {InputEvent} e
      */
     __privateAdd(this, _onBeforeInput, (e) => {
+      if (e.inputType === "historyUndo" || e.inputType === "historyRedo") {
+        return;
+      }
       if (!(e.inputType in commands)) {
         if (e.inputType !== "insertCompositionText") {
           e.preventDefault();
@@ -2247,6 +2291,9 @@ class TextEditor extends EventTarget {
      * @param {InputEvent} e
      */
     __privateAdd(this, _onInput, (e) => {
+      if (e.inputType === "historyUndo" || e.inputType === "historyRedo") {
+        return;
+      }
       if (e.inputType === "insertCompositionText") {
         __privateMethod(this, _TextEditor_instances, notifyLayout_fn).call(this, LayoutType.FULL, null);
       }
@@ -2387,12 +2434,24 @@ class TextEditor extends EventTarget {
     return this;
   }
   /**
+   * Moves cursor to end.
+   *
+   * @returns
+   */
+  cursorToEnd() {
+    __privateGet(this, _selectionController).cursorToEnd();
+    return this;
+  }
+  /**
    * Disposes everything.
    */
   dispose() {
     __privateGet(this, _changeController).removeEventListener("change", __privateGet(this, _onChange));
     __privateGet(this, _changeController).dispose();
-    __privateGet(this, _selectionController).removeEventListener("stylechange", __privateGet(this, _onStyleChange));
+    __privateGet(this, _selectionController).removeEventListener(
+      "stylechange",
+      __privateGet(this, _onStyleChange)
+    );
     __privateGet(this, _selectionController).dispose();
     removeEventListeners(__privateGet(this, _element), __privateGet(this, _events));
     __privateSet(this, _element, null);
@@ -2449,7 +2508,10 @@ setup_fn2 = function(options) {
     document.getSelection(),
     options
   ));
-  __privateGet(this, _selectionController).addEventListener("stylechange", __privateGet(this, _onStyleChange));
+  __privateGet(this, _selectionController).addEventListener(
+    "stylechange",
+    __privateGet(this, _onStyleChange)
+  );
   addEventListeners(__privateGet(this, _element), __privateGet(this, _events));
 };
 /**
