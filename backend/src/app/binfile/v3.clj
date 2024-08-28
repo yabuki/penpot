@@ -41,6 +41,14 @@
 (def encode-file
   (sm/encoder schema:file sm/json-transformer))
 
+(defn- write-entry!
+  [^ZipOutputStream output ^String path data]
+  (.putNextEntry output (ZipEntry. path))
+  (let [writer (OutputStreamWriter. output "UTF-8")]
+    (json/write writer data :indent true :key-fn json/write-camel-key)
+    (.flush writer))
+  (.closeEntry output))
+
 (defn write-export!
   [{:keys [::ids ::include-libraries ::embed-assets ::output] :as cfg}]
   (when (and include-libraries embed-assets)
@@ -60,14 +68,8 @@
                      (update :data #(bfc/embed-assets cfg % file-id)))
               file (encode-file file)]
 
-              ;; file (json/encode file :indent true :key-fn json/write-camel-key)
-              ;; file (bc/str->bytes file)]
-
-          (.putNextEntry output (ZipEntry. (str "files/" file-id ".json")))
-          (let [writer (OutputStreamWriter. output "UTF-8")]
-            (json/write writer file :indent true :key-fn json/write-camel-key)
-            (.flush writer))
-          (.closeEntry output))))))
+          (write-entry! output (str "file/" file-id ".json") (dissoc file :data))
+          (write-entry! output (str "fdata/" file-id ".json") (:data file)))))))
 
 (defn export-files!
   "Do the exportation of a specified file in custom penpot binary
