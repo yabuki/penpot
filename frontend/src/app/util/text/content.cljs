@@ -14,25 +14,32 @@
 (defn get-style-defaults
   "Returns a Javascript object compatible with the TextEditor default styles"
   [style-defaults]
-  (clj->js (reduce (fn [acc [k v]]
-                     (if (contains? styles/mapping k)
-                       (let [[style-encode] (get styles/mapping k)]
-                         (assoc acc (styles/get-style-name k) (style-encode v)))
-                       (assoc acc (name k) v))) {} style-defaults)))
+  (clj->js
+   (reduce
+    (fn [acc [k v]]
+      (if (contains? styles/mapping k)
+        (let [[style-encode] (get styles/mapping k)
+              style-name (styles/get-style-name k)
+              style-value (styles/normalize-style-value style-name (style-encode v))]
+          (assoc acc style-name style-value))
+        (let [style-name (name k)
+              style-value (styles/normalize-style-value style-name v)]
+          (assoc acc style-name style-value)))) {} style-defaults)))
 
 (defn get-styles-from-event
   "Returns a ClojureScript object compatible with text nodes"
   [e]
   (let [style-declaration (.-detail e)]
-    (reduce (fn [acc k]
-              (if (contains? styles/mapping k)
-                (let [style-name (styles/get-style-name k)
-                      [_ style-decode] (get styles/mapping k)
-                      style-value (.getPropertyValue style-declaration style-name)]
-                  (assoc acc k (style-decode style-value)))
-                (let [style-name (name k)
-                      style-value (.getPropertyValue style-declaration style-name)]
-                  (assoc acc k style-value)))) {} txt/text-style-attrs)))
+    (reduce
+     (fn [acc k]
+       (if (contains? styles/mapping k)
+         (let [style-name (styles/get-style-name k)
+               [_ style-decode] (get styles/mapping k)
+               style-value (.getPropertyValue style-declaration style-name)]
+           (assoc acc k (style-decode style-value)))
+         (let [style-name (name k)
+               style-value (.getPropertyValue style-declaration style-name)]
+           (assoc acc k style-value)))) {} txt/text-style-attrs)))
 
 (defn dom->cljs
   "Gets the editor content from a DOM structure"

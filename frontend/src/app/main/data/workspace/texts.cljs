@@ -378,6 +378,7 @@
               shape-ids (cond
                           (cfh/text-shape? shape)  [id]
                           (cfh/group-shape? shape) (cfh/get-children-ids objects id))]
+          (js/console.log "update-node?" update-node? (clj->js shape-ids) (clj->js shape) (clj->js attrs))
           (rx/of (dwsh/update-shapes shape-ids #(update-text-content % update-node? d/txt-merge attrs))))))))
 
 (defn migrate-node
@@ -686,6 +687,8 @@
                (rx/empty)))
 
            (let [attrs (select-keys attrs txt/text-node-attrs)]
+             (when-not (empty? attrs)
+               (js/console.log "attrs" (clj->js attrs)))
              (if-not (empty? attrs)
                (rx/of (update-text-attrs {:id id :attrs attrs}))
                (rx/empty)))

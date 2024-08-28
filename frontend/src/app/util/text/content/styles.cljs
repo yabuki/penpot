@@ -27,6 +27,16 @@
    :font-variant-id [identity identity]
    :vertical-align [identity identity]})
 
+(defn normalize-style-value
+  [k v]
+  (cond
+    (and (or (= k :font-size) (= k :letter-spacing))
+         (not= (str/slice v -2) "px"))
+    (str v "px")
+
+    :else
+    v))
+
 (defn get-style-name
   [key]
   (str/concat "--" (name key)))
@@ -55,8 +65,8 @@
   [key value]
   (if (attr-needs-mapping? key)
     (let [[encoder] (get mapping key)]
-      (encoder value))
-    value))
+      (normalize-style-value key (encoder value)))
+    (normalize-style-value key value)))
 
 (defn attr->style
   [[key value]]
