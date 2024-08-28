@@ -18,22 +18,29 @@
   {:version 1
    :type type})
 
+(def encode-file-data
+  (sm/encoder ctf/schema:data sm/json-transformer))
 
 (defn get-entries-for-file
   [{:keys [data id] :as file}]
-  (let [data'      (select-keys data [:id :pages :options])
-        colors     (get data :colors)
-        components (get data :components)]
+  (let [data  (encode-file-data data)
+        data' (select-keys data [:id :pages :options])]
+    (cons (->Entry (str "files/" id ".json")
+                   (json/encode data'))
+          (for [[page-id data] (:pages-index data)]
+            (->Entry (str "files/" id "/" page-id ".json")
+                     (json/encode data))))))
 
-  [(->Entry (str "files/" id ".json")
-
-(defn process-file-export
+(defn process-export-for-files
   [files on-entry]
   (loop [manifest (generate-manifest :type "files")
-         files    (seq files)]
+         files    (seq files)
+         result   []]
     (if-let [file (first files)]
-      (let [manifest (update-manifest-with-file file)]
-        (run! on-entry (get-entries-for-file file))
-        (recur manifest (rest files)))
+      (let [result' (map on-entry (get-entries-for-file file))]
+        (recur (update manifest :files (fnil conj []) id)
+               (rest files)
+               (into result result')))
 
-      (on-entry (Entry. "manifest.json" (json/encode manifest))))))
+      (let [result' (on-entry (Entry. "manifest.json" (json/encode manifest)))]
+        (conj result result')))))
