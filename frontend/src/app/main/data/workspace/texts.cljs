@@ -24,6 +24,7 @@
    [app.main.data.workspace.shapes :as dwsh]
    [app.main.data.workspace.state-helpers :as wsh]
    [app.main.data.workspace.undo :as dwu]
+   [app.main.features :as features]
    [app.main.fonts :as fonts]
    [app.util.router :as rt]
    [app.util.text-editor :as ted]
@@ -673,7 +674,8 @@
     ptk/WatchEvent
     (watch [_ state _]
       (let [text-editor-instance (:workspace-editor state)]
-        (if (some? text-editor-instance)
+        (if (and (features/active-feature? state "editor/v2")
+                 (some? text-editor-instance))
           (rx/empty)
           (rx/concat
            (let [attrs (select-keys attrs txt/root-attrs)]
@@ -694,14 +696,17 @@
                (rx/empty)))
 
            ;; FIXME: ¿Esto debería estar aquí? Tengo mis dudas.
-           (rx/of (v2-update-text-editor-styles id attrs))))))
+           (when (features/active-feature? state "editor/v2")
+             (rx/of (v2-update-text-editor-styles id attrs)))))))
 
     ptk/EffectEvent
     (effect [_ state _]
-      (let [text-editor-instance (:workspace-editor state)
-            styles (styles/attrs->styles attrs)]
-        (when (some? text-editor-instance)
-          (.applyStylesToSelection text-editor-instance styles))))))
+            (when (features/active-feature? state "editor/v2")
+              (let [text-editor-instance (:workspace-editor state)
+                    styles (styles/attrs->styles attrs)]
+                (when (some? text-editor-instance)
+                  (js/console.log "text-editor-instance" text-editor-instance)
+                  (.applyStylesToSelection text-editor-instance styles)))))))
 
 (defn update-all-attrs
   [ids attrs]

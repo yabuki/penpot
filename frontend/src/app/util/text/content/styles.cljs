@@ -28,11 +28,25 @@
    :vertical-align [identity identity]})
 
 (defn normalize-style-value
+  "This function adds units to style values"
   [k v]
   (cond
-    (and (or (= k :font-size) (= k :letter-spacing))
+    (and (or (= k :font-size)
+             (= k :letter-spacing))
          (not= (str/slice v -2) "px"))
     (str v "px")
+
+    :else
+    v))
+
+(defn normalize-attr-value
+  "This function strips units from attr values"
+  [k v]
+  (cond
+    (and (or (= k :font-size)
+             (= k :letter-spacing))
+         (= (str/slice v -2) "px"))
+    (str/slice v 0 -2)
 
     :else
     v))
@@ -95,8 +109,9 @@
   (if (style-needs-mapping? name)
     (let [key (get-attr-keyword name)
           [_ decoder] (get mapping key)]
-      (decoder value))
-    value))
+      (normalize-attr-value key (decoder value)))
+    (let [key (keyword name)]
+      (normalize-attr-value key value))))
 
 (defn style->attr
   [[key value]]
