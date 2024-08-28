@@ -35,8 +35,9 @@
   [:map {:title "export-binfile"}
    [:name [:string {:max 250}]]
    [:file-id ::sm/uuid]
-   [:include-libraries :boolean]
-   [:embed-assets :boolean]])
+   [:version {:optional true} :int]
+   [:include-libraries ::sm/boolean]
+   [:embed-assets ::sm/boolean]])
 
 (sv/defmethod ::export-binfile
   "Export a penpot file in a binary format."

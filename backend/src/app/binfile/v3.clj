@@ -9,26 +9,33 @@
   of entire team (or multiple teams) at once."
   (:refer-clojure :exclude [read])
   (:require
+   [app.common.data.macros :as dm]
    [app.binfile.common :as bfc]
    [app.common.data :as d]
    [app.common.features :as cfeat]
+   [app.common.json :as json]
    [app.common.logging :as l]
-   [app.common.transit :as t]
    [app.common.schema :as sm]
+   [app.common.transit :as t]
+   [app.common.types.file :as ctf]
    [app.common.uuid :as uuid]
+   [clojure.java.io :as jio]
+   [app.util.time :as dt]
    [app.config :as cf]
-   [buddy.core.codecs :as bc]
+   [datoteka.io :as io]
    [app.db :as db]
    [app.db.sql :as sql]
-   [app.storage :as sto])
+   [app.storage :as sto]
+   [buddy.core.codecs :as bc])
   (:import
    java.util.zip.ZipOutputStream
-   java.util.zip.ZipEntry))
+   java.util.zip.ZipEntry
+   java.io.OutputStreamWriter))
 
 (def schema:file
   [:map
    [:id ::sm/uuid]
-   [:data schema:data]
+   [:data ctf/schema:data]
    [:features ::cfeat/features]])
 
 (def encode-file
@@ -40,8 +47,8 @@
     (throw (IllegalArgumentException.
             "the `include-libraries` and `embed-assets` are mutally excluding options")))
 
-  (pu/with-open [output (ZipOutputStream. output)]
-    (let [ids     (into fids (when include-libraries (bfc/get-libraries cfg ids)))
+  (with-open [^ZipOutputStream output (ZipOutputStream. output)]
+    (let [ids     (into ids (when include-libraries (bfc/get-libraries cfg ids)))
           detach? (and (not embed-assets) (not include-libraries))]
       (doseq [file-id ids]
         (let [file (cond-> (bfc/get-file cfg file-id)
@@ -51,11 +58,16 @@
 
                      embed-assets
                      (update :data #(bfc/embed-assets cfg % file-id)))
-              file (encode-file file)
-              file (json/encode
+              file (encode-file file)]
+
+              ;; file (json/encode file :indent true :key-fn json/write-camel-key)
+              ;; file (bc/str->bytes file)]
+
           (.putNextEntry output (ZipEntry. (str "files/" file-id ".json")))
-
-
+          (let [writer (OutputStreamWriter. output "UTF-8")]
+            (json/write writer file :indent true :key-fn json/write-camel-key)
+            (.flush writer))
+          (.closeEntry output))))))
 
 (defn export-files!
   "Do the exportation of a specified file in custom penpot binary
@@ -85,7 +97,7 @@
         cs (volatile! nil)]
     (try
       (l/info :hint "start exportation" :export-id (str id))
-      (pu/with-open [output (io/output-stream output)]
+      (with-open [output (io/output-stream output)]
         (write-export! (assoc cfg ::output output)))
 
       (catch java.io.IOException _cause

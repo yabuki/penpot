@@ -35,7 +35,7 @@
 ;; SCHEMA
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def schema::media-object
+(def schema:media-object
   [:map {:title "FileMediaObject"}
    [:id ::sm/uuid]
    [:name :string]
@@ -61,7 +61,7 @@
     [:map-of {:gen/max 5} ::sm/uuid ::media-object]]
    [:plugin-data {:optional true} ::ctpg/plugin-data]])
 
-(sm/register! ::media-object schema::media-object)
+(sm/register! ::media-object schema:media-object)
 (sm/register! ::data schema:data)
 
 (def check-file-data!
