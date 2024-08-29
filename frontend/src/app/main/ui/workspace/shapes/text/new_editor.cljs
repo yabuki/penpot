@@ -70,26 +70,10 @@
              (st/emit! (dwt/v2-update-text-editor-styles shape-id new-styles)))))
 
         on-needslayout
-        nil
-        #_(mf/use-fn
-           (fn [e]
-             (let [text-editor-instance (mf/ref-val text-editor-instance-ref)
-                   layout-detail (.-detail e)
-                   layout-type (.-type layout-detail)
-                   layout-mutations (.-mutations layout-detail)
-                 ;; new-content (content/dom->cljs (impl/getRoot text-editor-instance))
-                   new-layout (layout/layout-from-editor text-editor-instance layout-type layout-mutations)]
-               (st/emit!
-                #_(dwt/v2-update-text-shape-content shape-id new-content true)
-                (dwt/v2-update-text-shape-layout :object-id shape-id :position-data new-layout)))))
-
-        on-change
         (mf/use-fn
-         (fn []
-           (let [text-editor-instance (mf/ref-val text-editor-instance-ref)
-                 new-content (content/dom->cljs (impl/getRoot text-editor-instance))]
-             (when (some? new-content)
-               (st/emit! (dwt/v2-update-text-shape-content shape-id new-content true))))))
+           (fn [e]
+             (st/emit!
+              (dwt/v2-update-text-shape-position-data shape-id []))))
 
         on-key-up
         (mf/use-fn
@@ -113,7 +97,6 @@
          (.addEventListener text-editor-instance "focus" on-focus)
          (.addEventListener text-editor-instance "needslayout" on-needslayout)
          (.addEventListener text-editor-instance "stylechange" on-stylechange)
-         (.addEventListener text-editor-instance "change" on-change)
          (st/emit! (dwt/update-editor text-editor-instance))
          (when (some? content)
            (impl/setRoot text-editor-instance (content/cljs->dom content)))
@@ -125,7 +108,6 @@
            (.removeEventListener text-editor-instance "focus" on-focus)
            (.removeEventListener text-editor-instance "needslayout" on-needslayout)
            (.removeEventListener text-editor-instance "stylechange" on-stylechange)
-           (.removeEventListener text-editor-instance "change" on-change)
            (.dispose text-editor-instance)
            (st/emit! (dwt/update-editor nil))
            (doseq [key keys]

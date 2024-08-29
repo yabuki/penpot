@@ -814,6 +814,14 @@
         (js/console.log "merged-styles" (clj->js merged-styles))
         (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
 
+(defn v2-update-text-shape-position-data
+  [shape-id position-data]
+  (ptk/reify ::v2-update-text-shape-position-data
+    ptk/UpdateEvent
+    (update [_ state]
+      (let []
+        (update-in state [:workspace-text-modifier shape-id] {:position-data position-data})))))
+
 (defn v2-update-text-shape-content
   ([id content]
    (v2-update-text-shape-content id content false nil))

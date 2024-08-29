@@ -309,8 +309,6 @@
         editing-shape
         (hooks/use-equal-memo editing-shape)
 
-        _ (js/console.log "editing-shape" editing-shape (:content editing-shape))
-
         text-shapes-changes
         (mf/use-memo
          (mf/deps text-shapes edition)

@@ -2280,7 +2280,6 @@ class TextEditor extends EventTarget {
         const command = commands[e.inputType];
         __privateGet(this, _selectionController).startMutation();
         command(e, this, __privateGet(this, _selectionController));
-        __privateGet(this, _changeController).notifyDebounced();
         const mutations = __privateGet(this, _selectionController).endMutation();
         __privateMethod(this, _TextEditor_instances, notifyLayout_fn).call(this, LayoutType.FULL, mutations);
       }
