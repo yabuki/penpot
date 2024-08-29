@@ -45,7 +45,7 @@
                       [_ style-decode] (get styles/mapping key)
                       value (style-decode (.getPropertyValue style style-name))]
                   (assoc acc key value))
-                (assoc acc key (.getPropertyValue style (name key)))))) {} attrs))
+                (assoc acc key (styles/normalize-attr-value key (.getPropertyValue style (name key))))))) {} attrs))
 
 (defn get-inline-styles
   [element]

@@ -811,7 +811,7 @@
       (let [merged-styles (d/merge txt/default-text-attrs
                                    (get-in state [:workspace-global :default-font])
                                    new-styles)]
-        (js/console.log "merged-styles" (clj->js merged-styles))
+        #_(js/console.log "merged-styles" (clj->js merged-styles))
         (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
 
 (defn v2-update-text-shape-position-data

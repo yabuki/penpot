@@ -69,7 +69,6 @@
   "Updates the shape with the current editor"
   [shape editor]
   (let [content (:content shape)
-        _ (js/console.log "root" (.-root editor) "editor" editor)
         editor-content (content/dom->cljs (.-root editor))]
 
     (update-shape-with-content shape content editor-content)))

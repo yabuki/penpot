@@ -138,14 +138,10 @@
        (obj/set! "--fills" (transit/encode-str fills))
 
        (string? letter-spacing)
-       (obj/set! "letterSpacing" (if (features/active-feature? @st/state "editor/v2")
-                                   letter-spacing
-                                   (str letter-spacing "px")))
+       (obj/set! "letterSpacing" (str letter-spacing "px"))
 
-       (string? font-size)
-       (obj/set! "fontSize" (if (features/active-feature? @st/state "editor/v2")
-                              font-size
-                              (str font-size "px")))
+       (and (string? font-size) (pos? (alength font-size)))
+       (obj/set! "fontSize" (str font-size "px"))
 
        (some? font)
        (-> (obj/set! "fontFamily" font-family)

@@ -38,7 +38,7 @@
                style-value (.getPropertyValue style-declaration style-name)]
            (assoc acc k (style-decode style-value)))
          (let [style-name (name k)
-               style-value (.getPropertyValue style-declaration style-name)]
+               style-value (styles/normalize-attr-value k (.getPropertyValue style-declaration style-name))]
            (assoc acc k style-value)))) {} txt/text-style-attrs)))
 
 (defn dom->cljs

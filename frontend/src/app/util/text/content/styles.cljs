@@ -58,7 +58,7 @@
 
 (defn get-style-keyword
   [key]
-  (keyword (str/concat "--" (name key))))
+  (keyword (get-style-name key)))
 
 (defn get-attr-keyword
   [style-name]
