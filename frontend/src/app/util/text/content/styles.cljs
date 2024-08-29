@@ -7,7 +7,8 @@
 (ns app.util.text.content.styles
   (:require
    [app.common.transit :as transit]
-   [cuerdas.core :as str]))
+   [cuerdas.core :as str]
+   [lambdaisland.uri.normalize :as normalize]))
 
 (defn encode
   [value]
@@ -76,11 +77,17 @@
     key))
 
 (defn attr->style-value
-  [key value]
-  (if (attr-needs-mapping? key)
-    (let [[encoder] (get mapping key)]
-      (normalize-style-value key (encoder value)))
-    (normalize-style-value key value)))
+  ([key value]
+   (attr->style-value key value false))
+  ([key value normalize?]
+   (if (attr-needs-mapping? key)
+     (let [[encoder] (get mapping key)]
+       (if normalize?
+         (normalize-style-value key (encoder value))
+         (encoder value)))
+     (if normalize?
+       (normalize-style-value key value)
+       value))))
 
 (defn attr->style
   [[key value]]
@@ -105,13 +112,19 @@
     (keyword key)))
 
 (defn style->attr-value
-  [name value]
-  (if (style-needs-mapping? name)
-    (let [key (get-attr-keyword name)
-          [_ decoder] (get mapping key)]
-      (normalize-attr-value key (decoder value)))
-    (let [key (keyword name)]
-      (normalize-attr-value key value))))
+  ([name value]
+   (style->attr-value name value false))
+  ([name value normalize?]
+   (if (style-needs-mapping? name)
+     (let [key (get-attr-keyword name)
+           [_ decoder] (get mapping key)]
+       (if normalize?
+         (normalize-attr-value key (decoder value))
+         (decoder value)))
+     (let [key (keyword name)]
+       (if normalize?
+         (normalize-attr-value key value)
+         value)))))
 
 (defn style->attr
   [[key value]]
