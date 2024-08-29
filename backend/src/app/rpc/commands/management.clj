@@ -178,7 +178,7 @@
 
   (binding [bfc/*state* (volatile! {:index {team-id (uuid/next)}})]
     (let [projs (bfc/get-team-projects cfg team-id)
-          files (bfc/get-team-files cfg team-id)
+          files (bfc/get-team-files-ids cfg team-id)
           frels (bfc/get-files-rels cfg files)
 
           team  (-> (db/get-by-id conn :team team-id)

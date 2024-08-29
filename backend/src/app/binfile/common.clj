@@ -56,6 +56,13 @@
 (def conj-vec
   (fnil conj []))
 
+(defn initial-state
+  []
+  {:storage-objects #{}
+   :files #{}
+   :teams #{}
+   :projects #{}})
+
 (defn collect-storage-objects
   [state items]
   (update state :storage-objects into xf-map-media-id items))
@@ -113,6 +120,16 @@
 (defn get-project
   [cfg project-id]
   (db/get cfg :project {:id project-id}))
+
+(def ^:private sql:get-teams
+  "SELECT t.* FROM team WHERE id = ANY(?)")
+
+(defn get-teams
+  [cfg ids]
+  (let [conn (db/get-connection cfg)
+        ids  (db/create-array conn "uuid" ids)]
+    (->> (db/exec! conn [sql:get-teams ids])
+         (map decode-row))))
 
 (defn get-team
   [cfg team-id]
@@ -224,26 +241,26 @@
                    (->> (db/exec! conn [sql ids])
                         (mapv #(assoc % :file-id id)))))))
 
-(def ^:private sql:get-team-files
+(def ^:private sql:get-team-files-ids
   "SELECT f.id FROM file AS f
      JOIN project AS p ON (p.id = f.project_id)
     WHERE p.team_id = ?")
 
-(defn get-team-files
+(defn get-team-files-ids
   "Get a set of file ids for the specified team-id"
   [{:keys [::db/conn]} team-id]
-  (->> (db/exec! conn [sql:get-team-files team-id])
+  (->> (db/exec! conn [sql:get-team-files-ids team-id])
        (into #{} xf-map-id)))
 
 (def ^:private sql:get-team-projects
-  "SELECT p.id FROM project AS p
+  "SELECT p.* FROM project AS p
     WHERE p.team_id = ?
       AND p.deleted_at IS NULL")
 
 (defn get-team-projects
   "Get a set of project ids for the team"
-  [{:keys [::db/conn]} team-id]
-  (->> (db/exec! conn [sql:get-team-projects team-id])
+  [cfg team-id]
+  (->> (db/exec! cfg [sql:get-team-projects team-id])
        (into #{} xf-map-id)))
 
 (def ^:private sql:get-project-files
