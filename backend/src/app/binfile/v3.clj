@@ -9,9 +9,10 @@
   of entire team (or multiple teams) at once."
   (:refer-clojure :exclude [read])
   (:require
-   [app.common.data.macros :as dm]
    [app.binfile.common :as bfc]
    [app.common.data :as d]
+   [app.common.data.macros :as dm]
+   [app.common.exceptions :as ex]
    [app.common.features :as cfeat]
    [app.common.json :as json]
    [app.common.logging :as l]
@@ -19,23 +20,24 @@
    [app.common.transit :as t]
    [app.common.types.file :as ctf]
    [app.common.uuid :as uuid]
-   [clojure.java.io :as jio]
-   [app.util.time :as dt]
    [app.config :as cf]
-   [datoteka.io :as io]
-   [datoteka.fs :as fs]
    [app.db :as db]
    [app.db.sql :as sql]
    [app.storage :as sto]
-   [buddy.core.codecs :as bc])
+   [app.util.time :as dt]
+   [buddy.core.codecs :as bc]
+   [clojure.java.io :as jio]
+   [datoteka.fs :as fs]
+   [datoteka.io :as io])
   (:import
-   java.util.zip.ZipOutputStream
-   java.util.zip.ZipFile
+   java.io.InputStreamReader
+   java.io.OutputStreamWriter
    java.util.zip.ZipEntry
-   java.io.OutputStreamWriter))
+   java.util.zip.ZipFile
+   java.util.zip.ZipOutputStream))
 
 (def schema:file
-  [:map
+  [:map {:title "file"}
    [:id ::sm/uuid]
    [:data ctf/schema:data]
    [:features ::cfeat/features]])
@@ -218,8 +220,38 @@
                 :aborted @ab
                 :cause @cs)))))
 
+(def schema:manifest
+  [:map {:title "manifest"}
+   [:version ::sm/int]
+   [:export-type :string]
+   [:type :string]
+   [:files {:optional true}
+    [::sm/set ::sm/uuid]]])
+
+(def decode-manifest
+  (sm/decoder schema:manifest sm/json-transformer))
+
+(def valid-manifest?
+  (sm/validator schema:manifest))
+
+(defn- read-manifest
+  [^ZipFile input]
+  (when-let [entry (.getEntry input "manifest.json")]
+    (with-open [stream (.getInputStream input entry)]
+      (with-open [reader (InputStreamReader. stream "UTF-8")]
+        (let [manifest (json/read reader :key-fn json/read-kebab-key)]
+          (decode-manifest manifest))))))
+
 (defn- read-files-import!
   [cfg ^ZipFile input]
+  (let [manifest (read-manifest input)]
+    (app.common.pprint/pprint manifest)
+    (when-not (valid-manifest? manifest)
+      (ex/raise :type :internal
+                :code :invalid-binfile-v3-manifest
+                :hint "unable to find a valid manifest"))
+
+    (prn (iterator-seq (.entries input))))
   )
 
 (defn import-files!
