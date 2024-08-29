@@ -44,15 +44,23 @@
    [:mtype :string]
    [:path {:optional true} [:maybe :string]]])
 
+(def schema:colors
+  [:map-of {:gen/max 5} ::sm/uuid ::ctc/color])
+
+(def schema:components
+  [:map-of {:gen/max 5} ::sm/uuid ::ctn/container])
+
+(def schema:typographies
+  [:map-of {:gen/max 2} ::sm/uuid ::cty/typography])
+
+
 (def schema:data
   [:map {:title "FileData"}
    [:pages [:vector ::sm/uuid]]
    [:pages-index
     [:map-of {:gen/max 5} ::sm/uuid ::ctp/page]]
-   [:colors {:optional true}
-    [:map-of {:gen/max 5} ::sm/uuid ::ctc/color]]
-   [:components {:optional true}
-    [:map-of {:gen/max 5} ::sm/uuid ::ctn/container]]
+   [:colors {:optional true} schema:colors]
+   [:components {:optional true} schema:components]
    [:recent-colors {:optional true}
     [:vector {:gen/max 3} ::ctc/recent-color]]
    [:typographies {:optional true}

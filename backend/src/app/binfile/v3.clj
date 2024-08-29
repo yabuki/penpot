@@ -49,27 +49,84 @@
     (.flush writer))
   (.closeEntry output))
 
-(defn write-export!
-  [{:keys [::ids ::include-libraries ::embed-assets ::output] :as cfg}]
+(defn- get-file
+  [{:keys [::embed-assets ::include-libraries] :as cfg} file-id]
+
   (when (and include-libraries embed-assets)
     (throw (IllegalArgumentException.
             "the `include-libraries` and `embed-assets` are mutally excluding options")))
 
+  (let [detach?  (and (not embed-assets) (not include-libraries))]
+    (cond-> (bfc/get-file cfg file-id)
+      detach?
+      (-> (ctf/detach-external-references file-id)
+          (dissoc :libraries))
+
+      embed-assets
+      (update :data #(bfc/embed-assets cfg % file-id))
+
+      :always
+      (encode-file))))
+
+(defn write-export!
+  [{:keys [::ids ::include-libraries ::embed-assets ::output] :as cfg}]
   (with-open [^ZipOutputStream output (ZipOutputStream. output)]
-    (let [ids     (into ids (when include-libraries (bfc/get-libraries cfg ids)))
-          detach? (and (not embed-assets) (not include-libraries))]
+    (let [ids      (into ids (when include-libraries (bfc/get-libraries cfg ids)))
+          sobjects (volatile! #{})
+          storage  (sto/resolve cfg)]
+
       (doseq [file-id ids]
-        (let [file (cond-> (bfc/get-file cfg file-id)
-                     detach?
-                     (-> (ctf/detach-external-references file-id)
-                         (dissoc :libraries))
+        (let [file         (get-file cfg file-id)
+              data         (:data file)
+              media        (bfc/get-file-media cfg file)
 
-                     embed-assets
-                     (update :data #(bfc/embed-assets cfg % file-id)))
-              file (encode-file file)]
+              typographies (not-empty (:typographies data))
+              plugins-data (not-empty (:plugin-data data))
+              components   (not-empty (:components data))
+              colors       (not-empty (:colors data))
 
-          (write-entry! output (str "file/" file-id ".json") (dissoc file :data))
-          (write-entry! output (str "fdata/" file-id ".json") (:data file)))))))
+              pages-index  (:pages-index data)
+              file         (dissoc file :data)
+              data         (-> data
+                               (dissoc :pages-index)
+                               (dissoc :colors)
+                               (dissoc :media)
+                               (dissoc :recent-colors)
+                               (dissoc :typographies)
+                               (dissoc :plugin-data))
+              ]
+
+
+          (write-entry! output (str "files/" file-id ".json") file)
+          (write-entry! output (str "files/" file-id "/data.json") data)
+
+          (doseq [[page-id data] pages-index]
+            (write-entry! output (str "files/" file-id "/pages/" page-id ".json") data))
+
+          (when-let [media (not-empty media)]
+            (vswap! sobjects into bfc/xf-map-media-id media)
+            (write-entry! output (str "files/" file-id "/media.json") media))
+
+          (when components
+            (write-entry! output (str "files/" file-id "/components.json") components))
+
+          (when colors
+            (write-entry! output (str "files/" file-id "/colors.json") colors))
+
+          (when typographies
+            (write-entry! output (str "files/" file-id "/typographies.json") typographies))
+
+          (when plugins-data
+            (write-entry! output (str "files/" file-id "/plugins-data.json") plugins-data))))
+
+      (when-let [sobjects (-> sobjects deref not-empty)]
+        (doseq [id sobjects]
+          (let [sobject (sto/get-object storage id)]
+            (write-entry! output (str "objects/" id ".json") (meta sobject))
+            (with-open [input (sto/get-object-data storage sobject)]
+              (.putNextEntry output (ZipEntry. (str "objects/" id ".bin")))
+              (io/copy! input output (:size sobject))
+              (.closeEntry output))))))))
 
 (defn export-files!
   "Do the exportation of a specified file in custom penpot binary
