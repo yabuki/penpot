@@ -18,7 +18,6 @@
 (defn set-styles
   [element styles]
   (doseq [[style-name style-value] styles]
-    (js/console.log "style-name" style-name style-value)
     (if (contains? styles/mapping style-name)
       (let [[style-encode] (get styles/mapping style-name)
             style-encoded-value (style-encode style-value)]

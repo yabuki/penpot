@@ -379,7 +379,6 @@
               shape-ids (cond
                           (cfh/text-shape? shape)  [id]
                           (cfh/group-shape? shape) (cfh/get-children-ids objects id))]
-          (js/console.log "update-node?" update-node? (clj->js shape-ids) (clj->js shape) (clj->js attrs))
           (rx/of (dwsh/update-shapes shape-ids #(update-text-content % update-node? d/txt-merge attrs))))))))
 
 (defn migrate-node
@@ -689,8 +688,6 @@
                (rx/empty)))
 
            (let [attrs (select-keys attrs txt/text-node-attrs)]
-             (when-not (empty? attrs)
-               (js/console.log "attrs" (clj->js attrs)))
              (if-not (empty? attrs)
                (rx/of (update-text-attrs {:id id :attrs attrs}))
                (rx/empty)))
@@ -705,7 +702,6 @@
               (let [text-editor-instance (:workspace-editor state)
                     styles (styles/attrs->styles attrs)]
                 (when (some? text-editor-instance)
-                  (js/console.log "text-editor-instance" text-editor-instance)
                   (.applyStylesToSelection text-editor-instance styles)))))))
 
 (defn update-all-attrs
@@ -811,7 +807,6 @@
       (let [merged-styles (d/merge txt/default-text-attrs
                                    (get-in state [:workspace-global :default-font])
                                    new-styles)]
-        #_(js/console.log "merged-styles" (clj->js merged-styles))
         (update-in state [:workspace-new-editor-state id] (fnil merge {}) merged-styles)))))
 
 (defn v2-update-text-shape-position-data
@@ -839,7 +834,6 @@
           (dwsh/update-shapes
            [id]
            (fn [shape]
-             (js/console.log "assoc shape :content" content)
              (let [{:keys [width height position-data]} modifiers]
                (let [new-shape (-> shape
                                    (assoc :content content)

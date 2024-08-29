@@ -58,8 +58,6 @@
                          :lineHeight (:line-height data (:line-height txt/default-text-attrs))
                          :margin 0}]
 
-    (js/console.log "line-height" line-height)
-
     (cond-> base
       (some? line-height)       (obj/set! "lineHeight" line-height)
       (some? text-align)        (obj/set! "textAlign" text-align))))
