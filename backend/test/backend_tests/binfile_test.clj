@@ -94,3 +94,6 @@
      (io/output-stream output))
     (prn output)))
 
+(t/deftest import-binfile-v3
+  )
+

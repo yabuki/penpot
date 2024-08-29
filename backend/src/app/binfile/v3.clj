@@ -23,12 +23,14 @@
    [app.util.time :as dt]
    [app.config :as cf]
    [datoteka.io :as io]
+   [datoteka.fs :as fs]
    [app.db :as db]
    [app.db.sql :as sql]
    [app.storage :as sto]
    [buddy.core.codecs :as bc])
   (:import
    java.util.zip.ZipOutputStream
+   java.util.zip.ZipFile
    java.util.zip.ZipEntry
    java.io.OutputStreamWriter))
 
@@ -215,6 +217,43 @@
                 :elapsed (str (inst-ms (tp)) "ms")
                 :aborted @ab
                 :cause @cs)))))
+
+(defn- read-files-import!
+  [cfg ^ZipFile input]
+  )
+
+(defn import-files!
+  [cfg input]
+
+  (dm/assert!
+   "expected valid profile-id and project-id on `cfg`"
+   (and (uuid? (::profile-id cfg))
+        (uuid? (::project-id cfg))))
+
+  ;; TODO: make better assert, input should be a path or file, not all
+  ;; iofactories
+  (dm/assert!
+   "expected instance of jio/IOFactory for `input`"
+   (satisfies? jio/IOFactory input))
+
+  (let [id (uuid/next)
+        tp (dt/tpoint)
+        cs (volatile! nil)]
+
+    (l/info :hint "import: started" :id (str id))
+    (try
+      (with-open [input (ZipFile. (fs/file input))]
+        (read-files-import! cfg input))
+
+      (catch Throwable cause
+        (vreset! cs cause)
+        (throw cause))
+
+      (finally
+        (l/info :hint "import: terminated"
+                :id (str id)
+                :elapsed (dt/format-duration (tp))
+                :error? (some? @cs))))))
 
 ;; (defn export-teams!
 ;;   [{:keys [::ids] :as cfg} output]
