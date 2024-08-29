@@ -68,12 +68,18 @@
       :always
       (encode-file))))
 
-(defn write-export!
+(defn write-files-export!
   [{:keys [::ids ::include-libraries ::embed-assets ::output] :as cfg}]
   (with-open [^ZipOutputStream output (ZipOutputStream. output)]
     (let [ids      (into ids (when include-libraries (bfc/get-libraries cfg ids)))
           sobjects (volatile! #{})
-          storage  (sto/resolve cfg)]
+          storage  (sto/resolve cfg)
+          manifest {:type "penpot-export"
+                    :version 1
+                    :export-type "files"
+                    :files ids}]
+
+      (write-entry! output "manifest.json" manifest)
 
       (doseq [file-id ids]
         (let [file         (get-file cfg file-id)
@@ -95,7 +101,6 @@
                                (dissoc :typographies)
                                (dissoc :plugin-data))
               ]
-
 
           (write-entry! output (str "files/" file-id ".json") file)
           (write-entry! output (str "files/" file-id "/data.json") data)
@@ -157,7 +162,7 @@
     (try
       (l/info :hint "start exportation" :export-id (str id))
       (with-open [output (io/output-stream output)]
-        (write-export! (assoc cfg ::output output)))
+        (write-files-export! (assoc cfg ::output output)))
 
       (catch java.io.IOException _cause
         ;; Do nothing, EOF means client closes connection abruptly
