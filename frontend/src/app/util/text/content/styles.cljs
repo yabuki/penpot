@@ -7,8 +7,7 @@
 (ns app.util.text.content.styles
   (:require
    [app.common.transit :as transit]
-   [cuerdas.core :as str]
-   [lambdaisland.uri.normalize :as normalize]))
+   [cuerdas.core :as str]))
 
 (defn encode
   [value]
