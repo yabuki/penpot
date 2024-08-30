@@ -70,9 +70,17 @@
 
         on-needslayout
         (mf/use-fn
-           (fn [e]
-             (st/emit!
-              (dwt/v2-update-text-shape-position-data shape-id []))))
+         (fn [e]
+           (st/emit!
+            (dwt/v2-update-text-shape-position-data shape-id []))))
+
+        on-change
+        (mf/use-fn
+         (fn []
+           (let [text-editor-instance (mf/ref-val text-editor-instance-ref)
+                 new-content (content/dom->cljs (impl/getRoot text-editor-instance))]
+             (when (some? new-content)
+               (st/emit! (dwt/v2-update-text-shape-content shape-id new-content true))))))
 
         on-key-up
         (mf/use-fn
@@ -96,6 +104,7 @@
          (.addEventListener text-editor-instance "focus" on-focus)
          (.addEventListener text-editor-instance "needslayout" on-needslayout)
          (.addEventListener text-editor-instance "stylechange" on-stylechange)
+         (.addEventListener text-editor-instance "change" on-change)
          (st/emit! (dwt/update-editor text-editor-instance))
          (when (some? content)
            (impl/setRoot text-editor-instance (content/cljs->dom content)))
@@ -107,6 +116,7 @@
            (.removeEventListener text-editor-instance "focus" on-focus)
            (.removeEventListener text-editor-instance "needslayout" on-needslayout)
            (.removeEventListener text-editor-instance "stylechange" on-stylechange)
+           (.removeEventListener text-editor-instance "change" on-change)
            (.dispose text-editor-instance)
            (st/emit! (dwt/update-editor nil))
            (doseq [key keys]

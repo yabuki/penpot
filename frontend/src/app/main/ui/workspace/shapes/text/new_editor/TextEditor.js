@@ -2058,14 +2058,6 @@ getSavedRange_fn = function() {
  * @returns {void}
  */
 applyStylesTo_fn = function(startNode, startOffset, endNode, endOffset, newStyles) {
-  console.log(
-    "applyStylesTo",
-    startNode,
-    startOffset,
-    endNode,
-    endOffset,
-    newStyles
-  );
   const root = __privateGet(this, _textEditor).root;
   setRootStyles(root, newStyles);
   if (startNode === endNode && startNode.nodeType === Node.TEXT_NODE) {
@@ -2423,6 +2415,7 @@ class TextEditor extends EventTarget {
     __privateGet(this, _selectionController).applyStyles(styles);
     const mutations = __privateGet(this, _selectionController).endMutation();
     __privateMethod(this, _TextEditor_instances, notifyLayout_fn).call(this, LayoutType.FULL, mutations);
+    __privateGet(this, _changeController).notifyImmediately();
     return this;
   }
   /**
