@@ -193,22 +193,41 @@
   [{:keys [attrs shape]}]
   (shape-current-values shape txt/is-root-node? attrs))
 
-(defn current-paragraph-values
+(defn v2-current-text-values
+  [{:keys [editor-instance attrs shape]}]
+  (let [result (-> (.-currentStyle editor-instance)
+                   (styles/get-styles-from-style-declaration)
+                   (select-keys attrs))
+        result (if (empty? result) txt/default-text-attrs result)]
+    result))
+
+(defn v1-current-paragraph-values
   [{:keys [editor-state attrs shape]}]
   (if editor-state
     (-> (ted/get-editor-current-block-data editor-state)
         (select-keys attrs))
     (shape-current-values shape txt/is-paragraph-node? attrs)))
 
-(defn current-text-values
-  [{:keys [editor-state attrs shape]}]
-  (if editor-state
-    (let [result (-> (ted/get-editor-current-inline-styles editor-state)
-                     (select-keys attrs))
-          result (if (empty? result) txt/default-text-attrs result)]
-      result)
-    (shape-current-values shape txt/is-text-node? attrs)))
+(defn current-paragraph-values
+  [{:keys [editor-state editor-instance attrs shape] :as options}]
+  (cond
+    (some? editor-state) (v1-current-paragraph-values options)
+    (some? editor-instance) (v2-current-text-values options)
+    :else (shape-current-values shape txt/is-paragraph-node? attrs)))
 
+(defn v1-current-text-values
+  [{:keys [editor-state attrs shape]}]
+  (let [result (-> (ted/get-editor-current-inline-styles editor-state)
+                   (select-keys attrs))
+        result (if (empty? result) txt/default-text-attrs result)]
+    result))
+
+(defn current-text-values
+  [{:keys [editor-state editor-instance attrs shape] :as options}]
+  (cond
+    (some? editor-state) (v1-current-text-values options)
+    (some? editor-instance) (v2-current-text-values options)
+    :else (shape-current-values shape txt/is-text-node? attrs)))
 
 ;; --- TEXT EDITION IMPL
 

@@ -58,9 +58,11 @@
         v2-editor-state (get v2-state-map (:id shape))
 
         layer-values (select-keys shape layer-attrs)
+        editor-instance (mf/deref refs/workspace-editor)
 
         fill-values  (-> (dwt/current-text-values
                           {:editor-state editor-state
+                           :editor-instance editor-instance
                            :shape shape
                            :attrs (conj txt/text-fill-attrs :fills)})
                          (d/update-in-when [:fill-color-gradient :type] keyword))
@@ -88,7 +90,7 @@
                        :attrs txt/text-node-attrs}))
         layout-item-values (select-keys shape layout-item-attrs)
         fill-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
-                      (d/merge fill-values (select-keys v2-editor-state fill-attrs))
+                      (d/merge (select-keys v2-editor-state fill-attrs) fill-values)
                       fill-values)
 
         text-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
