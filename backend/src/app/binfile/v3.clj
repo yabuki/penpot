@@ -36,14 +36,28 @@
    java.util.zip.ZipFile
    java.util.zip.ZipOutputStream))
 
-(def schema:file
+(def ^:private schema:file
   [:map {:title "file"}
    [:id ::sm/uuid]
    [:data ctf/schema:data]
    [:features ::cfeat/features]])
 
-(def encode-file
+(def ^:private encode-file
   (sm/encoder schema:file sm/json-transformer))
+
+(def ^:private schema:manifest
+  [:map {:title "manifest"}
+   [:version ::sm/int]
+   [:export-type :string]
+   [:type :string]
+   [:files {:optional true}
+    [::sm/set ::sm/uuid]]])
+
+(def ^:private decode-manifest
+  (sm/decoder schema:manifest sm/json-transformer))
+
+(def ^:private valid-manifest?
+  (sm/validator schema:manifest))
 
 (defn- write-entry!
   [^ZipOutputStream output ^String path data]
@@ -220,72 +234,58 @@
                 :aborted @ab
                 :cause @cs)))))
 
-(def schema:manifest
-  [:map {:title "manifest"}
-   [:version ::sm/int]
-   [:export-type :string]
-   [:type :string]
-   [:files {:optional true}
-    [::sm/set ::sm/uuid]]])
+;; (defn- read-manifest
+;;   [^ZipFile input]
+;;   (when-let [entry (.getEntry input "manifest.json")]
+;;     (with-open [stream (.getInputStream input entry)]
+;;       (with-open [reader (InputStreamReader. stream "UTF-8")]
+;;         (let [manifest (json/read reader :key-fn json/read-kebab-key)]
+;;           (decode-manifest manifest))))))
 
-(def decode-manifest
-  (sm/decoder schema:manifest sm/json-transformer))
+;; (defn- read-files-import!
+;;   [cfg ^ZipFile input]
+;;   (let [manifest (read-manifest input)]
+;;     (app.common.pprint/pprint manifest)
+;;     (when-not (valid-manifest? manifest)
+;;       (ex/raise :type :internal
+;;                 :code :invalid-binfile-v3-manifest
+;;                 :hint "unable to find a valid manifest"))
 
-(def valid-manifest?
-  (sm/validator schema:manifest))
+;;     (prn (iterator-seq (.entries input))))
+;;   )
 
-(defn- read-manifest
-  [^ZipFile input]
-  (when-let [entry (.getEntry input "manifest.json")]
-    (with-open [stream (.getInputStream input entry)]
-      (with-open [reader (InputStreamReader. stream "UTF-8")]
-        (let [manifest (json/read reader :key-fn json/read-kebab-key)]
-          (decode-manifest manifest))))))
+;; (defn import-files!
+;;   [cfg input]
 
-(defn- read-files-import!
-  [cfg ^ZipFile input]
-  (let [manifest (read-manifest input)]
-    (app.common.pprint/pprint manifest)
-    (when-not (valid-manifest? manifest)
-      (ex/raise :type :internal
-                :code :invalid-binfile-v3-manifest
-                :hint "unable to find a valid manifest"))
+;;   (dm/assert!
+;;    "expected valid profile-id and project-id on `cfg`"
+;;    (and (uuid? (::profile-id cfg))
+;;         (uuid? (::project-id cfg))))
 
-    (prn (iterator-seq (.entries input))))
-  )
+;;   ;; TODO: make better assert, input should be a path or file, not all
+;;   ;; iofactories
+;;   (dm/assert!
+;;    "expected instance of jio/IOFactory for `input`"
+;;    (satisfies? jio/IOFactory input))
 
-(defn import-files!
-  [cfg input]
+;;   (let [id (uuid/next)
+;;         tp (dt/tpoint)
+;;         cs (volatile! nil)]
 
-  (dm/assert!
-   "expected valid profile-id and project-id on `cfg`"
-   (and (uuid? (::profile-id cfg))
-        (uuid? (::project-id cfg))))
+;;     (l/info :hint "import: started" :id (str id))
+;;     (try
+;;       (with-open [input (ZipFile. (fs/file input))]
+;;         (read-files-import! cfg input))
 
-  ;; TODO: make better assert, input should be a path or file, not all
-  ;; iofactories
-  (dm/assert!
-   "expected instance of jio/IOFactory for `input`"
-   (satisfies? jio/IOFactory input))
+;;       (catch Throwable cause
+;;         (vreset! cs cause)
+;;         (throw cause))
 
-  (let [id (uuid/next)
-        tp (dt/tpoint)
-        cs (volatile! nil)]
-
-    (l/info :hint "import: started" :id (str id))
-    (try
-      (with-open [input (ZipFile. (fs/file input))]
-        (read-files-import! cfg input))
-
-      (catch Throwable cause
-        (vreset! cs cause)
-        (throw cause))
-
-      (finally
-        (l/info :hint "import: terminated"
-                :id (str id)
-                :elapsed (dt/format-duration (tp))
-                :error? (some? @cs))))))
+;;       (finally
+;;         (l/info :hint "import: terminated"
+;;                 :id (str id)
+;;                 :elapsed (dt/format-duration (tp))
+;;                 :error? (some? @cs))))))
 
 ;; (defn export-teams!
 ;;   [{:keys [::ids] :as cfg} output]

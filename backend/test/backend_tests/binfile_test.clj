@@ -95,13 +95,13 @@
      (io/output-stream output))
     (prn output)))
 
-(t/deftest import-binfile-v3
-  (let [profile (th/create-profile* 1)
-        input  (fs/path (io/resource "backend_tests/test_files/template-binfile-v3.penpot"))
-        cfg    (-> th/*system*
-                   (assoc ::v3/project-id (:default-project-id profile))
-                   (assoc ::v3/profile-id (:id profile)))
-        result (v3/import-files! cfg input)]
+;; (t/deftest import-binfile-v3
+;;   (let [profile (th/create-profile* 1)
+;;         input  (fs/path (io/resource "backend_tests/test_files/template-binfile-v3.penpot"))
+;;         cfg    (-> th/*system*
+;;                    (assoc ::v3/project-id (:default-project-id profile))
+;;                    (assoc ::v3/profile-id (:id profile)))
+;;         result (v3/import-files! cfg input)]
 
-    (prn result)))
+;;     (prn result)))
 
