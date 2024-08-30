@@ -302,16 +302,18 @@
   ([params] (update-file* *system* params))
   ([system {:keys [file-id changes session-id profile-id revn]
             :or {session-id (uuid/next) revn 0}}]
-   (db/tx-run! system (fn [{:keys [::db/conn] :as system}]
-                        (let [file (files.update/get-file conn file-id)]
-                          (files.update/update-file system
+   (-> system
+       (assoc ::files.update/timestamp (dt/now))
+       (db/tx-run! (fn [{:keys [::db/conn] :as system}]
+                     (let [file (files.update/get-file conn file-id)]
+                       (#'files.update/update-file* system
                                                     {:id file-id
                                                      :revn revn
                                                      :file file
                                                      :features (:features file)
                                                      :changes changes
                                                      :session-id session-id
-                                                     :profile-id profile-id}))))))
+                                                     :profile-id profile-id})))))))
 
 (declare command!)
 
