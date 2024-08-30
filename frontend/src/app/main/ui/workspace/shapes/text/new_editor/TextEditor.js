@@ -1026,6 +1026,14 @@ class SelectionController extends EventTarget {
     __privateMethod(this, _SelectionController_instances, setup_fn).call(this);
   }
   /**
+   * Styles of the current inline.
+   *
+   * @type {CSSStyleDeclaration}
+   */
+  get currentStyle() {
+    return __privateGet(this, _currentStyle);
+  }
+  /**
    * Saves the current selection and returns the client rects.
    *
    * @returns {boolean}
@@ -2104,8 +2112,7 @@ applyStylesTo_fn = function(startNode, startOffset, endNode, endOffset, newStyle
         setInlineStyles(inline, newStyles);
         inline.after(newInline);
       }
-      if (__privateGet(this, _textNodeIterator).currentNode === expectedEndNode)
-        return;
+      if (__privateGet(this, _textNodeIterator).currentNode === expectedEndNode) return;
       __privateGet(this, _textNodeIterator).nextNode();
     } while (__privateGet(this, _textNodeIterator).currentNode);
   }
@@ -2440,11 +2447,13 @@ class TextEditor extends EventTarget {
   dispose() {
     __privateGet(this, _changeController).removeEventListener("change", __privateGet(this, _onChange));
     __privateGet(this, _changeController).dispose();
+    __privateSet(this, _changeController, null);
     __privateGet(this, _selectionController).removeEventListener(
       "stylechange",
       __privateGet(this, _onStyleChange)
     );
     __privateGet(this, _selectionController).dispose();
+    __privateSet(this, _selectionController, null);
     removeEventListeners(__privateGet(this, _element), __privateGet(this, _events));
     __privateSet(this, _element, null);
     __privateSet(this, _root, null);

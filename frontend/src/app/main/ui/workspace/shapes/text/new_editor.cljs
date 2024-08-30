@@ -22,6 +22,7 @@
    [app.util.dom :as dom]
    [app.util.keyboard :as kbd]
    [app.util.text.content :as content]
+   [app.util.text.content.styles :as styles]
    #_[app.util.text.layout :as layout]
    [goog.events :as events]
    [rumext.v2 :as mf]))
@@ -65,7 +66,7 @@
         on-stylechange
         (mf/use-fn
          (fn [e]
-           (let [new-styles (content/get-styles-from-event e)]
+           (let [new-styles (styles/get-styles-from-event e)]
              (st/emit! (dwt/v2-update-text-editor-styles shape-id new-styles)))))
 
         on-needslayout
@@ -95,7 +96,7 @@
      (fn []
        (let [keys [(events/listen js/document "keyup" on-key-up)]
              text-editor (mf/ref-val text-editor-ref)
-             style-defaults (content/get-style-defaults (d/merge txt/default-text-attrs default-font))
+             style-defaults (styles/get-style-defaults (d/merge txt/default-text-attrs default-font))
              text-editor-options #js {:styleDefaults style-defaults
                                       :selectionImposterElement (mf/ref-val text-editor-selection-ref)}
              text-editor-instance (impl/createTextEditor text-editor text-editor-options)]

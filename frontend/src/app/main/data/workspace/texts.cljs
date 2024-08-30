@@ -415,7 +415,9 @@
 
     ptk/WatchEvent
     (watch [_ state _]
-      (when (nil? (get-in state [:workspace-editor-state id]))
+      (when (or
+             (and (features/active-feature? state "editor/v2") (nil? (:workspace-editor state)))
+             (and (not (features/active-feature? state "editor/v2")) (nil? (get-in state [:workspace-editor-state id]))))
         (let [objects   (wsh/lookup-page-objects state)
               shape     (get objects id)
 
@@ -437,8 +439,18 @@
                 (-> shape
                     (dissoc :fills)
                     (d/update-when :content update-content)))]
+          (rx/of (dwsh/update-shapes shape-ids update-shape)))))
 
-          (rx/of (dwsh/update-shapes shape-ids update-shape)))))))
+    ptk/EffectEvent
+    (effect [_ state _]
+      (when (features/active-feature? state "editor/v2")
+        (let [text-editor-instance (:workspace-editor state)]
+          (when (some? text-editor-instance)
+            (let [attrs (-> (.-currentStyle text-editor-instance)
+                            (styles/get-styles-from-style-declaration)
+                            ((comp update-node-fn migrate-node)))
+                  styles (styles/attrs->styles attrs)]
+              (.applyStylesToSelection text-editor-instance styles))))))))
 
 ;; --- RESIZE UTILS
 
