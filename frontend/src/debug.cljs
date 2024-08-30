@@ -14,6 +14,7 @@
    [app.common.logging :as l]
    [app.common.schema :as sm]
    [app.common.transit :as t]
+   [app.common.encoding_impl :as encoding]
    [app.common.types.file :as ctf]
    [app.common.uri :as u]
    [app.common.uuid :as uuid]
@@ -509,3 +510,84 @@
                      #_(.reload js/location))
            (fn [cause]
              (js/console.log "EE:" cause))))))
+
+;; (def sample-data
+;;   "SGVsbG8gd29ybGQgCkhvbGEgbXVuZA")
+
+(def sample-data
+  "SGVsbG8gd29ybGQgCkhvbGEgbXVuZG8")
+
+(def sample-data-size 23)
+
+(defn ^:export bench-base64-decode
+  []
+  (simple-benchmark []
+    (encoding/decodeBase64-2 sample-data)
+    1000000)
+
+  (simple-benchmark [result (js/Uint8Array. sample-data-size)]
+    (encoding/decodeBase64-1 sample-data result)
+    1000000))
+
+(defn ^:export bench-base64-encode
+  []
+  (let [buffer (js/Uint8Array. sample-data-size)]
+    (encoding/decodeBase64-1 sample-data buffer)
+
+    (simple-benchmark []
+      (encoding/encodeBase64-1 buffer)
+      10000)
+
+    (simple-benchmark []
+      (encoding/encodeBase64-2 buffer)
+      10000)))
+
+
+(defn ^:export test-base64
+  []
+  (let [result  (js/Uint8Array. sample-data-size)
+        decoder (js/TextDecoder.)]
+    (encoding/decodeBase64-1 sample-data result)
+    (.decode decoder result)))
+
+(defn buffer->string
+  [buffer]
+  (let [decoder (js/TextDecoder.)]
+    (.decode decoder buffer)))
+
+(defn ^:export test-base64-encode
+  []
+  (let [buffer  (js/Uint8Array. sample-data-size)
+        _       (encoding/decodeBase64-1 sample-data buffer)
+        dec1    (buffer->string buffer)
+        _ (js/console.log buffer)
+
+
+        ;; ROUNDTRIP
+        result    (encoding/encodeBase64-1 buffer)
+        buffer2   (js/Uint8Array. sample-data-size)
+        _         (encoding/decodeBase64-1 result buffer2)
+        _         (js/console.log buffer2)
+
+        dec2    (buffer->string buffer2)
+        ]
+
+
+    (js/console.log sample-data)
+    (js/console.log result)
+
+    ;; (js/console.log buffer)
+    ;; (js/console.log "RES:" dec1)
+    ;; (js/console.log "RES:" dec2)
+    (js/console.log "RES:" (= dec1 dec2))
+    #_(js/console.log (buffer->string buffer))
+    ;; (js/console.log "RESULT:" b64s)
+    ;; (js/console.log "RESULT:" sample-data)
+    ))
+
+
+
+        ;; b64s    (encoding/encodeBase64-1 result)
+        ;; _       (encoding/decodeBase64-1
+
+

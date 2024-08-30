@@ -77,135 +77,103 @@ goog.scope(function() {
   self.hexToBuffer = hexToBuffer;
   self.bufferToHex = bufferToHex;
 
-  // base-x encoding / decoding
-  // Copyright (c) 2018 base-x contributors
-  // Copyright (c) 2014-2018 The Bitcoin Core developers (base58.cpp)
-  // Distributed under the MIT software license, see the accompanying
-  // file LICENSE or http://www.opensource.org/licenses/mit-license.php.
 
-  // WARNING: This module is NOT RFC3548 compliant, it cannot be used
-  // for base16 (hex), base32, or base64 encoding in a standards
-  // compliant manner.
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
-  function getBaseCodec (ALPHABET) {
-    if (ALPHABET.length >= 255) { throw new TypeError("Alphabet too long"); }
-    let BASE_MAP = new Uint8Array(256);
-    for (let j = 0; j < BASE_MAP.length; j++) {
-      BASE_MAP[j] = 255;
-    }
-    for (let i = 0; i < ALPHABET.length; i++) {
-      let x = ALPHABET.charAt(i);
-      let xc = x.charCodeAt(0);
-      if (BASE_MAP[xc] !== 255) { throw new TypeError(x + " is ambiguous"); }
-      BASE_MAP[xc] = i;
-    }
-    let BASE = ALPHABET.length;
-    let LEADER = ALPHABET.charAt(0);
-    let FACTOR = Math.log(BASE) / Math.log(256); // log(BASE) / log(256), rounded up
-    let iFACTOR = Math.log(256) / Math.log(BASE); // log(256) / log(BASE), rounded up
-    function encode (source) {
-      if (source instanceof Uint8Array) {
-      } else if (ArrayBuffer.isView(source)) {
-        source = new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
-      } else if (Array.isArray(source)) {
-        source = Uint8Array.from(source);
-      }
-      if (!(source instanceof Uint8Array)) { throw new TypeError("Expected Uint8Array"); }
-      if (source.length === 0) { return ""; }
-      // Skip & count leading zeroes.
-      let zeroes = 0;
-      let length = 0;
-      let pbegin = 0;
-      let pend = source.length;
-      while (pbegin !== pend && source[pbegin] === 0) {
-        pbegin++;
-        zeroes++;
-      }
-      // Allocate enough space in big-endian base58 representation.
-      let size = ((pend - pbegin) * iFACTOR + 1) >>> 0;
-      let b58 = new Uint8Array(size);
-      // Process the bytes.
-      while (pbegin !== pend) {
-        let carry = source[pbegin];
-        // Apply "b58 = b58 * 256 + ch".
-        let i = 0;
-        for (let it1 = size - 1; (carry !== 0 || i < length) && (it1 !== -1); it1--, i++) {
-          carry += (256 * b58[it1]) >>> 0;
-          b58[it1] = (carry % BASE) >>> 0;
-          carry = (carry / BASE) >>> 0;
-        }
-        if (carry !== 0) { throw new Error("Non-zero carry"); }
-        length = i;
-        pbegin++;
-      }
-      // Skip leading zeroes in base58 result.
-      let it2 = size - length;
-      while (it2 !== size && b58[it2] === 0) {
-        it2++;
-      }
-      // Translate the result into a string.
-      let str = LEADER.repeat(zeroes);
-      for (; it2 < size; ++it2) { str += ALPHABET.charAt(b58[it2]); }
-      return str;
-    }
-
-    function decodeUnsafe (source) {
-      if (typeof source !== "string") { throw new TypeError("Expected String"); }
-      if (source.length === 0) { return new Uint8Array(); }
-      let psz = 0;
-      // Skip and count leading '1's.
-      let zeroes = 0;
-      let length = 0;
-      while (source[psz] === LEADER) {
-        zeroes++;
-        psz++;
-      }
-      // Allocate enough space in big-endian base256 representation.
-      let size = (((source.length - psz) * FACTOR) + 1) >>> 0; // log(58) / log(256), rounded up.
-      let b256 = new Uint8Array(size);
-      // Process the characters.
-      while (source[psz]) {
-        // Decode character
-        let carry = BASE_MAP[source.charCodeAt(psz)];
-        // Invalid character
-        if (carry === 255) { return; }
-        let i = 0;
-        for (let it3 = size - 1; (carry !== 0 || i < length) && (it3 !== -1); it3--, i++) {
-          carry += (BASE * b256[it3]) >>> 0;
-          b256[it3] = (carry % 256) >>> 0;
-          carry = (carry / 256) >>> 0;
-        }
-        if (carry !== 0) { throw new Error("Non-zero carry"); }
-        length = i;
-        psz++;
-      }
-      // Skip leading zeroes in b256.
-      let it4 = size - length;
-      while (it4 !== size && b256[it4] === 0) {
-        it4++;
-      }
-      let vch = new Uint8Array(zeroes + (size - it4));
-      let j = zeroes;
-      while (it4 !== size) {
-        vch[j++] = b256[it4++];
-      }
-      return vch;
-    }
-
-    function decode (string) {
-      let buffer = decodeUnsafe(string);
-      if (buffer) { return buffer; }
-      throw new Error("Non-base" + BASE + " character");
-    }
-
-    return {
-      encode: encode,
-      decodeUnsafe: decodeUnsafe,
-      decode: decode
-    };
+  // Use a lookup table to find the index.
+  const lookup = typeof Uint8Array === 'undefined' ? [] : new Uint8Array(256);
+  for (let i = 0; i < alphabet.length; i++) {
+    lookup[alphabet.charCodeAt(i)] = i;
   }
-  // MORE bases here: https://github.com/cryptocoinjs/base-x/tree/master
-  const BASE62 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  self.bufferToBase62 = getBaseCodec(BASE62).encode;
 
+  /*
+   * A low-level function that decodes base64 string to a existing Uint8Array
+   */
+
+  function decodeBase64_1(source, target) {
+    const sourceLength = source.length;
+    // const paddingLength = (source[sourceLength - 2] === '=' ? 2 : (source[sourceLength - 1] === '=' ? 1 : 0));
+    const baseLength = sourceLength; //(sourceLength - paddingLength) & 0xfffffffc;
+
+    let tmp;
+    let i = 0;
+    let byteIndex = 0;
+
+    for (; i < baseLength; i += 4) {
+      tmp = (lookup[source.charCodeAt(i)] << 18)
+        | (lookup[source.charCodeAt(i + 1)] << 12)
+        | (lookup[source.charCodeAt(i + 2)] << 6)
+        | (lookup[source.charCodeAt(i + 3)]);
+
+      target[byteIndex++] = (tmp >> 16) & 0xFF
+      target[byteIndex++] = (tmp >> 8) & 0xFF
+      target[byteIndex++] = (tmp) & 0xFF
+    }
+
+    // console.log("DECODE END", byteIndex);
+
+    // if (paddingLength === 1) {
+    //   tmp = (lookup[source.charCodeAt(i)] << 10)
+    //     | (lookup[source.charCodeAt(i + 1)] << 4)
+    //     | (lookup[source.charCodeAt(i + 2)] >> 2);
+
+    //   target[byteIndex++] = (tmp >> 8) & 0xFF
+    //   target[byteIndex++] = tmp & 0xFF
+    // }
+
+    // if (paddingLength === 2) {
+    //   tmp = (lookup[source.charCodeAt(i)] << 2) | (lookup[source.charCodeAt(i + 1)] >> 4)
+    //   target[byteIndex++] = tmp & 0xFF
+    // }
+  }
+
+  const decodeBase64_2 = function(data) {
+    return Uint8Array.from(atob(data), m => m.charCodeAt(0));
+  }
+
+  // const alphabet = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_');
+
+  function encodeBase64_1 (buffer) {
+    let i;
+    let len = buffer.length;
+    // let pad = len % 3;
+    let result = '';
+
+    for (i = 0; i < len; i += 3) {
+      const tmp1 = buffer[i];
+      const tmp2 = buffer[i + 1];
+      const tmp3 = buffer[i + 2];
+
+      result += alphabet[tmp1 >> 2];
+      result += alphabet[((tmp1 & 3) << 4) | (tmp2 >> 4)];
+      result += alphabet[((tmp2 & 15) << 2) | (tmp3 >> 6)];
+      result += alphabet[tmp3 & 63];
+    }
+
+    // This padding causes performance issue
+    // if (pad === 2) {
+    //   result = result.substring(0, result.length - 1) + '=';
+    // } else if (pad === 1) {
+    //   result = result.substring(0, result.length - 2) + '==';
+    // }
+
+    return result;
+  };
+
+  function encodeBase64_2(buffer) {
+    let binary = [];
+    let byteLength = buffer.byteLength;
+
+    for (let i = 0; i < byteLength; i++) {
+      binary.push(String.fromCharCode(buffer[i]));
+    }
+
+    return btoa(binary.join(''));
+  }
+
+  self.encodeBase64_1 = encodeBase64_1;
+  self.encodeBase64_2 = encodeBase64_2;
+
+  self.decodeBase64_1 = decodeBase64_1;
+  self.decodeBase64_2 = decodeBase64_2;
 });
