@@ -6,6 +6,7 @@
 
 (ns app.util.text.content.to-dom
   (:require
+   [app.common.data :as d]
    [app.common.text :as txt]
    [app.util.dom :as dom]
    [app.util.text.content.styles :as styles]))
@@ -56,7 +57,7 @@
 
 (defn get-paragraph-styles
   [paragraph]
-  (get-styles-from-attrs paragraph txt/paragraph-attrs))
+  (get-styles-from-attrs paragraph (d/concat-set txt/paragraph-attrs txt/text-node-attrs)))
 
 (defn get-root-styles
   [root]

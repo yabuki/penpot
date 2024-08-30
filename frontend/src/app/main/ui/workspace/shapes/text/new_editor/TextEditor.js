@@ -300,7 +300,24 @@ function getClosestTextNode(node) {
 const TAG = "DIV";
 const TYPE = "paragraph";
 const QUERY = `[data-itype="${TYPE}"]`;
-const STYLES = [["text-align"], ["direction"]];
+const STYLES = [
+  ["--typography-ref-id"],
+  ["--typography-ref-file"],
+  ["--font-id"],
+  ["--font-variant-id"],
+  ["--fills"],
+  ["font-variant"],
+  ["font-family"],
+  ["font-size", "px"],
+  ["font-weight"],
+  ["font-style"],
+  ["line-height"],
+  ["letter-spacing", "px"],
+  ["text-decoration"],
+  ["text-transform"],
+  ["text-align"],
+  ["direction"]
+];
 function isLikeParagraph(element) {
   return !isLikeInline(element);
 }

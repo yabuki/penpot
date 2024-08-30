@@ -53,7 +53,7 @@
 
 (defn get-paragraph-styles
   [element]
-  (get-attrs-from-styles element txt/paragraph-attrs))
+  (get-attrs-from-styles element (d/concat-set txt/paragraph-attrs txt/text-node-attrs)))
 
 (defn get-root-styles
   [element]
