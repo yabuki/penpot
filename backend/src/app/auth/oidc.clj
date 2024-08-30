@@ -12,6 +12,7 @@
    [app.common.data.macros :as dm]
    [app.common.exceptions :as ex]
    [app.common.logging :as l]
+   [app.common.schema :as sm]
    [app.common.spec :as us]
    [app.common.uri :as u]
    [app.config :as cf]
@@ -607,17 +608,30 @@
         nil
         session-id))))
 
+(def ^:private schema:auth-params
+  [:map {:title "auth-params"}
+   [:invitation-token {:optional true} :string]
+   [:create-welcome-file {:optional true} :boolean]])
+
+;; FIXME: this should be changed, on develop sm/default-transformer
+;; becomes sm/json-transformer and :boolean schema type should be
+;; replaced with ::sm/boolean for proper and more flexible decoding
+;; mechanism.
+(def ^:private decode-auth-params
+  (sm/decoder schema:auth-params sm/default-transformer))
+
 (defn- auth-handler
   [cfg {:keys [params] :as request}]
   (let [props  (audit/extract-utm-params params)
+        params (decode-auth-params params)
         esid   (rpc/get-external-session-id request)
-        params {:iss :oauth
+        claims {:iss :oauth
                 :invitation-token (:invitation-token params)
+                :create-welcome-file (:create-welcome-file params)
                 :external-session-id esid
                 :props props
                 :exp (dt/in-future "4h")}
-        state  (tokens/generate (::setup/props cfg)
-                                (d/without-nils params))
+        state  (tokens/generate (::setup/props cfg) (d/without-nils claims))
         uri    (build-auth-uri cfg state)]
     {::rres/status 200
      ::rres/body {:redirect-uri uri}}))

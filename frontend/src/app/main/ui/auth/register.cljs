@@ -87,7 +87,8 @@
                                           (fm/validate-not-empty :password (tr "auth.password-not-empty"))]
                              :initial initial)
 
-        submitted? (mf/use-state false)
+        submitted?
+        (mf/use-state false)
 
         on-submit
         (mf/use-fn
@@ -227,9 +228,8 @@
                                 :validators validators
                                 :initial params)
 
-        welcome-file? (cf/external-feature-flag "onboarding-03" "test")
-
-        submitted? (mf/use-state false)
+        submitted?
+        (mf/use-state false)
 
         on-success
         (mf/use-fn
@@ -248,8 +248,13 @@
         (mf/use-fn
          (fn [form _]
            (reset! submitted? true)
-           (let [params (cond-> (:clean-data @form)
-                          welcome-file? (assoc :welcome-file true))]
+           (let [create-welcome-file?
+                 (cf/external-feature-flag "onboarding-03" "test")
+
+                 params
+                 (cond-> (:clean-data @form)
+                   create-welcome-file? (assoc :create-welcome-file true))]
+
              (->> (rp/cmd! :register-profile params)
                   (rx/finalize #(reset! submitted? false))
                   (rx/subs! on-success on-error)))))]
