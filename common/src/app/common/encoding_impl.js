@@ -20,9 +20,16 @@ goog.scope(function() {
     hexMap[i] = (i + 0x100).toString(16).substr(1);
   }
 
+  // function decodeHex(input, buffer) {
+  //   for (let i = 0; i < input.length; i += 2) {
+  //     buffer[i / 2] = parseInt(input.substring(i, i + 2), 16);
+  //   }
+  // }
+
   function decodeHex(input, buffer) {
-    for (let i = 0; i < input.length; i += 2) {
-      view[i / 2] = parseInt(input.substring(i, i + 2), 16);
+    const length = input.length;
+    for (let i = 0; i < length; i += 2) {
+      buffer[i / 2] = parseInt(input[i] + input[i+1], 16);
     }
   }
 
@@ -80,6 +87,7 @@ goog.scope(function() {
 
   self.hexToBuffer = hexToBuffer;
   self.bufferToHex = bufferToHex;
+  self.decodeHex = decodeHex;
 
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';

@@ -521,8 +521,13 @@
 (def sample-data-hex
   "486F6C61206D756E646F2E2048656C6C6F20776F726C64")
 
-
 (def sample-data-size 23)
+(def sample-data-size-hex 23)
+
+(defn buffer->string
+  [buffer]
+  (let [decoder (js/TextDecoder.)]
+    (.decode decoder buffer)))
 
 (defn ^:export bench-base64-decode
   []
@@ -547,52 +552,59 @@
       (encoding/encodeBase64-2 buffer)
       10000)))
 
-
-(defn ^:export test-base64
+(defn ^:export test-hex
   []
-  (let [result  (js/Uint8Array. sample-data-size)
-        decoder (js/TextDecoder.)]
-    (encoding/decodeBase64-1 sample-data result)
-    (.decode decoder result)))
+  (let [result (encoding/hexToBuffer sample-data-hex)]
+    (js/console.log result)))
 
-(defn buffer->string
-  [buffer]
-  (let [decoder (js/TextDecoder.)]
-    (.decode decoder buffer)))
 
-(defn ^:export test-base64-encode
+(defn ^:export bench-hex-decode
   []
-  (let [buffer  (js/Uint8Array. sample-data-size)
-        _       (encoding/decodeBase64-1 sample-data buffer)
-        dec1    (buffer->string buffer)
-        _ (js/console.log buffer)
+  (simple-benchmark [d sample-data-hex]
+    (encoding/hexToBuffer d)
+    1000000)
+
+  (simple-benchmark [d sample-data-hex
+                     b (js/Uint8Array. sample-data-size-hex)]
+    (encoding/decodeHex d b)
+    1000000))
 
 
-        ;; ROUNDTRIP
-        result    (encoding/encodeBase64-1 buffer)
-        buffer2   (js/Uint8Array. sample-data-size)
-        _         (encoding/decodeBase64-1 result buffer2)
-        _         (js/console.log buffer2)
+;; (defn ^:export test-base64
+;;   []
+;;   (let [result  (js/Uint8Array. sample-data-size)
+;;         decoder (js/TextDecoder.)]
+;;     (encoding/decodeBase64-1 sample-data result)
+;;     (.decode decoder result)))
 
-        dec2    (buffer->string buffer2)
-        ]
-
-
-    (js/console.log sample-data)
-    (js/console.log result)
-
-    ;; (js/console.log buffer)
-    ;; (js/console.log "RES:" dec1)
-    ;; (js/console.log "RES:" dec2)
-    (js/console.log "RES:" (= dec1 dec2))
-    #_(js/console.log (buffer->string buffer))
-    ;; (js/console.log "RESULT:" b64s)
-    ;; (js/console.log "RESULT:" sample-data)
-    ))
+;; (defn ^:export test-base64-encode
+;;   []
+;;   (let [buffer  (js/Uint8Array. sample-data-size)
+;;         _       (encoding/decodeBase64-1 sample-data buffer)
+;;         dec1    (buffer->string buffer)
+;;         _ (js/console.log buffer)
 
 
+;;         ;; ROUNDTRIP
+;;         result    (encoding/encodeBase64-1 buffer)
+;;         buffer2   (js/Uint8Array. sample-data-size)
+;;         _         (encoding/decodeBase64-1 result buffer2)
+;;         _         (js/console.log buffer2)
 
-        ;; b64s    (encoding/encodeBase64-1 result)
-        ;; _       (encoding/decodeBase64-1
+;;         dec2    (buffer->string buffer2)
+;;         ]
+
+
+;;     (js/console.log sample-data)
+;;     (js/console.log result)
+
+;;     ;; (js/console.log buffer)
+;;     ;; (js/console.log "RES:" dec1)
+;;     ;; (js/console.log "RES:" dec2)
+;;     (js/console.log "RES:" (= dec1 dec2))
+;;     #_(js/console.log (buffer->string buffer))
+;;     ;; (js/console.log "RESULT:" b64s)
+;;     ;; (js/console.log "RESULT:" sample-data)
+;;     ))
 
 
