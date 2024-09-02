@@ -35,16 +35,28 @@
 (declare ^:private decode-file)
 (declare ^:private persist-file!)
 
+(def ^:private sql:get-snapshots
+  "SELECT id, data
+     FROM file_change
+    WHERE file_id = ?
+      AND data IS NOT NULL
+    ORDER BY created_at ASC")
+
 (def ^:private sql:mark-file-media-object-deleted
   "UPDATE file_media_object
       SET deleted_at = now()
     WHERE file_id = ? AND id != ALL(?::uuid[])
    RETURNING id")
 
+(def ^:private xf:collect-used-media
+  (comp (map :data) (mapcat bfc/collect-used-media)))
+
 (defn- clean-file-media!
   "Performs the garbage collection of file media objects."
-  [{:keys [::db/conn]} {:keys [id data] :as file}]
-  (let [used   (bfc/collect-used-media data)
+  [{:keys [::db/conn]} {:keys [id] :as file}]
+  (let [used   (into #{}
+                     xf:collect-used-media
+                     (cons file (db/cursor conn [sql:get-snapshots id])))
         ids    (db/create-array conn "uuid" used)
         unused (->> (db/exec! conn [sql:mark-file-media-object-deleted id ids])
                     (into #{} (map :id)))]
@@ -170,11 +182,6 @@
     (l/dbg :hint "clean" :rel "components" :file-id (str file-id) :total (count unused))
     file))
 
-(def ^:private sql:get-changes
-  "SELECT id, data FROM file_change
-    WHERE file_id = ? AND data IS NOT NULL
-    ORDER BY created_at ASC")
-
 (def ^:private sql:mark-deleted-data-fragments
   "UPDATE file_data_fragment
       SET deleted_at = now()
@@ -190,8 +197,7 @@
 
 (defn- clean-data-fragments!
   [{:keys [::db/conn]} {:keys [id] :as file}]
-  (let [used   (into #{} xf:collect-pointers
-                     (cons file (db/cursor conn [sql:get-changes id])))
+  (let [used   (into #{} xf:collect-pointers [file])
 
         unused (let [ids (db/create-array conn "uuid" used)]
                  (->> (db/exec! conn [sql:mark-deleted-data-fragments id ids])
