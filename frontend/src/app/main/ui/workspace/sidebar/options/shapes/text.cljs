@@ -82,20 +82,15 @@
                        :attrs txt/root-attrs})
                      (dwt/current-paragraph-values
                       {:editor-state editor-state
+                       :editor-instance editor-instance
                        :shape shape
                        :attrs txt/paragraph-attrs})
                      (dwt/current-text-values
                       {:editor-state editor-state
+                       :editor-instance editor-instance
                        :shape shape
                        :attrs txt/text-node-attrs}))
-        layout-item-values (select-keys shape layout-item-attrs)
-        fill-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
-                      (d/merge (select-keys v2-editor-state fill-attrs) fill-values)
-                      fill-values)
-
-        text-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
-                      (d/merge v2-editor-state text-values)
-                      text-values)]
+        layout-item-values (select-keys shape layout-item-attrs)]
 
     [:*
      [:& layer-menu {:ids ids
