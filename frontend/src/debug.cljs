@@ -517,6 +517,11 @@
 (def sample-data
   "SGVsbG8gd29ybGQgCkhvbGEgbXVuZG8")
 
+
+(def sample-data-hex
+  "486F6C61206D756E646F2E2048656C6C6F20776F726C64")
+
+
 (def sample-data-size 23)
 
 (defn ^:export bench-base64-decode

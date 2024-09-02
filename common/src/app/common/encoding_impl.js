@@ -20,6 +20,12 @@ goog.scope(function() {
     hexMap[i] = (i + 0x100).toString(16).substr(1);
   }
 
+  function decodeHex(input, buffer) {
+    for (let i = 0; i < input.length; i += 2) {
+      view[i / 2] = parseInt(input.substring(i, i + 2), 16);
+    }
+  }
+
   function hexToBuffer(input) {
     if (typeof input !== "string") {
       throw new TypeError("Expected input to be a string");
@@ -34,9 +40,7 @@ goog.scope(function() {
 
     const view = new Uint8Array(input.length / 2);
 
-    for (let i = 0; i < input.length; i += 2) {
-      view[i / 2] = parseInt(input.substring(i, i + 2), 16);
-    }
+    decodeHex(input, view);
 
     return view.buffer;
   }
