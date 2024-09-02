@@ -94,7 +94,7 @@
                       fill-values)
 
         text-values (if (and (features/active-feature? @st/state "editor/v2") (some? v2-editor-state))
-                      (d/merge text-values v2-editor-state)
+                      (d/merge v2-editor-state text-values)
                       text-values)]
 
     [:*
