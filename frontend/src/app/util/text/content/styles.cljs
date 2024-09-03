@@ -122,7 +122,6 @@
   [styles]
   (let [mapped-styles
         (into {} (map attr->style styles))]
-    (js/console.log "mapped-styles" mapped-styles)
     (clj->js mapped-styles)))
 
 (defn style-needs-mapping?
@@ -131,7 +130,6 @@
 
 (defn style->attr-key
   [key]
-  (js/console.log "style->attr-key" key)
   (if (style-needs-mapping? key)
     (keyword (str/slice key 2))
     (keyword key)))
@@ -162,7 +160,6 @@
   [styles]
   (let [mapped-attrs
         (into {} (map style->attr styles))]
-    (js/console.log "mapped-attrs" mapped-attrs)
     mapped-attrs))
 
 (defn get-style-defaults

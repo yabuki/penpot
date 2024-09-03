@@ -393,13 +393,65 @@ function mergeParagraphs(a, b) {
   b.remove();
   return a;
 }
+function createCanvas(width, height) {
+  if ("OffscreenCanvas" in globalThis) {
+    return new OffscreenCanvas(width, height);
+  }
+  return document.createElement("canvas");
+}
+const canvas = createCanvas(1, 1);
+const context = canvas.getContext("2d");
+function getByteAsHex(byte) {
+  return byte.toString(16).padStart(2, "0");
+}
+function getColor(fillStyle) {
+  context.fillStyle = fillStyle;
+  context.fillRect(0, 0, 1, 1);
+  const imageData = context.getImageData(0, 0, 1, 1);
+  const [r, g, b, a] = imageData.data;
+  return [`#${getByteAsHex(r)}${getByteAsHex(g)}${getByteAsHex(b)}`, a / 255];
+}
+function getFills(fillStyle) {
+  const [color, opacity] = getColor(fillStyle);
+  return `[["^ ","~:fill-color","${color}","~:fill-opacity",${opacity}]]`;
+}
+function getComputedStyle(element) {
+  const inertElement = document.createElement("div");
+  let currentElement = element;
+  while (currentElement) {
+    for (const styleName of currentElement.style) {
+      const currentValue = inertElement.style.getPropertyValue(styleName);
+      if (currentValue) {
+        const priority = currentElement.style.getPropertyPriority(styleName);
+        if (priority === "important") {
+          const newValue = currentElement.style.getPropertyValue(styleName);
+          inertElement.style.setProperty(styleName, newValue);
+        }
+      } else {
+        inertElement.style.setProperty(
+          styleName,
+          currentElement.style.getPropertyValue(styleName)
+        );
+      }
+    }
+    currentElement = currentElement.parentElement;
+  }
+  return inertElement.style;
+}
+function normalizeStyles(styleDeclaration) {
+  const color = styleDeclaration.getPropertyValue("color");
+  if (color) {
+    styleDeclaration.setProperty("--fills", getFills(color));
+  }
+  return styleDeclaration;
+}
 function mapContentFragmentFromDocument(document2, root) {
   const nodeIterator = document2.createNodeIterator(root, NodeFilter.SHOW_TEXT);
   const fragment = document2.createDocumentFragment();
   let currentParagraph = null;
   let currentNode = nodeIterator.nextNode();
   while (currentNode) {
-    const parentStyle = window.getComputedStyle(currentNode.parentElement);
+    const parentStyle = normalizeStyles(getComputedStyle(currentNode.parentElement));
     if (isDisplayBlock(currentNode.parentElement.style) || isDisplayBlock(parentStyle) || isLikeParagraph(currentNode.parentElement)) {
       if (currentParagraph) {
         fragment.appendChild(currentParagraph);
@@ -1558,7 +1610,6 @@ class SelectionController extends EventTarget {
    */
   get isParagraphStart() {
     if (!this.isCollapsed) return false;
-    console.log("focus", this.focusNode, this.focusOffset);
     return isParagraphStart(this.focusNode, this.focusOffset);
   }
   /**
@@ -1579,8 +1630,10 @@ class SelectionController extends EventTarget {
     const numParagraphs = fragment.children.length;
     console.log("insertPaste", numParagraphs);
     if (this.isParagraphStart) {
+      console.log("focusParagraph.before", fragment);
       this.focusParagraph.before(fragment);
     } else if (this.isParagraphEnd) {
+      console.log("focusParagraph.after", fragment);
       this.focusParagraph.after(fragment);
     } else {
       const newParagraph = splitParagraph(
@@ -1588,6 +1641,7 @@ class SelectionController extends EventTarget {
         this.focusInline,
         this.focusOffset
       );
+      console.log("splitParagraph", newParagraph, fragment);
       this.focusParagraph.after(fragment, newParagraph);
     }
   }
@@ -1948,9 +2002,9 @@ class SelectionController extends EventTarget {
       }
       this.collapse(singleParagraph.firstChild.firstChild, 0);
     }
-    if (isLineBreak(previousNode)) {
+    if (previousNode && isLineBreak(previousNode)) {
       this.collapse(previousNode, 0);
-    } else if (isTextNode(previousNode)) {
+    } else if (previousNode && isTextNode(previousNode)) {
       this.collapse(previousNode, previousNode.nodeValue.length);
     }
     __privateGet(this, _range).collapse();
