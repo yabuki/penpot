@@ -1017,6 +1017,23 @@
           (into {} (filter #(-> % val valid-color?) colors)))]
     (update data :colors update-colors)))
 
+(defn migrate-up-52
+  "This migration moves page options to the page level"
+  [data]
+  (let [update-page
+        (fn [{:keys [options] :as page}]
+          (cond-> page
+            (some? (:saved-grids options))
+            (assoc :grids (:saved-grids))
+
+            (some? (:flows options))
+            (assoc :flows (:flows options))
+
+            (some? (:guides options))
+            (assoc :guides (:guides options))))]
+
+    (update data :pages-index d/update-vals update-page)
+
 (def migrations
   "A vector of all applicable migrations"
   [{:id 2 :migrate-up migrate-up-2}
@@ -1059,4 +1076,5 @@
    {:id 48 :migrate-up migrate-up-48}
    {:id 49 :migrate-up migrate-up-49}
    {:id 50 :migrate-up migrate-up-50}
-   {:id 51 :migrate-up migrate-up-51}])
+   {:id 51 :migrate-up migrate-up-51}
+   {:id 52 :migrate-up migrate-up-52}])

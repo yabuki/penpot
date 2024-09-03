@@ -9,6 +9,7 @@
   (:require
    [app.common.geom.grid :as gg]
    [app.main.data.workspace.grid :as dw]
+   [app.common.types.grid :as ctg]
    [app.main.refs :as refs]
    [app.main.store :as st]
    [app.main.ui.components.editable-select :refer [editable-select]]
@@ -22,8 +23,8 @@
    [okulary.core :as l]
    [rumext.v2 :as mf]))
 
-(def workspace-saved-grids
-  (l/derived :saved-grids refs/workspace-page-options))
+(def workspace-grids
+  (l/derived :grids refs/workspace-data))
 
 (defn- get-size-options []
   [{:value nil :label (tr "workspace.options.grid.auto")}
@@ -298,8 +299,8 @@
 
         toggle-content      (mf/use-fn #(swap! state* not))
         id                  (:id shape)
-        saved-grids         (mf/deref workspace-saved-grids)
-        default-grid-params (mf/use-memo (mf/deps saved-grids) #(merge dw/default-grid-params saved-grids))
+        grids               (mf/deref workspace-grids)
+        default-grid-params (mf/use-memo (mf/deps grids) #(merge ctg/default-grid-params grids))
         handle-create-grid  (mf/use-fn (mf/deps id) #(st/emit! (dw/add-frame-grid id)))]
 
     [:div {:class (stl/css :element-set)}

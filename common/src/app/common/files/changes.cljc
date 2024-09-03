@@ -20,11 +20,13 @@
    [app.common.types.container :as ctn]
    [app.common.types.file :as ctf]
    [app.common.types.page :as ctp]
+   [app.common.types.grid :as ctg]
    [app.common.types.pages-list :as ctpl]
    [app.common.types.shape :as cts]
    [app.common.types.shape-tree :as ctst]
    [app.common.types.typographies-list :as ctyl]
    [app.common.types.typography :as ctt]
+   [app.common.uuid :as uuid]
    [clojure.set :as set]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -60,6 +62,20 @@
      [:type [:= :set-remote-synced]]
      [:remote-synced {:optional true} [:maybe :boolean]]]]])
 
+;; FIXME: revisit
+(def schema:mod-grid-change
+  [:and
+   [:map {:title "ModGridChange"}
+    [:page-id ::sm/uuid]
+    [:grid-type [::sm/one-of #{:square :row :column}]]]
+   [:maybe
+    [:multi {:decode/json #(update % :type keyword)
+             :dispatch :type
+             ::smd/simplified true}
+     [:square ctg/schema:square-params]
+     [:column ctg/schema:column-params]
+     [:row ctg/schema:column-params]]]])
+
 (def schema:change
   [:schema
    [:multi {:dispatch :type
@@ -67,13 +83,11 @@
             :decode/json #(update % :type keyword)
             ::smd/simplified true}
     [:set-option
-     [:map {:title "SetOptionChange"}
-      [:type [:= :set-option]]
-      [:page-id ::sm/uuid]
-      [:option [:union
-                [:keyword]
-                [:vector {:gen/max 10} :keyword]]]
-      [:value :any]]]
+
+     ;; DEPRECATED: remove before 2.3 release
+     ;;
+     ;; Is still there for not cause error when event is received
+     [:map {:title "SetOptionChange"}]]
 
     [:add-obj
      [:map {:title "AddObjChange"}
@@ -102,6 +116,27 @@
       [:page-id {:optional true} ::sm/uuid]
       [:component-id {:optional true} ::sm/uuid]
       [:ignore-touched {:optional true} :boolean]]]
+
+    [:add-guide
+     [:map {:title "AddGuideChange"}
+      [:page-id ::sm/uuid]
+      [:id ::sm/uuid]
+      [:guide ::ctp/guide]]]
+
+    [:mod-guide
+     [:map {:title "ModGuideChange"}
+      [:page-id ::sm/uuid]
+      [:id ::sm/uuid]
+      [:guide ::ctp/guide]]]
+
+    [:del-guide
+     [:map {:title "DelGuideChange"}
+      [:page-id ::sm/uuid]
+      [:id ::sm/uuid]]]
+
+    ;; Change used for all crud operation on persisted grid options on
+    ;; the page.
+    [:mod-grid schema:mod-grid-change]
 
     [:fix-obj
      [:map {:title "FixObjChange"}
@@ -143,6 +178,8 @@
      [:map {:title "ModPageChange"}
       [:type [:= :mod-page]]
       [:id ::sm/uuid]
+      ;; FIXME: string -> color
+      [:background :string]
       [:name :string]]]
 
     [:mod-plugin-data
@@ -357,14 +394,45 @@
        #?(:clj (validate-shapes! data result items))
        result))))
 
+;; DEPRECATED: remove before 2.3 release
 (defmethod process-change :set-option
   [data {:keys [page-id option value]}]
-  (d/update-in-when data [:pages-index page-id]
-                    (fn [data]
-                      (let [path (if (seqable? option) option [option])]
-                        (if value
-                          (assoc-in data (into [:options] path) value)
-                          (assoc data :options (d/dissoc-in (:options data) path)))))))
+  data)
+
+;; --- Guides
+
+(defmethod process-change :add-guide
+  [data {:keys [page-id guide]}]
+  (d/update-in-when data [:pages-index page-id] ctp/add-guide guide))
+
+(defmethod process-change :del-guide
+  [data {:keys [page-id id]}]
+  (d/update-in-when data [:pages-index page-id] ctp/remove-guide id))
+
+
+;; --- Guides
+
+(defmethod process-change :add-flow
+  [data {:keys [page-id guide]}]
+  (d/update-in-when data [:pages-index page-id] ctp/add-guide guide))
+
+(defmethod process-change :mod-flow
+  [data {:keys [page-id guide]}]
+  (d/update-in-when data [:pages-index page-id] ctp/add-guide guide))
+
+(defmethod process-change :del-flow
+  [data {:keys [page-id id]}]
+  (d/update-in-when data [:pages-index page-id] ctp/remove-guide id))
+
+;; --- Grids
+
+(defmethod process-change :mod-grid
+  [data {:keys [page-id grid-type params]}]
+  (if (nil? params)
+    (d/update-in-when [:pages-index page-id :grids] dissoc grid-type)
+    (update-in [:pages-index page-id :grids] assoc grid-type params)))
+
+;; --- Shape / Obj
 
 (defmethod process-change :add-obj
   [data {:keys [id obj page-id component-id frame-id parent-id index ignore-touched]}]
@@ -668,6 +736,7 @@
        (cond-> rc
          (> (count rc) 15)
          (subvec 1))))))
+
 
 ;; -- Media
 

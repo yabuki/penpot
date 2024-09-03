@@ -29,7 +29,11 @@
    [:id ::sm/uuid]
    [:axis [::sm/one-of #{:x :y}]]
    [:position ::sm/safe-number]
+   ;; FIXME: remove maybe?
    [:frame-id {:optional true} [:maybe ::sm/uuid]]])
+
+(def schema:guides
+  [:map-of {:gen/max 2} ::sm/uuid schema:guide])
 
 (def schema:page
   [:map {:title "FilePage"}
@@ -37,25 +41,28 @@
    [:name :string]
    [:objects
     [:map-of {:gen/max 5} ::sm/uuid ::cts/shape]]
+
+   [:grids {:optional true} ::ctg/saved-grids]
+   [:flows {:optional true}
+    [:vector {:gen/max 2} schema:flow]]
+   [:guides {:optional true} schema:guides]
+   [:plugin-data {:optional true} ::ctpg/plugin-data]
+
    [:options
+    ;; DEPERECATED: remove after 2.3 release
     [:map {:title "PageOptions"}
-     [:background {:optional true} ::ctc/rgb-color]
-     [:saved-grids {:optional true} ::ctg/saved-grids]
-     [:flows {:optional true}
-      [:vector {:gen/max 2} schema:flow]]
-     [:guides {:optional true}
-      [:map-of {:gen/max 2} ::sm/uuid schema:guide]]
-     [:plugin-data {:optional true} ::ctpg/plugin-data]]]])
+     [:background {:optional true} ::ctc/rgb-color]]]])
 
 (sm/register! ::page schema:page)
 (sm/register! ::guide schema:guide)
 (sm/register! ::flow schema:flow)
 
-(def check-page-guide!
-  (sm/check-fn ::guide))
+(def valid-guide?
+  (sm/lazy-validator schema:guide))
 
+;; FIXME: convert to validator
 (def check-page!
-  (sm/check-fn ::page))
+  (sm/check-fn schema:page))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; INIT & HELPERS
@@ -80,7 +87,9 @@
       (assoc :id (or id (uuid/next)))
       (assoc :name (or name "Page 1"))))
 
-;; --- Helpers for flow
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FLOW helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn rename-flow
   [flow name]
@@ -102,3 +111,15 @@
 (defn get-frame-flow
   [flows frame-id]
   (d/seek #(= (:starting-frame %) frame-id) flows))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GUIDE helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn add-guide
+  [page {:keys [id] :as guide}]
+  (update page :guides assoc id guide))
+
+(defn remove-guide
+  [page id]
+  (update page :guides dissoc id))

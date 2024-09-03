@@ -89,11 +89,16 @@
     (watch [it state _]
       (let [page (if page-id
                    (wsh/lookup-page state page-id)
-                   (wsh/lookup-page state))]
-        (rx/of (dch/commit-changes
+                   (wsh/lookup-page state))
+            flow (d/seek #(= (:id %) flow-id) (:flows page))
+            flow (some-> flow update-fn)]
+
+        (when (some? flow)
+          (rx/of (dch/commit-changes
                 (-> (pcb/empty-changes it)
                     (pcb/with-page page)
-                    (pcb/update-page-option :flows ctp/update-flow flow-id update-fn))))))))
+                    (pcb/add-flow flow)
+                    #_(pcb/update-page-option :flows ctp/update-flow flow-id update-fn))))))))
 
 (defn rename-flow
   [flow-id name]

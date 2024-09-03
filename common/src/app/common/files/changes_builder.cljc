@@ -246,6 +246,59 @@
       (update :undo-changes conj {:type :mov-page :id page-id :index prev-index})
       (apply-changes-local)))
 
+
+(defn add-guide
+  [changes guide]
+  (let [page-id (::page-id (meta changes))
+        page    (::page (meta changes))
+        old-val (dm/get-in page [:guides (:id guide)])
+
+        changes (update changes :redo-changes conj {:type :add-guide
+                                                    :page-id page-id
+                                                    :guide guide})
+
+        changes (if (some? old-val)
+                  (update changes :undo-changes conj {:type :del-guide
+                                                      :page-id page-id
+                                                      :guide old-val})
+                  (update changes :undo-changes conj {:type :del-guide
+                                                      :page-id page-id
+                                                      :id (:id guide)}))]
+    ;; FIXME: not sure if we need this
+    (apply-changes-local changes)))
+
+(defn remove-guide
+  [changes guide]
+  (let [page-id (::page-id (meta changes))
+        page    (::page (meta changes))
+        old-val (dm/get-in page [:guides (:id guide)])
+
+        changes (update changes :redo-changes conj {:type :del-guide
+                                                    :page-id page-id
+                                                    :id (:id guide)})
+        changes (update changes :undo-changes conj {:type :add-guide
+                                                    :page-id page-id
+                                                    :guide guide})]
+    ;; FIXME: not sure if we need this
+    (apply-changes-local changes)))
+
+(defn set-default-grid
+  [changes type params]
+  (let [page-id (::page-id (meta changes))
+        page    (::page (meta changes))
+        old-val (dm/get-in page [:grids type])
+
+        changes (update changes :redo-changes conj {:type :mod-grid
+                                                    :page-id page-id
+                                                    :grid-type type
+                                                    :params params})
+        changes (update changes :undo-changes conj {:type :mod-grid
+                                                    :page-id page-id
+                                                    :grid-type type
+                                                    :params old-val})]
+    ;; FIXME: not sure if we need this
+    (apply-changes-local changes)))
+
 (defn set-page-option
   [changes option-key option-val]
   (assert-page! changes)

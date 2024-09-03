@@ -1139,7 +1139,7 @@
       (assoc-in [:options :background] background)
 
       (d/not-empty? grids)
-      (assoc-in [:options :saved-grids] grids)
+      (assoc-in [:grids] grids)
 
       (d/not-empty? flows)
       (assoc-in [:options :flows] flows)
