@@ -11,6 +11,70 @@ function copy(event, editor) {
 }
 function cut(event, editor) {
 }
+function createCanvas(width, height) {
+  if ("OffscreenCanvas" in globalThis) {
+    return new OffscreenCanvas(width, height);
+  }
+  return document.createElement("canvas");
+}
+const canvas = createCanvas(1, 1);
+const context = canvas.getContext("2d");
+function getByteAsHex(byte) {
+  return byte.toString(16).padStart(2, "0");
+}
+function getColor(fillStyle) {
+  context.fillStyle = fillStyle;
+  context.fillRect(0, 0, 1, 1);
+  const imageData = context.getImageData(0, 0, 1, 1);
+  const [r, g, b, a] = imageData.data;
+  return [`#${getByteAsHex(r)}${getByteAsHex(g)}${getByteAsHex(b)}`, a / 255];
+}
+function getFills(fillStyle) {
+  const [color, opacity] = getColor(fillStyle);
+  return `[["^ ","~:fill-color","${color}","~:fill-opacity",${opacity}]]`;
+}
+function mergeStyleDeclarations(target, source) {
+  for (const styleName of source) {
+    target.setProperty(styleName, source.getPropertyValue(styleName));
+  }
+  return target;
+}
+function getComputedStyle(element) {
+  const inertElement = document.createElement("div");
+  let currentElement = element;
+  while (currentElement) {
+    for (const styleName of currentElement.style) {
+      const currentValue = inertElement.style.getPropertyValue(styleName);
+      if (currentValue) {
+        const priority = currentElement.style.getPropertyPriority(styleName);
+        if (priority === "important") {
+          const newValue = currentElement.style.getPropertyValue(styleName);
+          inertElement.style.setProperty(styleName, newValue);
+        }
+      } else {
+        inertElement.style.setProperty(
+          styleName,
+          currentElement.style.getPropertyValue(styleName)
+        );
+      }
+    }
+    currentElement = currentElement.parentElement;
+  }
+  return inertElement.style;
+}
+function normalizeStyles(styleDeclaration) {
+  const color = styleDeclaration.getPropertyValue("color");
+  if (color) {
+    styleDeclaration.removeProperty("color");
+    styleDeclaration.setProperty("--fills", getFills(color));
+  }
+  const fontFamily = styleDeclaration.getPropertyValue("font-family");
+  const fontId = styleDeclaration.getPropertyPriority("--font-id");
+  if (fontFamily && !fontId) {
+    styleDeclaration.removeProperty("font-family");
+  }
+  return styleDeclaration;
+}
 function setStyle(element, styleName, styleValue, styleUnit) {
   if (styleName.startsWith("--") && typeof styleValue !== "string" && typeof styleValue !== "number") {
     if (styleName === "--fills" && styleValue === null) debugger;
@@ -393,65 +457,13 @@ function mergeParagraphs(a, b) {
   b.remove();
   return a;
 }
-function createCanvas(width, height) {
-  if ("OffscreenCanvas" in globalThis) {
-    return new OffscreenCanvas(width, height);
-  }
-  return document.createElement("canvas");
-}
-const canvas = createCanvas(1, 1);
-const context = canvas.getContext("2d");
-function getByteAsHex(byte) {
-  return byte.toString(16).padStart(2, "0");
-}
-function getColor(fillStyle) {
-  context.fillStyle = fillStyle;
-  context.fillRect(0, 0, 1, 1);
-  const imageData = context.getImageData(0, 0, 1, 1);
-  const [r, g, b, a] = imageData.data;
-  return [`#${getByteAsHex(r)}${getByteAsHex(g)}${getByteAsHex(b)}`, a / 255];
-}
-function getFills(fillStyle) {
-  const [color, opacity] = getColor(fillStyle);
-  return `[["^ ","~:fill-color","${color}","~:fill-opacity",${opacity}]]`;
-}
-function getComputedStyle(element) {
-  const inertElement = document.createElement("div");
-  let currentElement = element;
-  while (currentElement) {
-    for (const styleName of currentElement.style) {
-      const currentValue = inertElement.style.getPropertyValue(styleName);
-      if (currentValue) {
-        const priority = currentElement.style.getPropertyPriority(styleName);
-        if (priority === "important") {
-          const newValue = currentElement.style.getPropertyValue(styleName);
-          inertElement.style.setProperty(styleName, newValue);
-        }
-      } else {
-        inertElement.style.setProperty(
-          styleName,
-          currentElement.style.getPropertyValue(styleName)
-        );
-      }
-    }
-    currentElement = currentElement.parentElement;
-  }
-  return inertElement.style;
-}
-function normalizeStyles(styleDeclaration) {
-  const color = styleDeclaration.getPropertyValue("color");
-  if (color) {
-    styleDeclaration.setProperty("--fills", getFills(color));
-  }
-  return styleDeclaration;
-}
-function mapContentFragmentFromDocument(document2, root) {
+function mapContentFragmentFromDocument(document2, root, styleDefaults) {
   const nodeIterator = document2.createNodeIterator(root, NodeFilter.SHOW_TEXT);
   const fragment = document2.createDocumentFragment();
   let currentParagraph = null;
   let currentNode = nodeIterator.nextNode();
   while (currentNode) {
-    const parentStyle = normalizeStyles(getComputedStyle(currentNode.parentElement));
+    const parentStyle = normalizeStyles(mergeStyleDeclarations(styleDefaults, getComputedStyle(currentNode.parentElement)));
     if (isDisplayBlock(currentNode.parentElement.style) || isDisplayBlock(parentStyle) || isLikeParagraph(currentNode.parentElement)) {
       if (currentParagraph) {
         fragment.appendChild(currentParagraph);
@@ -470,22 +482,23 @@ function mapContentFragmentFromDocument(document2, root) {
   fragment.appendChild(currentParagraph);
   return fragment;
 }
-function mapContentFragmentFromHTML(html) {
+function mapContentFragmentFromHTML(html, styleDefaults) {
   const parser = new DOMParser();
   const htmlDocument = parser.parseFromString(html, "text/html");
   return mapContentFragmentFromDocument(
     htmlDocument,
-    htmlDocument.documentElement
+    htmlDocument.documentElement,
+    styleDefaults
   );
 }
-function mapContentFragmentFromString(string) {
+function mapContentFragmentFromString(string, styleDefaults) {
   const lines = string.replace(/\r/g, "").split("\n");
   const fragment = document.createDocumentFragment();
   for (const line of lines) {
     if (line === "") {
-      fragment.appendChild(createEmptyParagraph());
+      fragment.appendChild(createEmptyParagraph(styleDefaults));
     } else {
-      fragment.appendChild(createParagraph([createInline(new Text(line))]));
+      fragment.appendChild(createParagraph([createInline(new Text(line), styleDefaults)], styleDefaults));
     }
   }
   return fragment;
@@ -496,11 +509,11 @@ function paste(event, editor, selectionController) {
   if (event.clipboardData.types.includes("text/html")) {
     console.log("text/html");
     const html = event.clipboardData.getData("text/html");
-    fragment = mapContentFragmentFromHTML(html);
+    fragment = mapContentFragmentFromHTML(html, selectionController.currentStyle);
   } else if (event.clipboardData.types.includes("text/plain")) {
     console.log("text/plain");
     const plain = event.clipboardData.getData("text/plain");
-    fragment = mapContentFragmentFromString(plain);
+    fragment = mapContentFragmentFromString(plain, selectionController.currentStyle);
   }
   if (!fragment) {
     return;
