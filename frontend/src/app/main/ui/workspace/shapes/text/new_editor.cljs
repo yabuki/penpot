@@ -96,7 +96,7 @@
      (fn []
        (let [keys [(events/listen js/document "keyup" on-key-up)]
              text-editor (mf/ref-val text-editor-ref)
-             style-defaults (styles/get-style-defaults (d/merge txt/default-text-attrs default-font))
+             style-defaults (styles/get-style-defaults (d/merge txt/default-attrs default-font))
              text-editor-options #js {:styleDefaults style-defaults
                                       :selectionImposterElement (mf/ref-val text-editor-selection-ref)}
              text-editor-instance (impl/createTextEditor text-editor text-editor-options)]

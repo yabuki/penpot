@@ -81,6 +81,8 @@
 (def text-style-attrs
   (d/concat-vec root-attrs paragraph-attrs text-node-attrs))
 
+(def default-root-attrs
+  {:vertical-align "top"})
 
 (def default-text-attrs
   {:typography-ref-file nil
@@ -98,6 +100,9 @@
    :text-decoration "none"
    :fills [{:fill-color clr/black
             :fill-opacity 1}]})
+
+(def default-attrs
+  (merge default-root-attrs default-text-attrs))
 
 (def typography-fields
   [:font-id
