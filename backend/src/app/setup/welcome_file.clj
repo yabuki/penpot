@@ -17,17 +17,35 @@
 (def ^:private shape-id #uuid "765e9f82-c44e-802e-8004-d72a10b7b445")
 
 (def ^:private update-path
-  [:pages-index page-id :objects shape-id
+  [:data :pages-index page-id :objects shape-id
    :content :children 0 :children 0 :children 0])
+
+(def ^:private sql:mark-file-object-thumbnails-deleted
+  "UPDATE file_tagged_object_thumbnail
+      SET deleted_at = now(),
+          object_id = uuid_generate_v4()
+    WHERE file_id = ?")
+
+(def ^:private sql:mark-file-thumbnail-deleted
+  "UPDATE file_thumbnail
+      SET deleted_at = now()
+    WHERE file_id = ?")
+
+
 
 (defn- update-welcome-shape
   [_ file name]
-  (let [text (str "Welcome to Penpot, " name "!")]
-    (update file :data update-in update-path assoc :text text)))
+  (let [text (str "Welcome to Penpot, " name "!")
+        _ (prn "file" (:id file))
+        _ (prn "name" name)]
+    (-> file
+        (update-in update-path assoc :text text)
+        (update-in [:data :pages-index page-id :objects shape-id] assoc :name "Welcome to Penpot!"))))
 
 (defn create-welcome-file
-  [cfg {:keys [id] :as profile}]
+  [cfg {:keys [id fullname] :as profile}]
   (try
+    (prn "create-welcome-file " fullname)
     (let [cfg             (dissoc cfg ::db/conn)
           params          {:profile-id (:id profile)
                            :project-id (:default-project-id profile)}
@@ -35,9 +53,11 @@
           file-id         (-> (management/clone-template cfg params template-stream)
                               first)]
 
-      (db/tx-run! cfg (fn [cfg]
-                        (fupdate/update-file cfg file-id update-welcome-shape name)
-                        (profile/update-profile-props cfg id {:welcome-file-id file-id}))))
+      (db/tx-run! cfg (fn [{:keys [::db/conn] :as cfg}]
+                        (fupdate/update-file cfg file-id update-welcome-shape fullname)
+                        (profile/update-profile-props cfg id {:welcome-file-id file-id})
+                        (db/exec-one! conn [sql:mark-file-object-thumbnails-deleted file-id])
+                        (db/exec-one! conn [sql:mark-file-thumbnail-deleted file-id]))))
 
     (catch Throwable cause
       (l/error :hint "unexpected error on create welcome file " :cause cause))))
