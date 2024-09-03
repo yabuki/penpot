@@ -14,6 +14,7 @@
    [app.common.types.shape.layout :as ctl]
    [app.main.data.workspace.state-helpers :as wsh]
    [app.main.store :as st]
+   [app.util.storage :as s]
    [okulary.core :as l]))
 
 ;; ---- Global refs
@@ -236,9 +237,9 @@
              =))
 
 (def workspace-recent-colors
-  (l/derived (fn [data]
-               (get data :recent-colors []))
-             workspace-data))
+  (l/derived (fn [storage]
+               (get storage :recent-colors []))
+             s/storage))
 
 (def workspace-recent-fonts
   (l/derived (fn [data]
