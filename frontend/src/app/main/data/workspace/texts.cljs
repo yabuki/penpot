@@ -469,6 +469,7 @@
                             (styles/get-styles-from-style-declaration)
                             ((comp update-node-fn migrate-node)))
                   styles (styles/attrs->styles attrs)]
+              (js/console.log "applyStylesToSelection" (clj->js attrs) styles)
               (.applyStylesToSelection text-editor-instance styles))))))))
 
 ;; --- RESIZE UTILS

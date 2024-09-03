@@ -7,7 +7,7 @@
 (ns app.util.text.content.styles
   (:require
    [app.common.text :as txt]
-   [app.common.transit :as transit] 
+   [app.common.transit :as transit]
    [cuerdas.core :as str]))
 
 (defn encode
@@ -52,17 +52,35 @@
     :else
     v))
 
-(defn get-style-name
+(defn get-style-name-as-css-variable
   [key]
   (str/concat "--" (name key)))
 
+(defn get-style-name
+  [key]
+  (cond
+    (= key :text-direction)
+    "direction"
+
+    :else
+    (name key)))
+
 (defn get-style-keyword
   [key]
-  (keyword (get-style-name key)))
+  (keyword (get-style-name-as-css-variable key)))
+
+(defn get-attr-keyword-from-css-variable
+  [style-name]
+  (keyword (str/slice style-name 2)))
 
 (defn get-attr-keyword
   [style-name]
-  (keyword (str/slice style-name 2)))
+  (cond
+    (= style-name "direction")
+    :text-direction
+
+    :else
+    (keyword style-name)))
 
 (defn attr-needs-mapping?
   [key]
@@ -72,9 +90,14 @@
 (defn attr->style-key
   [key]
   (if (attr-needs-mapping? key)
-    (let [name (get-style-name key)]
+    (let [name (get-style-name-as-css-variable key)]
       (keyword name))
-    key))
+    (cond
+      (= key :text-direction)
+      (keyword "direction")
+
+      :else
+      key)))
 
 (defn attr->style-value
   ([key value]
@@ -99,6 +122,7 @@
   [styles]
   (let [mapped-styles
         (into {} (map attr->style styles))]
+    (js/console.log "mapped-styles" mapped-styles)
     (clj->js mapped-styles)))
 
 (defn style-needs-mapping?
@@ -107,6 +131,7 @@
 
 (defn style->attr-key
   [key]
+  (js/console.log "style->attr-key" key)
   (if (style-needs-mapping? key)
     (keyword (str/slice key 2))
     (keyword key)))
@@ -116,17 +141,18 @@
    (style->attr-value name value false))
   ([name value normalize?]
    (if (style-needs-mapping? name)
-     (let [key (get-attr-keyword name)
+     (let [key (get-attr-keyword-from-css-variable name)
            [_ decoder] (get mapping key)]
        (if normalize?
          (normalize-attr-value key (decoder value))
          (decoder value)))
-     (let [key (keyword name)]
+     (let [key (get-attr-keyword name)]
        (if normalize?
          (normalize-attr-value key value)
          value)))))
 
 (defn style->attr
+  "Maps style to attr"
   [[key value]]
   [(style->attr-key key)
    (style->attr-value key value)])
@@ -136,6 +162,7 @@
   [styles]
   (let [mapped-attrs
         (into {} (map style->attr styles))]
+    (js/console.log "mapped-attrs" mapped-attrs)
     mapped-attrs))
 
 (defn get-style-defaults
@@ -146,10 +173,10 @@
     (fn [acc [k v]]
       (if (contains? mapping k)
         (let [[style-encode] (get mapping k)
-              style-name (get-style-name k)
+              style-name (get-style-name-as-css-variable k)
               style-value (normalize-style-value style-name (style-encode v))]
           (assoc acc style-name style-value))
-        (let [style-name (name k)
+        (let [style-name (get-style-name k)
               style-value (normalize-style-value style-name v)]
           (assoc acc style-name style-value)))) {} style-defaults)))
 
@@ -159,11 +186,11 @@
   (reduce
    (fn [acc k]
      (if (contains? mapping k)
-       (let [style-name (get-style-name k)
+       (let [style-name (get-style-name-as-css-variable k)
              [_ style-decode] (get mapping k)
              style-value (.getPropertyValue style-declaration style-name)]
          (assoc acc k (style-decode style-value)))
-       (let [style-name (name k)
+       (let [style-name (get-style-name k)
              style-value (normalize-attr-value k (.getPropertyValue style-declaration style-name))]
          (assoc acc k style-value)))) {} txt/text-style-attrs))
 

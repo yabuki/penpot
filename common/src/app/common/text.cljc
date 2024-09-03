@@ -98,6 +98,7 @@
    :text-transform "none"
    :text-align "left"
    :text-decoration "none"
+   :text-direction "ltr"
    :fills [{:fill-color clr/black
             :fill-opacity 1}]})
 

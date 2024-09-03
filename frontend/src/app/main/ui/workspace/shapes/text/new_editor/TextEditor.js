@@ -1558,6 +1558,7 @@ class SelectionController extends EventTarget {
    */
   get isParagraphStart() {
     if (!this.isCollapsed) return false;
+    console.log("focus", this.focusNode, this.focusOffset);
     return isParagraphStart(this.focusNode, this.focusOffset);
   }
   /**
@@ -1909,7 +1910,10 @@ class SelectionController extends EventTarget {
     const affectedParagraphs = /* @__PURE__ */ new Set();
     const startNode = getClosestTextNode(__privateGet(this, _range).startContainer);
     const endNode = getClosestTextNode(__privateGet(this, _range).endContainer);
+    let previousNode = null;
     if (startNode !== endNode) {
+      __privateGet(this, _textNodeIterator).currentNode = startNode;
+      previousNode = __privateGet(this, _textNodeIterator).previousNode();
       __privateGet(this, _textNodeIterator).currentNode = startNode;
       SafeGuard.start();
       do {
@@ -1944,6 +1948,12 @@ class SelectionController extends EventTarget {
       }
       this.collapse(singleParagraph.firstChild.firstChild, 0);
     }
+    if (isLineBreak(previousNode)) {
+      this.collapse(previousNode, 0);
+    } else if (isTextNode(previousNode)) {
+      this.collapse(previousNode, previousNode.nodeValue.length);
+    }
+    __privateGet(this, _range).collapse();
   }
   /**
    * Applies styles to selection

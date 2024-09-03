@@ -41,11 +41,12 @@
   (reduce (fn [acc key]
             (let [style (.-style element)]
               (if (contains? styles/mapping key)
-                (let [style-name (styles/get-style-name key)
+                (let [style-name (styles/get-style-name-as-css-variable key)
                       [_ style-decode] (get styles/mapping key)
                       value (style-decode (.getPropertyValue style style-name))]
                   (assoc acc key value))
-                (assoc acc key (styles/normalize-attr-value key (.getPropertyValue style (name key))))))) {} attrs))
+                (let [style-name (styles/get-style-name key)]
+                  (assoc acc key (styles/normalize-attr-value key (.getPropertyValue style style-name))))))) {} attrs))
 
 (defn get-inline-styles
   [element]
